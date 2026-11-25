@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>PAD Dungeon Guide</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" type="module"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">Puzzle &amp; Dragons</p>
+        <h1>Dungeon Guide</h1>
+      </div>
+      <div class="controls">
+        <label for="dungeon-select">Dungeon</label>
+        <select id="dungeon-select" aria-label="Choose a dungeon"></select>
+        <label for="team-hp">Team HP</label>
+        <input id="team-hp" type="number" min="1" step="1" inputmode="numeric" placeholder="Optional">
+      </div>
+    </header>
+
+    <main>
+      <p id="load-status" class="status" role="status">Loading dungeon data…</p>
+      <section id="error-panel" class="error-panel" role="alert" hidden></section>
+      <div id="guide-content" hidden>
+        <section class="overview" aria-labelledby="dungeon-title">
+          <div class="overview-heading">
+            <div>
+              <p class="eyebrow">Dungeon overview</p>
+              <h2 id="dungeon-title"></h2>
+              <p id="dungeon-jp" class="japanese-name"></p>
+            </div>
+            <div id="dungeon-rules" class="rule-list"></div>
+          </div>
+          <div class="summary-help">
+            <p class="muted summary-hint">Select one or more mechanics to show floors with any selected mechanic.</p>
+            <button
+              id="select-all-mechanics"
+              class="filter-action"
+              type="button"
+              aria-label="Select all mechanics"
+              aria-controls="floors-list"
+              aria-pressed="false"
+            >
+              Select all
+            </button>
+          </div>
+          <div id="critical-summary" class="summary-grid"></div>
+          <div id="hit-summary" class="hit-summary"></div>
+        </section>
+
+        <section aria-labelledby="floors-heading">
+          <div class="section-heading">
+            <h2 id="floors-heading">Floor guide</h2>
+            <p id="build-date" class="muted"></p>
+          </div>
+          <div id="floor-filter" class="floor-filter" hidden>
+            <p id="floor-filter-status" role="status" aria-live="polite"></p>
+            <button id="clear-floor-filter" type="button">Show all floors</button>
+          </div>
+          <div id="floors-list" class="floors-list"></div>
+        </section>
+
+        <footer class="credits">
+          <h2>Sources</h2>
+          <div id="source-links"></div>
+        </footer>
+      </div>
+    </main>
+  </body>
+</html>

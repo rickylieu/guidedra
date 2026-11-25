@@ -1,0 +1,5 @@
+raw/
+report.md
+site/data/*-debug.json
+__pycache__/
+.venv/
