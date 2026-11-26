@@ -22,6 +22,7 @@ PART_NAMES = {"部位": "Part", "翼": "Wing", "聖鳥": "Holy bird"}
 ROULETTE_ORB_COLORS = frozenset(
     {"Fire", "Water", "Wood", "Light", "Dark", "Heart", "Jammer", "Bomb"}
 )
+BOARD_CHANGE_TAGS = frozenset({"Board change", "Full-board change", "Orb change"})
 
 
 def _consolidate_roulette_variants(
@@ -135,6 +136,134 @@ def _consolidate_roulette_variants(
     return consolidated
 
 
+def _consolidate_preferred_variants(
+    tag: str,
+    variants: dict[
+        tuple[tuple[str, str | None], tuple[str, ...]], set[str]
+    ],
+) -> dict[tuple[tuple[str, str | None], tuple[str, ...]], set[str]]:
+    if tag in BOARD_CHANGE_TAGS and variants:
+        by_details: dict[
+            tuple[str, ...], list[tuple[tuple[str, str | None], tuple[str, ...]]]
+        ] = defaultdict(list)
+        for key in variants:
+            by_details[key[1]].append(key)
+        discarded = set()
+        for keys in by_details.values():
+            priority = {key: _board_change_timing_priority(key[0]) for key in keys}
+            highest = max(priority.values())
+            if highest > 1:
+                discarded.update(key for key in keys if priority[key] < highest)
+        variants = {
+            key: sources for key, sources in variants.items() if key not in discarded
+        }
+
+    if tag in {"Unmatchable", "Attribute absorb"}:
+        groups: dict[
+            tuple[tuple[str, str | None], tuple[str, ...]],
+            list[tuple[tuple[tuple[str, str | None], tuple[str, ...]], bool]],
+        ] = defaultdict(list)
+        for key in variants:
+            timing, details = key
+            colors = tuple(detail for detail in details if _is_color_detail(detail))
+            base_details = tuple(
+                detail for detail in details if not _is_color_detail(detail)
+            )
+            groups[(timing, base_details)].append((key, bool(colors)))
+        for group in groups.values():
+            specific = [key for key, has_colors in group if has_colors]
+            if len(specific) == 1:
+                for key, has_colors in group:
+                    if not has_colors:
+                        variants.pop(key, None)
+
+    return variants
+
+
+def _prioritize_puzzle_test_failure(
+    variants_by_entity: dict[
+        str, dict[tuple[tuple[str, str | None], tuple[str, ...]], set[str]]
+    ],
+) -> dict[tuple[tuple[str, str | None], tuple[str, ...]], set[str]]:
+    variants: dict[
+        tuple[tuple[str, str | None], tuple[str, ...]], set[str]
+    ] = defaultdict(set)
+    for entity_variants in variants_by_entity.values():
+        has_explicit_failure = any(
+            timing == ("label", "Puzzle test failed")
+            for timing, _ in entity_variants
+        )
+        for key, sources in entity_variants.items():
+            timing = key[0]
+            is_combo_failure = (
+                timing[0] == "label"
+                and bool(
+                    timing[1]
+                    and re.fullmatch(r"If \d+ or fewer combos", timing[1])
+                )
+            )
+            if has_explicit_failure and is_combo_failure:
+                continue
+            variants[key].update(sources)
+    return dict(variants)
+
+
+def _prefer_source_consensus(
+    variants_by_entity: dict[
+        str, dict[tuple[tuple[str, str | None], tuple[str, ...]], set[str]]
+    ],
+) -> dict[
+    str, dict[tuple[tuple[str, str | None], tuple[str, ...]], set[str]]
+]:
+    preferred = {}
+    for entity, variants in variants_by_entity.items():
+        by_timing: dict[
+            tuple[str, str | None],
+            list[tuple[tuple[str, str | None], tuple[str, ...]]],
+        ] = defaultdict(list)
+        for key in variants:
+            by_timing[key[0]].append(key)
+
+        discarded = set()
+        for keys in by_timing.values():
+            if len(keys) < 2:
+                continue
+            counts = {key: len(variants[key]) for key in keys}
+            most_sources = max(counts.values())
+            leaders = [key for key, count in counts.items() if count == most_sources]
+            if most_sources >= 2 and len(leaders) == 1:
+                discarded.update(key for key in keys if key != leaders[0])
+
+        preferred[entity] = {
+            key: sources for key, sources in variants.items() if key not in discarded
+        }
+    return preferred
+
+
+def _board_change_timing_priority(key: tuple[str, str | None]) -> int:
+    kind, value = key
+    if kind == "label" and (
+        value == "Preemptive"
+        or bool(value and re.fullmatch(r"Below \d+% HP", value))
+    ):
+        return 3
+    if kind == "label" and value not in {"Unknown timing", "Normal action"}:
+        return 2
+    if kind in {"action", "first_action", "sequence"} or (
+        kind == "label" and value and value.startswith("Normal action")
+    ):
+        return 1
+    return 0
+
+
+def _is_color_detail(detail: str) -> bool:
+    colors = ROULETTE_ORB_COLORS
+    return detail == "All colors" or (
+        bool(detail)
+        and all(color in colors for color in detail.split(", "))
+    )
+
+
 def merge_dungeon(
     manifest_entry: dict[str, Any],
     source_records: dict[str, dict[str, Any]],
@@ -186,6 +315,17 @@ def merge_dungeon(
         }
         primary_floor = source_floors.get(primary, {})
         primary_enemies = primary_floor.get("enemies", [])
+        appear = primary_floor.get("appear")
+        if appear is None:
+            appear = next(
+                (
+                    floor.get("appear")
+                    for floor in source_floors.values()
+                    if floor.get("appear") is not None
+                ),
+                None,
+            )
+        one_of = bool(appear == 1 and len(primary_enemies) > 1)
         matched: dict[int, dict[str, dict[str, Any]]] = {
             index: {} for index in range(len(primary_enemies))
         }
@@ -217,13 +357,40 @@ def merge_dungeon(
                     }
                 )
 
+        enemy_entity_by_source: dict[str, dict[int, str]] = defaultdict(dict)
+        entity_names: dict[str, str] = {}
+        primary_entities: set[str] = set()
+        for index, enemy in enumerate(primary_enemies):
+            entity = f"primary:{index}"
+            primary_entities.add(entity)
+            card = enemy.get("card")
+            entity_names[entity] = (
+                card_names.get(str(card)) if card is not None else None
+            ) or enemy.get("name_jp", "Unknown enemy")
+            enemy_entity_by_source[primary][id(enemy)] = entity
+            for source, candidate in matched[index].items():
+                enemy_entity_by_source[source][id(candidate)] = entity
+
         tags_by_source: dict[str, set[str]] = defaultdict(set)
         details_by_tag: dict[str, list[str]] = defaultdict(list)
-        variants_by_tag: dict[
-            str, dict[tuple[tuple[str, str | None], tuple[str, ...]], set[str]]
-        ] = defaultdict(lambda: defaultdict(set))
+        trait_details_by_tag: dict[str, list[str]] = defaultdict(list)
+        entities_by_tag: dict[str, set[str]] = defaultdict(set)
+        variants_by_entity_tag: dict[
+            str,
+            dict[
+                str,
+                dict[tuple[tuple[str, str | None], tuple[str, ...]], set[str]],
+            ],
+        ] = defaultdict(lambda: defaultdict(lambda: defaultdict(set)))
         for source, floor in source_floors.items():
-            for enemy in floor.get("enemies", []):
+            for enemy_index, enemy in enumerate(floor.get("enemies", [])):
+                entity = enemy_entity_by_source[source].get(id(enemy))
+                if entity is None:
+                    entity = f"{source}:{enemy_index}"
+                    card = enemy.get("card")
+                    entity_names[entity] = (
+                        card_names.get(str(card)) if card is not None else None
+                    ) or enemy.get("name_jp", "Unknown enemy")
                 timing_kinds = {
                     action.get("timing_kind") for action in enemy.get("actions", [])
                 }
@@ -246,7 +413,9 @@ def merge_dungeon(
                         action, has_puzzle_test, action_interval
                     )
                     for tag in action_tags:
-                        variants_by_tag[tag][(when_key, tuple(details))].add(source)
+                        entities_by_tag[tag].add(entity)
+                        variant_key = (when_key, tuple(details))
+                        variants_by_entity_tag[tag][entity][variant_key].add(source)
                         if detail_text:
                             if detail_text not in details_by_tag[tag]:
                                 details_by_tag[tag].append(detail_text)
@@ -264,9 +433,12 @@ def merge_dungeon(
                     trait_tags = extract_tags(trait)
                     tags_by_source[source].update(trait_tags)
                     for tag in trait_tags:
+                        entities_by_tag[tag].add(entity)
                         for detail in extract_details(trait):
                             if detail not in details_by_tag[tag]:
                                 details_by_tag[tag].append(detail)
+                            if detail not in trait_details_by_tag[tag]:
+                                trait_details_by_tag[tag].append(detail)
                     if english_trait(trait) is None:
                         diagnostics["untranslated_traits"].append(
                             {
@@ -296,22 +468,76 @@ def merge_dungeon(
                     if detail.startswith("for ")
                 )
             ]
-            variants = variants_by_tag.get(tag, {})
-            for (when_key, variant_details), variant_sources in list(variants.items()):
-                if when_key != ("puzzle_pass", None):
-                    continue
-                matching_keys = [
-                    key
-                    for key in variants
-                    if key[0][0] == "puzzle_pass"
-                    and key[0][1] is not None
-                    and key[1] == variant_details
+            variants_by_entity = _prefer_source_consensus(
+                variants_by_entity_tag.get(tag, {})
+            )
+            variant_entities: dict[
+                tuple[tuple[str, str | None], tuple[str, ...]], set[str]
+            ] = defaultdict(set)
+            if tag == "Attribute absorb":
+                variants = {}
+                for entity, entity_variants in variants_by_entity.items():
+                    entity_variants = _consolidate_preferred_variants(
+                        tag, entity_variants
+                    )
+                    for key, variant_sources in entity_variants.items():
+                        variants.setdefault(key, set()).update(variant_sources)
+                        variant_entities[key].add(entity)
+                show_enemy_context = one_of or len(variants_by_entity) > 1
+                not_reported_for = (
+                    sorted(
+                        entity_names[entity]
+                        for entity in primary_entities
+                        - entities_by_tag.get(tag, set())
+                    )
+                    if one_of
+                    and entities_by_tag.get(tag, set()) <= primary_entities
+                    else []
+                )
+            else:
+                variants = _prioritize_puzzle_test_failure(
+                    variants_by_entity
+                )
+                for (when_key, variant_details), variant_sources in list(
+                    variants.items()
+                ):
+                    if when_key != ("puzzle_pass", None):
+                        continue
+                    matching_keys = [
+                        key
+                        for key in variants
+                        if key[0][0] == "puzzle_pass"
+                        and key[0][1] is not None
+                        and key[1] == variant_details
+                    ]
+                    if len(matching_keys) == 1:
+                        variants[matching_keys[0]].update(variant_sources)
+                        del variants[(when_key, variant_details)]
+                if tag == "Roulette":
+                    variants = _consolidate_roulette_variants(variants)
+                variants = _consolidate_preferred_variants(tag, variants)
+                show_enemy_context = False
+                not_reported_for = []
+            if variants:
+                details = list(
+                    dict.fromkeys(
+                        [
+                            ", ".join(variant_details)
+                            for _, variant_details in variants
+                            if variant_details
+                        ]
+                        + trait_details_by_tag.get(tag, [])
+                    )
+                )
+                details = [
+                    detail
+                    for detail in details
+                    if not any(
+                        other.startswith(f"{detail}, ")
+                        for other in details
+                        if detail.startswith("for ")
+                    )
                 ]
-                if len(matching_keys) == 1:
-                    variants[matching_keys[0]].update(variant_sources)
-                    del variants[(when_key, variant_details)]
-            if tag == "Roulette":
-                variants = _consolidate_roulette_variants(variants)
             floor_tags.append(
                 {
                     "name": tag,
@@ -323,11 +549,30 @@ def merge_dungeon(
                             "when": _semantic_timing_label(when_key),
                             "details": list(variant_details),
                             "sources": sorted(variant_sources),
+                            **(
+                                {
+                                    "enemies": sorted(
+                                        {
+                                            entity_names[entity]
+                                            for entity in variant_entities[
+                                                (when_key, variant_details)
+                                            ]
+                                        }
+                                    )
+                                }
+                                if tag == "Attribute absorb" and show_enemy_context
+                                else {}
+                            ),
                         }
                         for (when_key, variant_details), variant_sources in sorted(
                             variants.items()
                         )
                     ],
+                    **(
+                        {"not_reported_for": not_reported_for}
+                        if not_reported_for
+                        else {}
+                    ),
                 }
             )
             if len(sources) == 1:
@@ -425,12 +670,6 @@ def merge_dungeon(
                         }
                     )
 
-        appear = primary_floor.get("appear")
-        if appear is None:
-            appear = next(
-                (floor.get("appear") for floor in source_floors.values() if floor.get("appear") is not None),
-                None,
-            )
         invade_floor_numbers = sorted(
             {
                 floor_number
@@ -443,7 +682,7 @@ def merge_dungeon(
                 "number": number,
                 "invade_floors": invade_floor_numbers,
                 "appear": appear,
-                "one_of": bool(appear == 1 and len(enemy_items) > 1),
+                "one_of": one_of,
                 "halves_max_hp": "Max HP halved" in all_tag_names,
                 "tags": floor_tags,
                 "enemies": enemy_items,
@@ -527,8 +766,12 @@ def _semantic_timing(
         return "action", "1"
     if kind == "sequence":
         order = action.get("order")
-        if order is not None and action_interval == 1:
-            return "action", str(order)
+        if order is not None:
+            return "sequence", str(order)
+    if kind == "normal":
+        match = re.fullmatch(r"Normal action (\d+)", when)
+        if match:
+            return "action", match.group(1)
     if kind in {"nth_action", "turn"}:
         match = re.search(r"(?:Action|Turn) (\d+)", when)
         if match:
@@ -542,6 +785,10 @@ def _semantic_timing_label(key: tuple[str, str | None]) -> str:
     kind, value = key
     if kind == "puzzle_pass":
         return f"Puzzle test passed ({value}+ combos)" if value else "Puzzle test passed"
+    if kind == "first_action":
+        return "First action"
+    if kind == "sequence":
+        return f"In-order action {value}" if value else "Used in order"
     if kind == "action":
         return f"Action {value}"
     if kind == "turn":
