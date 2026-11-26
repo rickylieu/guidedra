@@ -51,6 +51,11 @@
       "Invade (Floor 2, 3, or 4)",
       "Floor 7"
     ],
+    "Enemy shield": [
+      "Invade (Floor 2, 3, or 4)",
+      "Floor 5",
+      "Floor 7"
+    ],
     "Roulette": [
       "Invade (Floor 2, 3, or 4)",
       "Floor 6",
@@ -173,7 +178,7 @@
         },
         {
           "name": "Enemy shield",
-          "critical": false,
+          "critical": true,
           "sources": [
             "AppMedia"
           ],
@@ -2322,7 +2327,7 @@
         },
         {
           "name": "Enemy shield",
-          "critical": false,
+          "critical": true,
           "sources": [
             "AppMedia"
           ],
@@ -3291,7 +3296,7 @@
         },
         {
           "name": "Enemy shield",
-          "critical": false,
+          "critical": true,
           "sources": [
             "AppMedia"
           ],

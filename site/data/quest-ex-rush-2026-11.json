@@ -47,6 +47,10 @@
     "invade_median_hit": 6500000
   },
   "summary": {
+    "Enemy shield": [
+      "Invade (Floor 2, 3, or 4)",
+      "Floor 7"
+    ],
     "Full-board change": [
       "Invade (Floor 2, 3, or 4)",
       "Floor 1",
@@ -166,7 +170,7 @@
         },
         {
           "name": "Enemy shield",
-          "critical": false,
+          "critical": true,
           "sources": [
             "AppMedia"
           ],
@@ -2894,7 +2898,7 @@
         },
         {
           "name": "Enemy shield",
-          "critical": false,
+          "critical": true,
           "sources": [
             "AppMedia"
           ],

@@ -10,6 +10,7 @@ from typing import Any
 
 
 CRITICAL_TAGS = {
+    "Enemy shield",
     "Awoken bind",
     "Unmatchable",
     "Invade",

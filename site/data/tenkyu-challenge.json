@@ -127,6 +127,11 @@
       "Floor 13",
       "Floor 14"
     ],
+    "Enemy shield": [
+      "Floor 3",
+      "Floor 9",
+      "Floor 13"
+    ],
     "Super blind": [
       "Floor 3",
       "Floor 6"
@@ -1725,7 +1730,7 @@
         },
         {
           "name": "Enemy shield",
-          "critical": false,
+          "critical": true,
           "sources": [
             "Altema",
             "AppMedia",
@@ -4262,7 +4267,7 @@
         },
         {
           "name": "Enemy shield",
-          "critical": false,
+          "critical": true,
           "sources": [
             "Altema",
             "AppMedia",
@@ -6986,7 +6991,7 @@
         },
         {
           "name": "Enemy shield",
-          "critical": false,
+          "critical": true,
           "sources": [
             "Altema",
             "AppMedia",

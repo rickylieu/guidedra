@@ -580,3 +580,64 @@ main {
 .enemy-attribute {
   color: #c9d1d9;
 }
+
+/* enemy heading: name right, stats left */
+.enemy-summary .enemy-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+}
+.enemy-summary .enemy-heading h4 {
+  order: 2;
+  margin-left: auto;
+  align-self: flex-end;
+  text-align: right;
+}
+.enemy-summary .enemy-heading .enemy-stats {
+  order: 1;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+/* team attributes */
+.team-attributes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.9rem;
+  margin: 0.4rem 0;
+}
+.team-attributes > p {
+  flex-basis: 100%;
+  margin: 0;
+}
+.team-attribute-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.team-attributes .team-attribute-input {
+  width: 4.5rem;
+}
+.team-attribute.attr-fire { color: rgb(229, 83, 61); }
+.team-attribute.attr-water { color: rgb(61, 139, 229); }
+.team-attribute.attr-wood { color: rgb(63, 174, 90); }
+.team-attribute.attr-light { color: rgb(229, 194, 61); }
+.team-attribute.attr-dark { color: rgb(155, 89, 208); }
+#average-damage[readonly] {
+  opacity: 0.7;
+}
+.team-risk,
+.tag.team-risk,
+.summary-floor-list li.team-risk,
+.action-text.team-risk {
+  color: #ffc53d !important;
+  font-weight: 700;
+}
+.tag.team-risk {
+  border-color: #ffc53d;
+}
+.enemy-team-damage {
+  color: #c9d1d9;
+}

@@ -1,5 +1,14 @@
 import { allMechanics, filterFloors, formatFilterStatus } from "./filters.mjs";
 import { actionTextForGroup, groupFloorActions } from "./floor-actions.mjs";
+import {
+  ATTRIBUTE_NAMES,
+  affectsTeam,
+  effectiveDamage,
+  floorTurns,
+  halvedAttributes,
+  parseBillions,
+  teamTotalLabel,
+} from "./team-damage.mjs";
 
 const dungeonSelect = document.getElementById("dungeon-select");
 const teamHpInput = document.getElementById("team-hp");
@@ -12,6 +21,7 @@ const clearFloorFilter = document.getElementById("clear-floor-filter");
 const selectAllMechanicsButton = document.getElementById("select-all-mechanics");
 const STORAGE_KEY = "pad-dungeon-guide-team-hp";
 const AVERAGE_DAMAGE_KEY = "pad-dungeon-guide-average-damage";
+const TEAM_DAMAGE_KEY = "pad-dungeon-guide-team-damage";
 const SPLIT_CLERIC_KEY = "pad-dungeon-guide-split-cleric";
 const DEBUG_MODE = new URL(window.location.href).searchParams.get("debug") === "1";
 const DAMAGE_CAP_TAG = "Damage cap set";
@@ -36,7 +46,7 @@ let dungeonIndex = [];
 let currentDungeon = null;
 let selectedMechanics = new Set();
 let cardElements = {};
-const ATTRIBUTES = new Set(["Fire", "Water", "Wood", "Light", "Dark"]);
+const ATTRIBUTES = new Set(ATTRIBUTE_NAMES);
 const ATTRIBUTE_COLORS = {
   Fire: "229, 83, 61",
   Water: "61, 139, 229",
@@ -110,7 +120,32 @@ const averageDamageLabel = element(
 );
 averageDamageLabel.htmlFor = "average-damage";
 const averageDamageField = element("p", "skill-plan-input");
-averageDamageField.append(averageDamageLabel, averageDamageInput);
+const averageDamageTotal = element("span", "average-damage-total");
+averageDamageTotal.style.display = "none";
+averageDamageField.append(averageDamageLabel, averageDamageInput, averageDamageTotal);
+const teamDamageInputs = new Map();
+const teamDamageField = element("div", "team-attributes");
+teamDamageField.append(
+  element(
+    "p",
+    "muted",
+    "Damage per turn by attribute (billions). Leave an attribute blank if your team doesn't hit with it.",
+  ),
+);
+for (const name of ATTRIBUTE_NAMES) {
+  const input = element("input", `${teamHpInput.className} team-attribute-input`);
+  input.type = "text";
+  input.inputMode = "numeric";
+  input.id = `team-${name.toLowerCase()}`;
+  input.placeholder = "0";
+  input.autocomplete = "off";
+  const label = element("label", `team-attribute attr-${name.toLowerCase()}`, `${name} `);
+  label.htmlFor = input.id;
+  const wrap = element("span", "team-attribute-field");
+  wrap.append(label, input);
+  teamDamageField.append(wrap);
+  teamDamageInputs.set(name, input);
+}
 const splitClericInput = element("input");
 splitClericInput.type = "checkbox";
 splitClericInput.id = "split-cleric";
@@ -125,6 +160,7 @@ splitClericField.append(splitClericInput, splitClericLabel);
 skillPlanSection.append(
   element("h3", "", "Skill plan"),
   averageDamageField,
+  teamDamageField,
   splitClericField,
   skillPlanNote,
   skillPlanLines,
@@ -181,11 +217,63 @@ function selectedTeamHp() {
     : null;
 }
 
-function parseDamage(text) {
-  const match = /^(\d+)\s*b?$/i.exec(String(text).trim());
-  if (!match) return null;
-  const value = Number(match[1]) * BILLION;
-  return Number.isFinite(value) && value > 0 ? value : null;
+const parseDamage = parseBillions;
+
+function teamDamage() {
+  const team = {};
+  for (const [name, input] of teamDamageInputs) {
+    const value = parseBillions(input.value);
+    if (value !== null) team[name] = value;
+  }
+  return Object.keys(team).length ? team : null;
+}
+
+function teamTotal(team) {
+  return Object.values(team || {}).reduce((sum, value) => sum + value, 0);
+}
+
+function teamColors() {
+  return new Set(Object.keys(teamDamage() || {}));
+}
+
+function unreadableTeamInputs() {
+  return [...teamDamageInputs]
+    .filter(([, input]) => input.value.trim() !== "" && parseBillions(input.value) === null)
+    .map(([name]) => name);
+}
+
+function syncAverageFromTeam() {
+  const label = teamTotalLabel(teamDamage());
+  averageDamageInput.style.display = label ? "none" : "";
+  averageDamageTotal.style.display = label ? "" : "none";
+  averageDamageTotal.textContent = label || "";
+  if (!label) {
+    averageDamageInput.value = window.localStorage.getItem(AVERAGE_DAMAGE_KEY) || "";
+  }
+}
+
+function saveTeamDamage() {
+  const saved = {};
+  for (const [name, input] of teamDamageInputs) {
+    if (input.value.trim() !== "") saved[name] = input.value.trim();
+  }
+  if (Object.keys(saved).length) {
+    window.localStorage.setItem(TEAM_DAMAGE_KEY, JSON.stringify(saved));
+  } else {
+    window.localStorage.removeItem(TEAM_DAMAGE_KEY);
+  }
+}
+
+function loadTeamDamage() {
+  let saved = {};
+  try {
+    saved = JSON.parse(window.localStorage.getItem(TEAM_DAMAGE_KEY) || "{}") || {};
+  } catch {
+    saved = {};
+  }
+  for (const [name, input] of teamDamageInputs) {
+    input.value = typeof saved[name] === "string" ? saved[name] : "";
+  }
 }
 
 function formatMultiple(value) {
@@ -250,6 +338,17 @@ function visibleEffectDetails(name, details) {
     ...damageCapValues(name, details),
     ...(details || []).filter((detail) => !isDamageCapValue(name, detail)),
   ];
+}
+
+function allTagDetails(tag) {
+  return [
+    ...(tag?.details || []),
+    ...(tag?.variants || []).flatMap((variant) => variant.details || []),
+  ];
+}
+
+function actionDetailText(action) {
+  return /\(([^)]*)\)/.exec(action.text || "")?.[1] || "";
 }
 
 function unresolvedEffectVariantIndexes(variants) {
@@ -474,6 +573,10 @@ function effectDuration(details) {
   return longest;
 }
 
+function floorAppear(floor) {
+  return Number.isInteger(floor.appear) && floor.appear > 0 ? floor.appear : null;
+}
+
 function floorHp(floor) {
   const enemies = floor.enemies || [];
   const hps = enemies
@@ -482,12 +585,51 @@ function floorHp(floor) {
     .sort((first, second) => second - first);
   if (hps.length === 0) return null;
   const total = (values) => values.reduce((sum, hp) => sum + hp, 0);
-  const appear = Number.isInteger(floor.appear) && floor.appear > 0
-    ? floor.appear
-    : null;
+  const appear = floorAppear(floor);
   if (appear !== null && appear < hps.length) return total(hps.slice(0, appear));
   if (appear !== null && enemies.length === 1) return hps[0] * appear;
   return total(hps);
+}
+
+function countedEnemies(floor) {
+  const all = floor.enemies || [];
+  const withHp = all
+    .filter((enemy) => Number.isFinite(enemy.hp) && enemy.hp > 0)
+    .sort((first, second) => second.hp - first.hp);
+  if (withHp.length === 0) return null;
+  const appear = floorAppear(floor);
+  let picked = withHp;
+  if (appear !== null && appear < withHp.length) {
+    picked = withHp.slice(0, appear);
+  } else if (appear !== null && all.length === 1) {
+    picked = Array(appear).fill(withHp[0]);
+  }
+  return picked.map((enemy) => ({
+    hp: enemy.hp,
+    attributes: enemyAttributes(enemy),
+    halved: halvedAttributes(enemy.traits),
+  }));
+}
+
+function floorAbsorb(floor) {
+  const tag = (floor.tags || []).find((entry) => entry.name === "Attribute absorb");
+  if (!tag) return { colors: [], turns: 0 };
+  const variants = tag.variants?.length
+    ? tag.variants
+    : [{ when: "Preemptive", details: tag.details || [] }];
+  const colors = new Set();
+  let turns = 0;
+  for (const variant of variants) {
+    if (!isPreemptiveWhen(variant.when)) continue;
+    const found = (variant.details || [])
+      .flatMap((detail) => detail.split(/,\s*/))
+      .map((name) => name.trim())
+      .filter((name) => ATTRIBUTES.has(name));
+    if (found.length === 0) continue;
+    for (const color of found) colors.add(color);
+    turns = Math.max(turns, effectDuration(variant.details) ?? MAX_TURNS_PER_FLOOR);
+  }
+  return { colors: [...colors], turns };
 }
 
 function hasResolve(floor) {
@@ -543,9 +685,10 @@ function unplacedInvades(data) {
   );
 }
 
-function buildTimeline(floors, averageDamage) {
+function buildTimeline(floors, averageDamage, team = null) {
   const timeline = new Map();
   const assumed = [];
+  const stalled = [];
   const ordered = floors
     .filter((floor) => Number.isInteger(floor.number))
     .sort((first, second) => first.number - second.number);
@@ -556,12 +699,21 @@ function buildTimeline(floors, averageDamage) {
     nextTurn +=
       Math.max(0, floor.number - previousNumber - 1) * DEFAULT_TURNS_PER_FLOOR;
     let turns = DEFAULT_TURNS_PER_FLOOR;
-    if (averageDamage !== null) {
+    const minimum = hasResolve(floor) ? MIN_TURNS_WITH_RESOLVE : 1;
+    if (team) {
+      const enemies = countedEnemies(floor);
+      if (enemies === null) {
+        assumed.push(floor.assumedLabel || floor.label);
+      } else {
+        const result = floorTurns(enemies, team, floorAbsorb(floor), MAX_TURNS_PER_FLOOR);
+        turns = Math.max(minimum, result.turns);
+        if (result.capped) stalled.push(floor.assumedLabel || floor.label);
+      }
+    } else if (averageDamage !== null) {
       const hp = floorHp(floor);
       if (hp === null) {
         assumed.push(floor.assumedLabel || floor.label);
       } else {
-        const minimum = hasResolve(floor) ? MIN_TURNS_WITH_RESOLVE : 1;
         turns = Math.min(
           MAX_TURNS_PER_FLOOR,
           Math.max(minimum, Math.ceil(hp / averageDamage)),
@@ -572,7 +724,7 @@ function buildTimeline(floors, averageDamage) {
     nextTurn += turns;
     previousNumber = floor.number;
   }
-  return { timeline, assumed };
+  return { timeline, assumed, stalled };
 }
 
 function skillNeedsForFloor(floor, plan) {
@@ -773,15 +925,23 @@ function formatSkillPlanLine(plan, worst, unplacedLabels) {
 function updateSkillPlan() {
   skillPlanLines.replaceChildren();
   if (!currentDungeon) return;
+  const team = teamDamage();
   const typed = averageDamageInput.value.trim();
-  const averageDamage = parseDamage(typed);
+  const averageDamage = team ? teamTotal(team) : parseDamage(typed);
   const scenarios = invadeScenarios(currentDungeon).map((scenario) => ({
     ...scenario,
-    ...buildTimeline(scenario.floors, averageDamage),
+    ...buildTimeline(scenario.floors, averageDamage, team),
   }));
   const assumed = [...new Set(scenarios.flatMap((scenario) => scenario.assumed))];
+  const stalled = [...new Set(scenarios.flatMap((scenario) => scenario.stalled))];
   const unplaced = unplacedInvades(currentDungeon);
+  const unreadable = unreadableTeamInputs();
   const notes = [];
+  if (unreadable.length) {
+    notes.push(
+      `Couldn't read the ${unreadable.join(", ")} damage (enter a whole number of billions, like 12), so it is left out.`,
+    );
+  }
   if (averageDamage === null) {
     notes.push(
       typed === ""
@@ -789,14 +949,26 @@ function updateSkillPlan() {
         : `Couldn't read that damage (enter a whole number of billions, like 35), so every floor is assumed to take ${DEFAULT_TURNS_PER_FLOOR} turns.`,
     );
   } else {
+    if (team) {
+      notes.push(
+        "Turns on a floor use your damage by attribute against each enemy's attribute (main above 50% HP, sub at or below): Fire > Wood > Water > Fire is ×2 / ×0.5, Light and Dark ×2 against each other, and an enemy that takes half damage from an attribute halves it.",
+        "A colour in a preemptive Attribute absorb counts as 0 damage while the absorb lasts.",
+      );
+    } else {
+      notes.push(`Turns on a floor = its enemy HP ÷ ${formatNumber(averageDamage)}, rounded up.`);
+    }
     notes.push(
-      `Turns on a floor = its enemy HP ÷ ${formatNumber(averageDamage)}, rounded up.`,
       `Floors with resolve or super resolve take at least ${MIN_TURNS_WITH_RESOLVE} turns.`,
       "Effects that aren't preemptive are left out on floors cleared in 1 turn.",
     );
     if (assumed.length) {
       notes.push(
         `No HP for ${assumed.join(", ")}: assumed ${DEFAULT_TURNS_PER_FLOOR} turns.`,
+      );
+    }
+    if (stalled.length) {
+      notes.push(
+        `Your attributes can't damage ${stalled.join(", ")} in time: counted as ${MAX_TURNS_PER_FLOOR} turns.`,
       );
     }
   }
@@ -820,6 +992,22 @@ function updateSkillPlan() {
       )}`,
     );
     skillPlanLines.append(line);
+  }
+}
+
+function applySummaryRisks() {
+  const colors = teamColors();
+  for (const item of document.querySelectorAll("#critical-summary li[data-mechanic]")) {
+    let details = [];
+    try {
+      details = JSON.parse(item.dataset.details || "[]");
+    } catch {
+      details = [];
+    }
+    item.classList.toggle(
+      "team-risk",
+      affectsTeam(item.dataset.mechanic, details, colors),
+    );
   }
 }
 
@@ -876,9 +1064,14 @@ function renderCriticalSummary(data) {
         const floorLabel = floor?.one_of && !alternativeAbsorb
           ? `${label} (${floor.appear} of ${(floor.enemies || []).length} possible enemies)`
           : label;
-        floorList.append(
-          element("li", "", details ? `${floorLabel} — ${details}` : `${floorLabel} — ${mechanicName}`),
+        const entry = element(
+          "li",
+          "",
+          details ? `${floorLabel} — ${details}` : `${floorLabel} — ${mechanicName}`,
         );
+        entry.dataset.mechanic = tag;
+        entry.dataset.details = JSON.stringify(allTagDetails(effect));
+        floorList.append(entry);
       }
       item.append(floorList);
       grid.append(item);
@@ -888,6 +1081,7 @@ function renderCriticalSummary(data) {
   }
   selectAllMechanicsButton.disabled = Object.keys(summary).length === 0;
   syncMechanicControls();
+  applySummaryRisks();
 }
 
 function selectMechanic(mechanic) {
@@ -1016,14 +1210,17 @@ function renderHitSummary(data) {
 
 function renderFloorTags(tags, primary) {
   const list = element("div", "tag-list");
+  const colors = teamColors();
   for (const tag of tags || []) {
     const classes = ["tag"];
     if (tag.critical) classes.push("critical");
     const foundBy = tag.sources || [];
     if (!foundBy.includes(primary)) classes.push("not-primary");
+    const risky = affectsTeam(tag.name, allTagDetails(tag), colors);
+    if (risky) classes.push("team-risk");
     const unresolvedVariants = unresolvedEffectVariantIndexes(tag.variants || []);
     const unresolvedSources = unresolvedVariants.size > 0;
-    const variants = tag.critical
+    const variants = tag.critical || risky
       ? formatEffectVariants(tag.name, tag, false)
       : [];
     const displayName = displayMechanicName(tag.name);
@@ -1031,7 +1228,8 @@ function renderFloorTags(tags, primary) {
     let details = "";
     if (
       tag.critical ||
-      ["Resolve", "Super resolve", "Your ATK down", DAMAGE_CAP_TAG].includes(tag.name)
+      risky ||
+      ["Resolve", "Super resolve", "Reduce ATK", DAMAGE_CAP_TAG].includes(tag.name)
     ) {
       details = variants.length
         ? variants.join("; ")
@@ -1096,6 +1294,16 @@ function renderEnemySummary(enemy) {
   if (enemy.defense !== null && enemy.defense !== undefined) {
     stats.append(element("span", "", `DEF ${formatNumber(enemy.defense)}`));
   }
+  const team = teamDamage();
+  if (team) {
+    const halved = halvedAttributes(enemy.traits);
+    const above = effectiveDamage(team, main, [], halved);
+    const below = effectiveDamage(team, sub || main, [], halved);
+    const text = above === below
+      ? `Your damage ${formatNumber(above)}`
+      : `Your damage ${formatNumber(above)} → ${formatNumber(below)} at ≤50% HP`;
+    stats.append(element("span", "enemy-team-damage", text));
+  }
   heading.append(stats);
   section.append(heading);
 
@@ -1146,7 +1354,7 @@ function actionQualifier(action, groupKey, sequenceTotal) {
   return "";
 }
 
-function renderAction(action, floor, teamHp, groupKey, sequenceTotal = null) {
+function renderAction(action, floor, teamHp, groupKey, sequenceTotal = null, colors = new Set()) {
   const alert = alertForAction(action, floor, teamHp);
   const alertClass = alert?.startsWith("Execute")
     ? "execute"
@@ -1161,7 +1369,12 @@ function renderAction(action, floor, teamHp, groupKey, sequenceTotal = null) {
   const qualifier = actionQualifier(action, groupKey, sequenceTotal);
   if (qualifier) copy.append(element("span", "action-when", qualifier));
   const text = actionTextForGroup(action, groupKey, DEBUG_MODE);
-  if (text) copy.append(element("span", "action-text", text));
+  const risky = actionTagNames(action).some((name) =>
+    affectsTeam(name, [actionDetailText(action)], colors),
+  );
+  if (text) {
+    copy.append(element("span", `action-text${risky ? " team-risk" : ""}`, text));
+  }
   if (DEBUG_MODE && action.source) {
     const source = element("span", "action-source", action.source);
     source.title = `Source: ${action.source}`;
@@ -1190,6 +1403,7 @@ function renderAction(action, floor, teamHp, groupKey, sequenceTotal = null) {
 
 function renderTimingGroups(floor, teamHp) {
   const container = element("div", "timing-groups");
+  const colors = teamColors();
   for (const enemy of floor.enemies || []) {
     const enemySection = element("section", "enemy-timing-block");
     enemySection.append(renderEnemySummary(enemy));
@@ -1203,7 +1417,7 @@ function renderTimingGroups(floor, teamHp) {
           ? sequenceLength(enemyGroup.actions)
           : null;
         for (const action of enemyGroup.actions) {
-          actions.append(renderAction(action, floor, teamHp, group.key, total));
+          actions.append(renderAction(action, floor, teamHp, group.key, total, colors));
         }
       }
       section.append(actions);
@@ -1322,6 +1536,8 @@ async function start() {
   if (savedDamage && parseDamage(savedDamage) !== null) {
     averageDamageInput.value = savedDamage;
   }
+  loadTeamDamage();
+  syncAverageFromTeam();
   splitClericInput.checked = window.localStorage.getItem(SPLIT_CLERIC_KEY) === "1";
   const requestedSlug = new URL(window.location.href).searchParams.get("d");
   const selected = dungeonIndex.find((entry) => entry.slug === requestedSlug) || dungeonIndex[0];
@@ -1366,6 +1582,7 @@ teamHpInput.addEventListener("input", () => {
 });
 
 averageDamageInput.addEventListener("input", () => {
+  if (averageDamageInput.style.display === "none") return;
   const typed = averageDamageInput.value.trim();
   if (typed === "") {
     window.localStorage.removeItem(AVERAGE_DAMAGE_KEY);
@@ -1374,6 +1591,16 @@ averageDamageInput.addEventListener("input", () => {
   }
   updateSkillPlan();
 });
+
+for (const input of teamDamageInputs.values()) {
+  input.addEventListener("input", () => {
+    saveTeamDamage();
+    syncAverageFromTeam();
+    updateSkillPlan();
+    applySummaryRisks();
+    if (currentDungeon) renderFloors(currentDungeon);
+  });
+}
 
 splitClericInput.addEventListener("change", () => {
   if (splitClericInput.checked) {
