@@ -536,9 +536,7 @@ def extract_hit(text_jp: str) -> tuple[int | None, list[str]]:
     if multiplier_detail:
         amount *= int(multiplier_detail.group(1))
 
-    at_multiplier = re.search(r"[（(]\s*(\d+(?:\.\d+)?)倍時\s*[）)]", text[match.end() :])
-    if at_multiplier:
-        details.append(f"at ×{at_multiplier.group(1)} ATK")
+    # (○倍時): the hit already includes the multiplier; flagged as already_enraged
     return amount, details
 
 
@@ -732,3 +730,15 @@ def english_trait(trait_jp: str) -> str | None:
     if match:
         return f"Acts every {match.group(1)} turns"
     return None
+
+# already enraged flag
+_annotate_action_base = annotate_action
+
+
+def annotate_action(action, *args, **kwargs):
+    result = _annotate_action_base(action, *args, **kwargs)
+    target = result if isinstance(result, dict) else action
+    text = unicodedata.normalize("NFKC", action.get("text_jp") or "")
+    if target.get("hit") and re.search(r"\(\s*\d+(?:\.\d+)?倍時\s*\)", text):
+        target["already_enraged"] = True
+    return result

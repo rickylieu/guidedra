@@ -2,7 +2,7 @@
   "slug": "december-2026-ex-rush",
   "name_en": "December 2026 Quest EX Rush",
   "name_jp": "10月クエストEXラッシュ",
-  "built": "2026-11-25",
+  "built": "2026-11-26",
   "sources": [
     {
       "name": "AppMedia",
@@ -26,7 +26,7 @@
       {
         "start_floor": 1,
         "end_floor": 5,
-        "median_hit": 6426000,
+        "median_hit": 6489000,
         "min_hit": 5900000,
         "max_hit": 18700000,
         "label": "Floors 1–5"
@@ -405,6 +405,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -425,6 +426,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -445,6 +447,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -465,6 +468,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -485,6 +489,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -504,6 +509,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -521,6 +527,7 @@
             },
             {
               "when": "Normal action 1",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -538,6 +545,7 @@
             },
             {
               "when": "Normal action 1",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -553,6 +561,7 @@
             },
             {
               "when": "Normal action 2",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -570,6 +579,7 @@
             },
             {
               "when": "Normal action 2",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -590,6 +600,7 @@
             },
             {
               "when": "Normal action 3",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -607,6 +618,7 @@
             },
             {
               "when": "Normal action 3",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -627,6 +639,7 @@
             },
             {
               "when": "Normal action 4",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -644,6 +657,7 @@
             },
             {
               "when": "Normal action 4",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -874,6 +888,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -894,6 +909,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -914,6 +930,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -935,6 +952,7 @@
             },
             {
               "when": "Below 50% HP",
+              "already_enraged": false,
               "timing_kind": "hp_below",
               "order": null,
               "source": "AppMedia",
@@ -955,6 +973,7 @@
             },
             {
               "when": "Below 50% HP",
+              "already_enraged": false,
               "timing_kind": "hp_below",
               "order": null,
               "source": "AppMedia",
@@ -975,6 +994,7 @@
             },
             {
               "when": "Normal action 1",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -992,6 +1012,7 @@
             },
             {
               "when": "Normal action 2",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -1027,7 +1048,7 @@
           ],
           "variants": [
             {
-              "when": "Action 1",
+              "when": "In-order action 1",
               "details": [
                 "for 1 turn"
               ],
@@ -1036,7 +1057,7 @@
               ]
             },
             {
-              "when": "Action 3",
+              "when": "In-order action 3",
               "details": [
                 "for 1 turn"
               ],
@@ -1101,7 +1122,7 @@
           ],
           "variants": [
             {
-              "when": "Action 1",
+              "when": "In-order action 1",
               "details": [
                 "for 1 turn",
                 "DEF +1B"
@@ -1111,7 +1132,7 @@
               ]
             },
             {
-              "when": "Action 3",
+              "when": "In-order action 3",
               "details": [
                 "for 1 turn",
                 "DEF +1.5B"
@@ -1133,7 +1154,7 @@
           ],
           "variants": [
             {
-              "when": "Action 2",
+              "when": "In-order action 2",
               "details": [
                 "for 1 turn",
                 "50%"
@@ -1155,7 +1176,7 @@
           ],
           "variants": [
             {
-              "when": "Action 2",
+              "when": "In-order action 2",
               "details": [
                 "×1.3"
               ],
@@ -1252,6 +1273,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1272,6 +1294,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1293,6 +1316,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1312,9 +1336,10 @@
               "severity_multiple": null
             },
             {
-              "when": "Normal action 1",
-              "timing_kind": "normal",
-              "order": null,
+              "when": "Used in order",
+              "already_enraged": false,
+              "timing_kind": "sequence",
+              "order": 1,
               "source": "AppMedia",
               "text": "Attribute absorb (for 1 turn)",
               "tags": [
@@ -1331,9 +1356,10 @@
               "severity_multiple": null
             },
             {
-              "when": "Normal action 1",
-              "timing_kind": "normal",
-              "order": null,
+              "when": "Used in order",
+              "already_enraged": false,
+              "timing_kind": "sequence",
+              "order": 1,
               "source": "AppMedia",
               "text": "Enemy DEF up (for 1 turn - DEF +1B)",
               "tags": [
@@ -1351,9 +1377,10 @@
               "severity_multiple": null
             },
             {
-              "when": "Normal action 2",
-              "timing_kind": "normal",
-              "order": null,
+              "when": "Used in order",
+              "already_enraged": false,
+              "timing_kind": "sequence",
+              "order": 2,
               "source": "AppMedia",
               "text": "Enemy damage reduction (for 1 turn - 50%)",
               "tags": [
@@ -1371,9 +1398,10 @@
               "severity_multiple": null
             },
             {
-              "when": "Normal action 2",
-              "timing_kind": "normal",
-              "order": null,
+              "when": "Used in order",
+              "already_enraged": false,
+              "timing_kind": "sequence",
+              "order": 2,
               "source": "AppMedia",
               "text": "Enrage (×1.3)",
               "tags": [
@@ -1390,9 +1418,10 @@
               "severity_multiple": null
             },
             {
-              "when": "Normal action 3",
-              "timing_kind": "normal",
-              "order": null,
+              "when": "Used in order",
+              "already_enraged": false,
+              "timing_kind": "sequence",
+              "order": 3,
               "source": "AppMedia",
               "text": "Attribute absorb (for 1 turn)",
               "tags": [
@@ -1409,23 +1438,23 @@
               "severity_multiple": null
             },
             {
-              "when": "Normal action 3",
-              "timing_kind": "normal",
-              "order": null,
+              "when": "Used in order",
+              "already_enraged": true,
+              "timing_kind": "sequence",
+              "order": 3,
               "source": "AppMedia",
-              "text": "Enemy DEF up (for 1 turn - DEF +1.5B - at ×1.3 ATK)",
+              "text": "Enemy DEF up (for 1 turn - DEF +1.5B)",
               "tags": [
                 "Enemy DEF up"
               ],
               "details": [
                 "for 1 turn",
-                "DEF +1.5B",
-                "at ×1.3 ATK"
+                "DEF +1.5B"
               ],
               "hit": 7850700,
-              "normal_hit": 6039000,
+              "normal_hit": 7850700,
               "enraged_hit": 7850700,
-              "enraged": true,
+              "enraged": false,
               "severity": null,
               "severity_multiple": null
             }
@@ -1671,6 +1700,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1691,6 +1721,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1712,6 +1743,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1732,6 +1764,7 @@
             },
             {
               "when": "Below 50% HP",
+              "already_enraged": false,
               "timing_kind": "hp_below",
               "order": null,
               "source": "AppMedia",
@@ -1751,6 +1784,7 @@
             },
             {
               "when": "Below 50% HP",
+              "already_enraged": false,
               "timing_kind": "hp_below",
               "order": null,
               "source": "AppMedia",
@@ -1768,6 +1802,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -1788,6 +1823,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -2031,6 +2067,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2051,6 +2088,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2072,6 +2110,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2089,6 +2128,7 @@
             },
             {
               "when": "Normal action 1",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -2108,6 +2148,7 @@
             },
             {
               "when": "Normal action 1",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -2125,6 +2166,7 @@
             },
             {
               "when": "Normal action 2",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -2144,6 +2186,7 @@
             },
             {
               "when": "Normal action 2",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -2161,6 +2204,7 @@
             },
             {
               "when": "Normal action 3",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -2180,6 +2224,7 @@
             },
             {
               "when": "Normal action 3",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": 4,
               "source": "AppMedia",
@@ -2524,6 +2569,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2544,6 +2590,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2565,6 +2612,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2585,6 +2633,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2606,6 +2655,7 @@
             },
             {
               "when": "First action",
+              "already_enraged": false,
               "timing_kind": "first_action",
               "order": null,
               "source": "AppMedia",
@@ -2625,6 +2675,7 @@
             },
             {
               "when": "First action",
+              "already_enraged": false,
               "timing_kind": "first_action",
               "order": null,
               "source": "AppMedia",
@@ -2645,27 +2696,28 @@
             },
             {
               "when": "First action",
+              "already_enraged": true,
               "timing_kind": "first_action",
               "order": null,
               "source": "AppMedia",
-              "text": "Orb change, Full-board change (Fire, Jammer - at ×5 ATK)",
+              "text": "Orb change, Full-board change (Fire, Jammer)",
               "tags": [
                 "Orb change",
                 "Full-board change"
               ],
               "details": [
-                "Fire, Jammer",
-                "at ×5 ATK"
+                "Fire, Jammer"
               ],
               "hit": 30030000,
-              "normal_hit": null,
-              "enraged_hit": null,
+              "normal_hit": 30030000,
+              "enraged_hit": 30030000,
               "enraged": true,
               "severity": "large",
               "severity_multiple": 4.5
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -2686,6 +2738,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -2701,6 +2754,7 @@
             },
             {
               "when": "Normal action 1",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -2721,6 +2775,7 @@
             },
             {
               "when": "Normal action 2",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -2959,6 +3014,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2979,6 +3035,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -3000,6 +3057,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -3022,6 +3080,7 @@
             },
             {
               "when": "Turn 1",
+              "already_enraged": false,
               "timing_kind": "turn",
               "order": null,
               "source": "AppMedia",
@@ -3041,6 +3100,7 @@
             },
             {
               "when": "Turn 2",
+              "already_enraged": false,
               "timing_kind": "turn",
               "order": null,
               "source": "AppMedia",
@@ -3060,6 +3120,7 @@
             },
             {
               "when": "Turn 3",
+              "already_enraged": false,
               "timing_kind": "turn",
               "order": null,
               "source": "AppMedia",
@@ -3079,6 +3140,7 @@
             },
             {
               "when": "Turn 4",
+              "already_enraged": false,
               "timing_kind": "turn",
               "order": null,
               "source": "AppMedia",
@@ -3096,6 +3158,7 @@
             },
             {
               "when": "Turn 4",
+              "already_enraged": false,
               "timing_kind": "turn",
               "order": null,
               "source": "AppMedia",
@@ -3113,6 +3176,7 @@
             },
             {
               "when": "Turn 4",
+              "already_enraged": false,
               "timing_kind": "turn",
               "order": null,
               "source": "AppMedia",
@@ -3409,6 +3473,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -3427,6 +3492,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -3447,6 +3513,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -3468,6 +3535,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -3488,6 +3556,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -3508,6 +3577,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -3528,6 +3598,7 @@
             },
             {
               "when": "Repeats in order",
+              "already_enraged": false,
               "timing_kind": "sequence",
               "order": 1,
               "source": "AppMedia",
@@ -3548,6 +3619,7 @@
             },
             {
               "when": "Repeats in order",
+              "already_enraged": false,
               "timing_kind": "sequence",
               "order": 2,
               "source": "AppMedia",
@@ -3568,6 +3640,7 @@
             },
             {
               "when": "Repeats in order",
+              "already_enraged": false,
               "timing_kind": "sequence",
               "order": 3,
               "source": "AppMedia",
@@ -3585,6 +3658,7 @@
             },
             {
               "when": "Repeats in order",
+              "already_enraged": false,
               "timing_kind": "sequence",
               "order": 4,
               "source": "AppMedia",

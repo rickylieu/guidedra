@@ -142,6 +142,7 @@ def _publish_dungeon(
                     "actions": [
                         {
                             "when": action["when"],
+                            "already_enraged": action.get("already_enraged", False),
                             "timing_kind": action["timing_kind"],
                             "order": action["order"],
                             "source": source_names.get(action["source"], action["source"]),
@@ -254,6 +255,9 @@ def _enraged_hit_values(
     action: dict[str, Any],
     multiplier: float | None,
 ) -> tuple[int | None, int | None]:
+    # already enraged: no second multiply
+    if action.get("already_enraged"):
+        return action.get("hit"), action.get("hit")
     hit = action.get("hit")
     if (
         hit is None

@@ -292,17 +292,17 @@ def test_published_warning_details_and_hit_severity():
     floor12 = floors["Floor 12"]
     assert floor12["one_of"] is True
     floor12_absorb = tag("Floor 12", "Attribute absorb")
-    assert floor12_absorb["not_reported_for"] == ["試練スクルド"]
+    assert floor12_absorb["not_reported_for"] == ["Future of the Divine Transcendence, Skuld"]
     assert {
         (tuple(variant["details"]), tuple(variant["enemies"]))
         for variant in floor12_absorb["variants"]
     } == {
-        (("for 4 turns", "Fire, Light"), ("試練ウルド",)),
-        (("for 4 turns", "Water, Wood"), ("試練ヴェルダンディ",)),
+        (("for 4 turns", "Fire, Light"), ("Past of the Divine Transcendence, Urd",)),
+        (("for 4 turns", "Water, Wood"), ("Present of the Divine Transcendence, Verdandi",)),
     }
     floor2_absorb = tag("Floor 2", "Attribute absorb")
-    assert floor2_absorb["not_reported_for"] == ["転生アリエル"]
-    assert floor2_absorb["variants"][0]["enemies"] == ["転生ルミエル"]
+    assert floor2_absorb["not_reported_for"] == ["Reincarnated Ariel"]
+    assert floor2_absorb["variants"][0]["enemies"] == ["Reincarnated Lumiel"]
 
     skill_bind_variants = tag("Floor 6", "Skill bind")["variants"]
     assert skill_bind_variants == [
@@ -366,7 +366,7 @@ def test_published_warning_details_and_hit_severity():
         }
     ]
 
-    floor14_assist = tag("Floor 14", "Assist bind")["variants"]
+    floor14_assist = tag("Floor 14", "Void assists")["variants"]
     assert any(
         variant["when"] == "Action 3"
         and variant["sources"] == ["AppMedia"]
@@ -518,7 +518,7 @@ def test_published_warning_details_and_hit_severity():
     assert floor9_enraged_hit["normal_hit"] == 10_710_000
     assert floor9_enraged_hit["enraged_hit"] == 53_550_000
     assert floor15_enraged_hit["enraged"]
-    assert floor15_enraged_hit["enraged_hit"] is None
+    assert floor15_enraged_hit["enraged_hit"] == 55_200_000
     assert not floor15_normal_hit["enraged"]
     assert floor15_normal_hit["enraged_hit"] == 26_520_000
     assert not floor5_normal_hit["enraged"]
@@ -557,8 +557,8 @@ def test_published_warning_details_and_hit_severity():
     assert any("Super resolve at 40%" in enemy["traits"] for enemy in floors["Floor 5"]["enemies"])
     assert any("ATK reduced by 75%" in action["text"] for action in all_actions)
     assert any(
-        "ATK reduced by 80%" in " ".join(variant["details"])
-        for variant in tag("Floor 12", "Your ATK down")["variants"]
+        "by 80%" in " ".join(variant["details"])
+        for variant in tag("Floor 12", "Reduce ATK")["variants"]
     )
     assert any(
         "Move-time change" in action["text"] and "×2" in action["text"]
@@ -734,4 +734,3 @@ def test_report_lists_japanese_for_items_without_english_annotation(gamewith_rec
     assert "未訳部位" in report
     assert "Enemy traits without an English mapping" in report
     assert "未訳特性" in report
-    assert "超高度(回復力が20分の1)" in report

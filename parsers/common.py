@@ -266,12 +266,31 @@ def actions_from_cell(cell: Tag, source: str) -> tuple[list[dict[str, Any]], lis
     traits: list[str] = []
     timing = ""
 
+    sequence = ""
+    pending_order = None
+
+    def set_timing(content: str) -> None:
+        nonlocal timing, sequence, pending_order
+        numbered = re.fullmatch(r"通常(?:行動|攻撃)\s*([①-⑳]|\d+)", content)
+        if sequence and numbered:
+            mark = numbered.group(1)
+            pending_order = int(mark) if mark.isdecimal() else ord(mark) - 0x245F
+            timing = sequence
+            return
+        sequence = ""
+        pending_order = None
+        timing = content
+
     def handle_line(line: str) -> None:
-        nonlocal timing
+        nonlocal timing, sequence, pending_order
         line = re.sub(r"\s+", " ", line).strip()
         if not line:
             return
         if source in {"appmedia", "gamewith"}:
+            if line.startswith("※") and re.search(r"順番に.*使用", line):
+                sequence = timing = line.lstrip("※ ").strip()
+                pending_order = None
+                return
             if line.startswith("※") and _ONE_SHOT_NOTE.search(line):
                 line = line.lstrip("※ ").strip()
             elif line.startswith("※") or "出現を確認" in line:
@@ -287,7 +306,7 @@ def actions_from_cell(cell: Tag, source: str) -> tuple[list[dict[str, Any]], lis
             if trait:
                 traits.append(trait)
             else:
-                timing = content
+                set_timing(content)
             return
 
         trait = _trait_from_text(line)
@@ -302,7 +321,7 @@ def actions_from_cell(cell: Tag, source: str) -> tuple[list[dict[str, Any]], lis
             if trait:
                 traits.append(trait)
             else:
-                timing = content
+                set_timing(content)
             line = remainder.strip()
             if not line:
                 return
@@ -311,7 +330,7 @@ def actions_from_cell(cell: Tag, source: str) -> tuple[list[dict[str, Any]], lis
             {
                 "timing_jp": timing,
                 "text_jp": line,
-                "order": action_order(line),
+                "order": pending_order or action_order(line),
             }
         )
 

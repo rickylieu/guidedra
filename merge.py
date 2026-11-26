@@ -208,6 +208,31 @@ def _prioritize_puzzle_test_failure(
     return dict(variants)
 
 
+def _fold_unspecified_amounts(variants):
+    # an unspecified amount yields to a stated one at the same timing
+    folded = {key: set(sources) for key, sources in variants.items()}
+    for key in list(folded):
+        if key not in folded:
+            continue
+        timing, details = key
+        vague = [i for i, detail in enumerate(details) if "unspecified" in detail]
+        if len(vague) != 1:
+            continue
+        i = vague[0]
+        matches = [
+            other
+            for other in folded
+            if other != key
+            and other[0] == timing
+            and len(other[1]) == len(details)
+            and "unspecified" not in other[1][i]
+            and all(a == b for j, (a, b) in enumerate(zip(other[1], details)) if j != i)
+        ]
+        if len(matches) == 1:
+            folded[matches[0]].update(folded.pop(key))
+    return folded
+
+
 def _prefer_source_consensus(
     variants_by_entity: dict[
         str, dict[tuple[tuple[str, str | None], tuple[str, ...]], set[str]]
@@ -217,6 +242,7 @@ def _prefer_source_consensus(
 ]:
     preferred = {}
     for entity, variants in variants_by_entity.items():
+        variants = _fold_unspecified_amounts(variants)
         by_timing: dict[
             tuple[str, str | None],
             list[tuple[tuple[str, str | None], tuple[str, ...]]],
@@ -468,9 +494,13 @@ def merge_dungeon(
                     if detail.startswith("for ")
                 )
             ]
-            variants_by_entity = _prefer_source_consensus(
-                variants_by_entity_tag.get(tag, {})
-            )
+            entity_variants = variants_by_entity_tag.get(tag, {})
+            if tag == "Roulette":  # roulette paired before consensus
+                entity_variants = {
+                    entity: _consolidate_roulette_variants(found)
+                    for entity, found in entity_variants.items()
+                }
+            variants_by_entity = _prefer_source_consensus(entity_variants)
             variant_entities: dict[
                 tuple[tuple[str, str | None], tuple[str, ...]], set[str]
             ] = defaultdict(set)
@@ -641,6 +671,7 @@ def merge_dungeon(
                     "actions": [
                         {
                             "when": action.get("when", "Unknown timing"),
+                            "already_enraged": action.get("already_enraged", False),
                             "timing_kind": action.get("timing_kind"),
                             "text": action.get("text", ""),
                             "tags": action.get("tags", []),

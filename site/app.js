@@ -1169,10 +1169,12 @@ function renderAction(action, floor, teamHp, groupKey, sequenceTotal = null) {
   }
   row.append(copy);
   if (action.hit !== null && action.hit !== undefined) {
-    const normalHit = Number.isFinite(action.normal_hit)
+    const normalHit = !action.already_enraged && Number.isFinite(action.normal_hit)
       ? action.normal_hit
       : action.hit;
-    const enragedHit = Number.isFinite(action.enraged_hit)
+    const enragedHit = action.already_enraged
+      ? " (already enraged)"
+      : Number.isFinite(action.enraged_hit)
       ? ` (enraged hit: ${formatNumber(action.enraged_hit)})`
       : "";
     const hitLabel = `${alert ? `${alert} · ` : ""}${formatNumber(normalHit)} damage${enragedHit}`;

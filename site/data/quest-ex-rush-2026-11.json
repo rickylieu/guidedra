@@ -2,7 +2,7 @@
   "slug": "quest-ex-rush-2026-11",
   "name_en": "November Quest EX Rush",
   "name_jp": "9月クエストEXラッシュ",
-  "built": "2026-11-25",
+  "built": "2026-11-26",
   "sources": [
     {
       "name": "AppMedia",
@@ -376,6 +376,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -396,6 +397,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -416,6 +418,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -437,6 +440,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -457,6 +461,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -474,6 +479,7 @@
             },
             {
               "when": "Normal action 1",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -491,6 +497,7 @@
             },
             {
               "when": "Normal action 1",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -511,6 +518,7 @@
             },
             {
               "when": "Normal action 2",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -528,6 +536,7 @@
             },
             {
               "when": "Normal action 2",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -549,6 +558,7 @@
             },
             {
               "when": "Normal action 3",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -566,6 +576,7 @@
             },
             {
               "when": "Normal action 3",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -785,6 +796,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -805,6 +817,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -826,6 +839,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -847,6 +861,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -866,6 +881,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -1176,6 +1192,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1196,6 +1213,7 @@
             },
             {
               "when": "Unknown timing",
+              "already_enraged": false,
               "timing_kind": "unknown",
               "order": null,
               "source": "AppMedia",
@@ -1217,6 +1235,7 @@
             },
             {
               "when": "When 1 remains",
+              "already_enraged": false,
               "timing_kind": "remaining_eq",
               "order": null,
               "source": "AppMedia",
@@ -1246,6 +1265,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1266,6 +1286,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1287,6 +1308,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1308,6 +1330,7 @@
             },
             {
               "when": "Turn 2",
+              "already_enraged": false,
               "timing_kind": "turn",
               "order": null,
               "source": "AppMedia",
@@ -1328,6 +1351,7 @@
             },
             {
               "when": "Turn 2",
+              "already_enraged": false,
               "timing_kind": "turn",
               "order": null,
               "source": "AppMedia",
@@ -1348,6 +1372,7 @@
             },
             {
               "when": "Below 50% HP",
+              "already_enraged": false,
               "timing_kind": "hp_below",
               "order": null,
               "source": "AppMedia",
@@ -1368,6 +1393,7 @@
             },
             {
               "when": "Below 50% HP",
+              "already_enraged": false,
               "timing_kind": "hp_below",
               "order": null,
               "source": "AppMedia",
@@ -1592,6 +1618,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1612,6 +1639,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1633,6 +1661,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1653,6 +1682,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -1673,6 +1703,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -1811,6 +1842,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1831,6 +1863,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -1851,6 +1884,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2083,6 +2117,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2103,6 +2138,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2124,6 +2160,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2146,6 +2183,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2166,6 +2204,7 @@
             },
             {
               "when": "First action",
+              "already_enraged": false,
               "timing_kind": "first_action",
               "order": null,
               "source": "AppMedia",
@@ -2183,6 +2222,7 @@
             },
             {
               "when": "First action",
+              "already_enraged": false,
               "timing_kind": "first_action",
               "order": null,
               "source": "AppMedia",
@@ -2198,6 +2238,7 @@
             },
             {
               "when": "Normal action 1",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -2218,6 +2259,7 @@
             },
             {
               "when": "Normal action 1",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -2573,6 +2615,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2593,6 +2636,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2614,6 +2658,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -2635,6 +2680,7 @@
             },
             {
               "when": "First action",
+              "already_enraged": false,
               "timing_kind": "first_action",
               "order": null,
               "source": "AppMedia",
@@ -2652,23 +2698,23 @@
             },
             {
               "when": "First action",
+              "already_enraged": true,
               "timing_kind": "first_action",
               "order": 1,
               "source": "AppMedia",
-              "text": " (at ×4.5 ATK)",
+              "text": "",
               "tags": [],
-              "details": [
-                "at ×4.5 ATK"
-              ],
+              "details": [],
               "hit": 29700000,
-              "normal_hit": null,
-              "enraged_hit": null,
+              "normal_hit": 29700000,
+              "enraged_hit": 29700000,
               "enraged": true,
               "severity": "large",
               "severity_multiple": 4.5
             },
             {
               "when": "First action",
+              "already_enraged": false,
               "timing_kind": "first_action",
               "order": 1,
               "source": "AppMedia",
@@ -2689,6 +2735,7 @@
             },
             {
               "when": "First action",
+              "already_enraged": false,
               "timing_kind": "first_action",
               "order": 2,
               "source": "AppMedia",
@@ -2709,6 +2756,7 @@
             },
             {
               "when": "First action",
+              "already_enraged": false,
               "timing_kind": "first_action",
               "order": 3,
               "source": "AppMedia",
@@ -2729,6 +2777,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -2749,6 +2798,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -2769,6 +2819,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -3095,6 +3146,7 @@
           "actions": [
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -3113,6 +3165,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -3133,6 +3186,7 @@
             },
             {
               "when": "Preemptive",
+              "already_enraged": false,
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
@@ -3155,6 +3209,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -3174,6 +3229,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -3194,6 +3250,7 @@
             },
             {
               "when": "On super resolve",
+              "already_enraged": false,
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
@@ -3213,6 +3270,7 @@
             },
             {
               "when": "Normal action 1",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -3233,6 +3291,7 @@
             },
             {
               "when": "Normal action 1",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -3248,6 +3307,7 @@
             },
             {
               "when": "Normal action 2",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -3268,6 +3328,7 @@
             },
             {
               "when": "Normal action 2",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -3283,6 +3344,7 @@
             },
             {
               "when": "Normal action 3",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -3303,6 +3365,7 @@
             },
             {
               "when": "Normal action 3",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -3318,6 +3381,7 @@
             },
             {
               "when": "Normal action 4",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
@@ -3337,6 +3401,7 @@
             },
             {
               "when": "Normal action 4",
+              "already_enraged": false,
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
