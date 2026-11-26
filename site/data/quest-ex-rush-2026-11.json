@@ -10,9 +10,14 @@
     }
   ],
   "rules": {
-    "battles": null,
-    "stamina": null,
-    "notes": []
+    "battles": 7,
+    "stamina": 99,
+    "notes": [
+      "Super gravity: ATK 6/10000",
+      "Super altitude: RCV 1/4",
+      "No continues",
+      "Time limit: 40 minutes"
+    ]
   },
   "normal_hit_baseline": 6402500,
   "damage_progression": {

@@ -11,8 +11,24 @@ const floorFilterStatus = document.getElementById("floor-filter-status");
 const clearFloorFilter = document.getElementById("clear-floor-filter");
 const selectAllMechanicsButton = document.getElementById("select-all-mechanics");
 const STORAGE_KEY = "pad-dungeon-guide-team-hp";
+const AVERAGE_DAMAGE_KEY = "pad-dungeon-guide-average-damage";
+const SPLIT_CLERIC_KEY = "pad-dungeon-guide-split-cleric";
 const DEBUG_MODE = new URL(window.location.href).searchParams.get("debug") === "1";
 const DAMAGE_CAP_TAG = "Damage cap set";
+const DEFAULT_TURNS_PER_FLOOR = 2;
+const MAX_TURNS_PER_FLOOR = 99;
+const BILLION = 1e9;
+const PUZZLE_LESSON_TIMING_KINDS = new Set([
+  "after_lesson",
+  "lesson_pass",
+  "lesson_fail",
+]);
+const PUZZLE_LESSON_WHENS = new Set([
+  "After the puzzle lesson",
+  "Puzzle lesson passed",
+  "Puzzle lesson failed",
+]);
+const PUZZLE_EXEMPT_TAGS = new Set(["Resolve", "Super resolve", "Invade"]);
 
 let dungeonIndex = [];
 let currentDungeon = null;
@@ -28,6 +44,86 @@ const SUMMARY_GROUPS = [
     mechanics: ["Bind", "Awoken bind", "Unmatchable"],
   },
 ];
+
+const SKILL_PLANS = [
+  {
+    title: "Damage absorb skill",
+    mechanics: ["Damage absorb"],
+    lasting: true,
+  },
+  {
+    title: "Attribute absorb skill",
+    mechanics: ["Attribute absorb"],
+    lasting: true,
+    colors: true,
+  },
+  {
+    title: "Damage void skill",
+    mechanics: ["Damage void"],
+    lasting: true,
+  },
+];
+
+const CLERIC_PLAN = {
+  title: "Cleric",
+  mechanics: ["Awoken bind", "Unmatchable"],
+  lasting: false,
+};
+
+const SPLIT_CLERIC_PLANS = [
+  {
+    title: "Cleric (Awoken bind)",
+    mechanics: ["Awoken bind"],
+    lasting: false,
+  },
+  {
+    title: "Cleric (Unmatchable)",
+    mechanics: ["Unmatchable"],
+    lasting: false,
+  },
+];
+
+const skillPlanSection = element("section", "summary-section skill-plan");
+const skillPlanNote = element("p", "muted");
+const skillPlanLines = element("div", "skill-plan-lines");
+const averageDamageInput = element("input", teamHpInput.className);
+averageDamageInput.type = "text";
+averageDamageInput.inputMode = "numeric";
+averageDamageInput.id = "average-damage";
+averageDamageInput.placeholder = "e.g. 35";
+averageDamageInput.autocomplete = "off";
+const averageDamageLabel = element(
+  "label",
+  document.querySelector('label[for="team-hp"]')?.className || "",
+  "Average damage per turn (billions) ",
+);
+averageDamageLabel.htmlFor = "average-damage";
+const averageDamageField = element("p", "skill-plan-input");
+averageDamageField.append(averageDamageLabel, averageDamageInput);
+const splitClericInput = element("input");
+splitClericInput.type = "checkbox";
+splitClericInput.id = "split-cleric";
+const splitClericLabel = element(
+  "label",
+  "",
+  " Show Awoken bind and Unmatchable separately",
+);
+splitClericLabel.htmlFor = "split-cleric";
+const splitClericField = element("p", "skill-plan-input");
+splitClericField.append(splitClericInput, splitClericLabel);
+skillPlanSection.append(
+  element("h3", "", "Skill plan"),
+  averageDamageField,
+  splitClericField,
+  skillPlanNote,
+  skillPlanLines,
+);
+
+function activeSkillPlans() {
+  return splitClericInput.checked
+    ? [...SKILL_PLANS, ...SPLIT_CLERIC_PLANS]
+    : [...SKILL_PLANS, CLERIC_PLAN];
+}
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -72,6 +168,13 @@ function selectedTeamHp() {
   return teamHpInput.value.trim() !== "" && Number.isFinite(value) && value > 0
     ? value
     : null;
+}
+
+function parseDamage(text) {
+  const match = /^(\d+)\s*b?$/i.exec(String(text).trim());
+  if (!match) return null;
+  const value = Number(match[1]) * BILLION;
+  return Number.isFinite(value) && value > 0 ? value : null;
 }
 
 function formatMultiple(value) {
@@ -280,6 +383,426 @@ function primarySourceName(data) {
   return data.sources?.[0]?.name || "";
 }
 
+function floorActions(floor) {
+  return (floor.enemies || []).flatMap((enemy) => enemy.actions || []);
+}
+
+function isPreemptiveWhen(when) {
+  return !when || when === "Preemptive";
+}
+
+function isPreemptiveAction(action) {
+  return action.timing_kind === "preemptive" || isPreemptiveWhen(action.when);
+}
+
+function isAfterPuzzleLesson(action) {
+  return (
+    PUZZLE_LESSON_TIMING_KINDS.has(action.timing_kind) ||
+    PUZZLE_LESSON_WHENS.has(action.when)
+  );
+}
+
+function isPuzzleLessonFloor(floor) {
+  return floorActions(floor).some(isAfterPuzzleLesson);
+}
+
+function actionTagNames(action) {
+  return (action.tags || []).map((tag) =>
+    typeof tag === "string" ? tag : tag?.name,
+  );
+}
+
+function puzzleFloorTag(tag, actions) {
+  if (PUZZLE_EXEMPT_TAGS.has(tag.name)) return tag;
+  if (tag.variants?.length) {
+    const variants = tag.variants.filter(
+      (variant) => !isPreemptiveWhen(variant.when),
+    );
+    return variants.length ? { ...tag, variants } : null;
+  }
+  const tagged = actions.filter((action) =>
+    actionTagNames(action).includes(tag.name),
+  );
+  return tagged.length && tagged.every(isPreemptiveAction) ? null : tag;
+}
+
+function withoutPuzzleEffects(floor) {
+  if (!isPuzzleLessonFloor(floor)) return floor;
+  const actions = floorActions(floor);
+  const tags = (floor.tags || [])
+    .map((tag) => puzzleFloorTag(tag, actions))
+    .filter(Boolean);
+  return {
+    ...floor,
+    tags,
+    halves_max_hp:
+      Boolean(floor.halves_max_hp) &&
+      tags.some((tag) => tag.name === "Max HP halved"),
+  };
+}
+
+function withoutPuzzleLessonEffects(data) {
+  const floors = (data.floors || []).map(withoutPuzzleEffects);
+  const summary = {};
+  for (const [tag, labels] of Object.entries(data.summary || {})) {
+    const kept = (labels || []).filter((label) => {
+      const floor = floors.find((entry) => entry.label === label);
+      return !floor || (floor.tags || []).some((entry) => entry.name === tag);
+    });
+    if (kept.length) summary[tag] = kept;
+  }
+  return { ...data, floors, summary };
+}
+
+function effectDuration(details) {
+  let longest = null;
+  for (const detail of details || []) {
+    const match = /^for (\d+) turns?$/.exec(detail);
+    if (match) longest = Math.max(longest ?? 0, Number(match[1]));
+  }
+  return longest;
+}
+
+function floorHp(floor) {
+  const enemies = floor.enemies || [];
+  const hps = enemies
+    .map((enemy) => enemy.hp)
+    .filter((hp) => Number.isFinite(hp) && hp > 0)
+    .sort((first, second) => second - first);
+  if (hps.length === 0) return null;
+  const total = (values) => values.reduce((sum, hp) => sum + hp, 0);
+  const appear = Number.isInteger(floor.appear) && floor.appear > 0
+    ? floor.appear
+    : null;
+  if (appear !== null && appear < hps.length) return total(hps.slice(0, appear));
+  if (appear !== null && enemies.length === 1) return hps[0] * appear;
+  return total(hps);
+}
+
+function invadeFloorNumbers(floor) {
+  if (Array.isArray(floor.invade_floors) && floor.invade_floors.length) {
+    return [...new Set(floor.invade_floors.filter(Number.isInteger))];
+  }
+  const match = /Floors?\s+([\d,\s]+)/.exec(floor.label || "");
+  if (!match) return [];
+  return [...new Set(
+    match[1]
+      .split(",")
+      .map((part) => Number(part.trim()))
+      .filter((number) => Number.isInteger(number) && number > 0),
+  )];
+}
+
+function invadeScenarios(data) {
+  const numbered = (data.floors || []).filter((floor) =>
+    Number.isInteger(floor.number),
+  );
+  const scenarios = [{ invadeFloor: null, floors: numbered }];
+  for (const invader of data.floors || []) {
+    if (Number.isInteger(invader.number)) continue;
+    for (const number of invadeFloorNumbers(invader)) {
+      scenarios.push({
+        invadeFloor: number,
+        floors: [
+          ...numbered.filter((floor) => floor.number !== number),
+          {
+            ...invader,
+            number,
+            label: `Floor ${number}`,
+            assumedLabel: invader.label,
+          },
+        ],
+      });
+    }
+  }
+  return scenarios;
+}
+
+function unplacedInvades(data) {
+  return (data.floors || []).filter(
+    (floor) =>
+      !Number.isInteger(floor.number) && invadeFloorNumbers(floor).length === 0,
+  );
+}
+
+function buildTimeline(floors, averageDamage) {
+  const timeline = new Map();
+  const assumed = [];
+  const ordered = floors
+    .filter((floor) => Number.isInteger(floor.number))
+    .sort((first, second) => first.number - second.number);
+  let nextTurn = 1;
+  let previousNumber = 0;
+  for (const floor of ordered) {
+    if (timeline.has(floor.number)) continue;
+    nextTurn +=
+      Math.max(0, floor.number - previousNumber - 1) * DEFAULT_TURNS_PER_FLOOR;
+    let turns = DEFAULT_TURNS_PER_FLOOR;
+    if (averageDamage !== null) {
+      const hp = floorHp(floor);
+      if (hp === null) {
+        assumed.push(floor.assumedLabel || floor.label);
+      } else {
+        turns = Math.min(
+          MAX_TURNS_PER_FLOOR,
+          Math.max(1, Math.ceil(hp / averageDamage)),
+        );
+      }
+    }
+    timeline.set(floor.number, { start: nextTurn, turns });
+    nextTurn += turns;
+    previousNumber = floor.number;
+  }
+  return { timeline, assumed };
+}
+
+function skillNeedsForFloor(floor, plan) {
+  const needs = [];
+  for (const tag of floor.tags || []) {
+    if (!plan.mechanics.includes(tag.name)) continue;
+    const variants = tag.variants?.length
+      ? tag.variants
+      : [{ when: "Preemptive", details: tag.details || [] }];
+    for (const variant of variants) {
+      const when = variant.when || "Preemptive";
+      const timing = when === "Unknown timing" ? "" : when;
+      const colors = (variant.details || []).filter(
+        (detail) => !detail.startsWith("for "),
+      );
+      let reason = timing;
+      if (plan.mechanics.length > 1) {
+        reason = [tag.name, timing].filter(Boolean).join(" · ");
+      } else if (plan.colors && colors.length) {
+        reason = [timing, colors.join(", ")].filter(Boolean).join(" - ");
+      }
+      needs.push({
+        reason,
+        preemptive: when === "Preemptive",
+        skippable: when !== "Preemptive" && when !== "Unknown timing",
+        duration: effectDuration(variant.details),
+        colors,
+      });
+    }
+  }
+  return needs;
+}
+
+function buildSkillPlan(floors, plan, timeline) {
+  const turns = new Map();
+  for (const floor of floors) {
+    const span = Number.isInteger(floor.number)
+      ? timeline.get(floor.number)
+      : null;
+    if (!span) continue;
+    const needs = skillNeedsForFloor(floor, plan).filter(
+      (need) => !(span.turns === 1 && need.skippable),
+    );
+    if (needs.length === 0) continue;
+    const floorEnd = span.start + span.turns - 1;
+    for (const need of needs) {
+      const first = span.start + (need.preemptive ? 0 : Math.min(1, span.turns - 1));
+      let last = first;
+      if (plan.lasting) {
+        last = need.duration === null
+          ? floorEnd
+          : Math.max(first, Math.min(floorEnd, first + need.duration - 1));
+      }
+      for (let turn = first; turn <= last; turn += 1) {
+        if (!turns.has(turn)) {
+          turns.set(turn, {
+            floor,
+            floorTurn: turn - span.start + 1,
+            reasons: new Set(),
+          });
+        }
+        if (need.reason) turns.get(turn).reasons.add(need.reason);
+      }
+    }
+  }
+
+  const runs = [];
+  for (const turn of [...turns.keys()].sort((first, second) => first - second)) {
+    const entry = turns.get(turn);
+    const current = runs[runs.length - 1];
+    if (plan.lasting && current && turn === current.end + 1) {
+      current.end = turn;
+      current.endFloor = entry.floor;
+    } else {
+      runs.push({
+        start: turn,
+        end: turn,
+        startFloor: entry.floor,
+        startFloorTurn: entry.floorTurn,
+        endFloor: entry.floor,
+        reasons: [...entry.reasons],
+      });
+    }
+  }
+  return runs;
+}
+
+function longestRun(runs) {
+  return runs.reduce((best, run) =>
+    run.end - run.start > best.end - best.start ? run : best,
+  );
+}
+
+function tightestGap(runs) {
+  let tightest = null;
+  for (let index = 1; index < runs.length; index += 1) {
+    const gap = runs[index].start - runs[index - 1].start;
+    if (tightest === null || gap < tightest.gap) {
+      tightest = {
+        gap,
+        from: runs[index - 1].startFloor,
+        to: runs[index].startFloor,
+      };
+    }
+  }
+  return tightest;
+}
+
+function worstCaseSkillPlan(scenarios, plan) {
+  const worst = { first: null, longest: null, tightest: null };
+  for (const scenario of scenarios) {
+    const runs = buildSkillPlan(scenario.floors, plan, scenario.timeline);
+    if (runs.length === 0) continue;
+    const { invadeFloor } = scenario;
+    if (!worst.first || runs[0].start < worst.first.run.start) {
+      worst.first = { run: runs[0], invadeFloor };
+    }
+    if (plan.lasting) {
+      const run = longestRun(runs);
+      if (
+        !worst.longest ||
+        run.end - run.start > worst.longest.run.end - worst.longest.run.start
+      ) {
+        worst.longest = { run, invadeFloor };
+      }
+    }
+    const gap = tightestGap(runs);
+    if (gap && (!worst.tightest || gap.gap < worst.tightest.gap)) {
+      worst.tightest = { ...gap, invadeFloor };
+    }
+  }
+  return worst;
+}
+
+function unplacedInvadeLabels(floors, plan) {
+  const labels = [];
+  for (const floor of floors) {
+    const needs = skillNeedsForFloor(floor, plan);
+    if (needs.length === 0) continue;
+    const colors = plan.colors
+      ? [...new Set(needs.flatMap((need) => need.colors))]
+      : [];
+    labels.push(
+      colors.length ? `${floor.label} - ${colors.join(", ")}` : floor.label,
+    );
+  }
+  return labels;
+}
+
+function formatFloorSpan(first, last) {
+  return first === last
+    ? first.label
+    : `Floors ${first.number}–${last.number}`;
+}
+
+function withInvaderNote(items, invadeFloor) {
+  const all = [...items];
+  if (invadeFloor !== null) all.push(`invader on Floor ${invadeFloor}`);
+  return all.length ? ` (${all.join("; ")})` : "";
+}
+
+function formatSkillPlanLine(plan, worst, unplacedLabels) {
+  if (!worst.first) {
+    return unplacedLabels.length
+      ? `only on ${unplacedLabels.join("; ")}`
+      : "not needed";
+  }
+  const { run: first, invadeFloor: firstInvade } = worst.first;
+  const parts = [
+    `first needed ${first.startFloor.label}, turn ${first.startFloorTurn}${
+      withInvaderNote(first.reasons, firstInvade)
+    }`,
+  ];
+  if (plan.lasting && worst.longest) {
+    const { run, invadeFloor } = worst.longest;
+    const length = run.end - run.start + 1;
+    parts.push(
+      `effect: ${length} ${length === 1 ? "turn" : "turns"}${
+        withInvaderNote([formatFloorSpan(run.startFloor, run.endFloor)], invadeFloor)
+      }`,
+    );
+  }
+  if (worst.tightest) {
+    const { gap, from, to, invadeFloor } = worst.tightest;
+    const where = from === to
+      ? `within ${from.label}`
+      : `${from.label} → ${to.label}`;
+    parts.push(`cooldown ≤ ${gap}${withInvaderNote([where], invadeFloor)}`);
+  } else {
+    parts.push("needed once");
+  }
+  if (unplacedLabels.length) {
+    parts.push(`also on ${unplacedLabels.join("; ")}`);
+  }
+  return parts.join(" · ");
+}
+
+function updateSkillPlan() {
+  skillPlanLines.replaceChildren();
+  if (!currentDungeon) return;
+  const typed = averageDamageInput.value.trim();
+  const averageDamage = parseDamage(typed);
+  const scenarios = invadeScenarios(currentDungeon).map((scenario) => ({
+    ...scenario,
+    ...buildTimeline(scenario.floors, averageDamage),
+  }));
+  const assumed = [...new Set(scenarios.flatMap((scenario) => scenario.assumed))];
+  const unplaced = unplacedInvades(currentDungeon);
+  const notes = [];
+  if (averageDamage === null) {
+    notes.push(
+      typed === ""
+        ? `Assumes every floor takes ${DEFAULT_TURNS_PER_FLOOR} turns. Enter average damage to count turns from enemy HP.`
+        : `Couldn't read that damage (enter a whole number of billions, like 35), so every floor is assumed to take ${DEFAULT_TURNS_PER_FLOOR} turns.`,
+    );
+  } else {
+    notes.push(
+      `Turns on a floor = its enemy HP ÷ ${formatNumber(averageDamage)}, rounded up.`,
+      "Effects that aren't preemptive are left out on floors cleared in 1 turn.",
+    );
+    if (assumed.length) {
+      notes.push(
+        `No HP for ${assumed.join(", ")}: assumed ${DEFAULT_TURNS_PER_FLOOR} turns.`,
+      );
+    }
+  }
+  if (scenarios.length > 1) {
+    notes.push(
+      "The invader is tried on each floor it can appear on, in place of that floor's enemies; each line shows the worst case.",
+    );
+  }
+  if (unplaced.length) {
+    notes.push("Invaders with no known floor are not counted in the turns.");
+  }
+  skillPlanNote.textContent = notes.join(" ");
+  for (const plan of activeSkillPlans()) {
+    const line = element("p", "skill-plan-line");
+    line.append(
+      element("strong", "", plan.title),
+      ` — ${formatSkillPlanLine(
+        plan,
+        worstCaseSkillPlan(scenarios, plan),
+        unplacedInvadeLabels(unplaced, plan),
+      )}`,
+    );
+    skillPlanLines.append(line);
+  }
+}
+
 function renderCriticalSummary(data) {
   const container = document.getElementById("critical-summary");
   container.replaceChildren();
@@ -296,6 +819,8 @@ function renderCriticalSummary(data) {
     container.append(element("p", "muted", "No critical mechanics found."));
     return;
   }
+  container.append(skillPlanSection);
+  updateSkillPlan();
   for (const group of groups) {
     const mechanics = group.mechanics.filter((tag) => summary[tag]?.length);
     if (mechanics.length === 0) continue;
@@ -672,7 +1197,8 @@ function renderSources(data) {
   }
 }
 
-function renderDungeon(data) {
+function renderDungeon(rawData) {
+  const data = withoutPuzzleLessonEffects(rawData);
   currentDungeon = data;
   selectedMechanics = new Set();
   document.getElementById("dungeon-title").textContent = data.name_en;
@@ -718,6 +1244,11 @@ async function start() {
   if (savedHp && Number.isFinite(Number(savedHp)) && Number(savedHp) > 0) {
     teamHpInput.value = savedHp;
   }
+  const savedDamage = window.localStorage.getItem(AVERAGE_DAMAGE_KEY);
+  if (savedDamage && parseDamage(savedDamage) !== null) {
+    averageDamageInput.value = savedDamage;
+  }
+  splitClericInput.checked = window.localStorage.getItem(SPLIT_CLERIC_KEY) === "1";
   const requestedSlug = new URL(window.location.href).searchParams.get("d");
   const selected = dungeonIndex.find((entry) => entry.slug === requestedSlug) || dungeonIndex[0];
   dungeonSelect.value = selected.slug;
@@ -758,6 +1289,25 @@ teamHpInput.addEventListener("input", () => {
     renderHitSummary(currentDungeon);
     renderFloors(currentDungeon);
   }
+});
+
+averageDamageInput.addEventListener("input", () => {
+  const typed = averageDamageInput.value.trim();
+  if (typed === "") {
+    window.localStorage.removeItem(AVERAGE_DAMAGE_KEY);
+  } else {
+    window.localStorage.setItem(AVERAGE_DAMAGE_KEY, typed);
+  }
+  updateSkillPlan();
+});
+
+splitClericInput.addEventListener("change", () => {
+  if (splitClericInput.checked) {
+    window.localStorage.setItem(SPLIT_CLERIC_KEY, "1");
+  } else {
+    window.localStorage.removeItem(SPLIT_CLERIC_KEY);
+  }
+  updateSkillPlan();
 });
 
 start().catch((error) => {

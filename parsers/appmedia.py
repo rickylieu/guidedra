@@ -1,4 +1,4 @@
-"""Parser for the saved AppMedia Tenkyu Challenge guide."""
+"""Parser for saved AppMedia dungeon guides."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup, Tag
 from glossary import parse_japanese_number
 from parsers.common import (
     actions_from_cell,
+    cell_events,
     cell_text,
     clean_monster_name,
     image_alt,
@@ -25,6 +26,7 @@ from parsers.common import (
 
 
 EXPECTED_HEADER = "階層 | 出現 | 特性/ギミック"
+_RULE_LINE = re.compile(r"^(?:超重力|超高度|制限時間|ノーコン)")
 
 
 def _floor_table(soup: BeautifulSoup) -> Tag:
@@ -98,6 +100,45 @@ def _parse_stat(text: str, label: str) -> int | None:
     return parse_japanese_number(match.group(1)) if match else None
 
 
+def _cell_lines(cell: Tag) -> list[str]:
+    return [text for kind, text in cell_events(cell) if kind in {"text", "text_indent"}]
+
+
+def _first_int(value: str) -> int | None:
+    match = re.search(r"\d+", value.replace(",", ""))
+    return int(match.group()) if match else None
+
+
+def _basic_info(soup: BeautifulSoup) -> dict[str, Any]:
+    """Read バトル数, スタミナ and ルール from label | value cell pairs."""
+    battles: int | None = None
+    stamina: int | None = None
+    lines: list[str] = []
+    for table in soup.find_all("table"):
+        for row in table.find_all("tr"):
+            cells = row.find_all(["th", "td"], recursive=False)
+            for label_cell, value_cell in zip(cells, cells[1:]):
+                label = cell_text(label_cell)
+                if not label or len(label) > 10:
+                    continue
+                value = cell_text(value_cell)
+                if battles is None and label == "バトル数":
+                    battles = _first_int(value)
+                elif stamina is None and label.endswith("スタミナ"):
+                    stamina = _first_int(value)
+                elif not lines and "ルール" in label:
+                    lines = _cell_lines(value_cell)
+
+    if not lines:
+        for cell in soup.find_all(["td", "th"]):
+            matching = [line for line in _cell_lines(cell) if _RULE_LINE.match(line)]
+            if matching:
+                lines = matching
+                break
+
+    return {"battles": battles, "stamina": stamina, "lines_jp": lines}
+
+
 def parse(html: str) -> dict[str, Any]:
     soup = parse_html(html)
     table = _floor_table(soup)
@@ -136,7 +177,7 @@ def parse(html: str) -> dict[str, Any]:
     return {
         "source": "appmedia",
         "dungeon_jp": parse_dungeon_name(soup),
-        "rules": {"battles": None, "stamina": None, "lines_jp": []},
+        "rules": _basic_info(soup),
         "must_counter_jp": must,
         "recommended_jp": recommended,
         "floors": floors,

@@ -9,6 +9,14 @@ from typing import Any
 from glossary import extract_tags, normalize_text
 
 
+_RULE_STAT_TERMS: tuple[tuple[str, str, str], ...] = (
+    ("超重力", "Super gravity", "ATK"),
+    ("超高度", "Super altitude", "RCV"),
+)
+_RULE_FRACTION_RE = re.compile(r"(\d+)\s*分の\s*(\d+)|(\d+)\s*/\s*(\d+)")
+_RULE_TERMS_RE = re.compile(r"超重力|超高度|制限時間|ノーコン")
+
+
 def apply_rules(
     merged: dict[str, Any],
     records: dict[str, dict[str, Any]],
@@ -37,7 +45,7 @@ def apply_rules(
                     )
 
         for line in record.get("rules", {}).get("lines_jp", []):
-            if _translate_rule(line) is None:
+            if not _translate_rules(line):
                 diagnostics["untranslated_rules"].append(
                     {"source": source, "text_jp": line}
                 )
@@ -62,12 +70,7 @@ def apply_rules(
                 summary.setdefault(tag["name"], []).append(label)
     merged["summary"] = summary
 
-    notes = [
-        translated
-        for line in merged["rules"].get("lines_jp", [])
-        if (translated := _translate_rule(line)) is not None
-    ]
-    merged["rules"]["notes"] = list(dict.fromkeys(notes))
+    _merge_rules(merged, records)
 
 
 def normal_hit_baseline(floors: list[dict[str, Any]]) -> int | None:
@@ -321,9 +324,64 @@ def floor_label(floor: dict[str, Any]) -> str:
     return "Invade"
 
 
-def _translate_rule(value: str) -> str | None:
+def _translate_rules(value: str) -> list[str]:
+    """Translate every rule term found in one ルール line, in page order."""
     text = normalize_text(value)
-    match = re.search(r"制限時間\s*(\d+)\s*分", text)
-    if match:
-        return f"Time limit: {match.group(1)} minutes"
-    return None
+    found: list[tuple[int, str]] = []
+
+    for term_jp, name, stat in _RULE_STAT_TERMS:
+        for match in re.finditer(term_jp, text):
+            following = text[match.end():]
+            next_term = _RULE_TERMS_RE.search(following)
+            if next_term:
+                following = following[: next_term.start()]
+            fraction = _RULE_FRACTION_RE.search(following)
+            if fraction:
+                if fraction.group(1):
+                    numerator, denominator = fraction.group(2), fraction.group(1)
+                else:
+                    numerator, denominator = fraction.group(3), fraction.group(4)
+                found.append((match.start(), f"{name}: {stat} {numerator}/{denominator}"))
+            else:
+                found.append((match.start(), name))
+
+    for match in re.finditer(r"制限時間\s*(\d+)\s*分", text):
+        found.append((match.start(), f"Time limit: {match.group(1)} minutes"))
+
+    for match in re.finditer(r"ノーコン", text):
+        found.append((match.start(), "No continues"))
+
+    return [note for _, note in sorted(found)]
+
+
+_SOURCE_ORDER = ("gamewith", "appmedia", "altema", "game8")
+
+
+def _merge_rules(
+    merged: dict[str, Any], records: dict[str, dict[str, Any]]
+) -> None:
+    """Fill battles/stamina from the first source that has them; one note per rule."""
+    order = [merged["primary"]] if merged.get("primary") in records else []
+    order += [s for s in _SOURCE_ORDER if s in records and s not in order]
+    order += [s for s in records if s not in order]
+
+    rules = merged.setdefault("rules", {})
+    for field in ("battles", "stamina"):
+        if rules.get(field) is None:
+            rules[field] = next(
+                (
+                    records[s].get("rules", {}).get(field)
+                    for s in order
+                    if records[s].get("rules", {}).get(field) is not None
+                ),
+                None,
+            )
+
+    lines = list(rules.get("lines_jp", []))
+    for s in order:
+        lines += records[s].get("rules", {}).get("lines_jp", [])
+    notes_by_rule: dict[str, str] = {}
+    for line in lines:
+        for note in _translate_rules(line):
+            notes_by_rule.setdefault(note.split(":")[0], note)
+    rules["notes"] = list(notes_by_rule.values())
