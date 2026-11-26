@@ -166,6 +166,37 @@ def test_appmedia_super_resolve_header_does_not_change_action_timing(appmedia_re
     assert "5B or more" in absorb["details"]
 
 
+def test_appmedia_parser_reads_prefixed_orb_images_in_full_board_change():
+    html = """
+    <html><head><title>天穹チャレンジの攻略</title></head><body>
+      <table>
+        <tr><th>階層</th><th>出現</th><th>特性/ギミック</th></tr>
+        <tr><td>B10</td><td>ハイレン</td><td>
+          【HP50%以下で使用】<br>
+          4ターン：50億以上無効<br>
+          8,484,000ダメージ+全ドロップ
+          <img src="/drop_water.png" alt="drop_water">
+          <img src="/Heart.png" alt="Heart">変化
+        </td></tr>
+      </table>
+    </body></html>
+    """
+    record = annotate_record(appmedia.parse(html))
+    floor10 = _floor(record, 10)
+    actions = _actions({"floors": [floor10]})
+
+    damage_void = next(action for action in actions if "Damage void" in action["tags"])
+    board_change = next(
+        action for action in actions if "Full-board change" in action["tags"]
+    )
+    assert damage_void["when"] == "Below 50% HP"
+    assert "for 4 turns" in damage_void["details"]
+    assert "5B or more" in damage_void["details"]
+    assert board_change["when"] == "Below 50% HP"
+    assert board_change["hit"] == 8_484_000
+    assert "Water, Heart" in board_change["details"]
+
+
 def test_game8_tenkyu_facts(game8_record):
     record = annotate_record(game8_record)
     numbered = [floor for floor in record["floors"] if floor["number"] is not None]
@@ -201,7 +232,9 @@ def test_published_json_has_no_japanese_outside_names():
     def check(value, path=()):
         if isinstance(value, dict):
             for key, child in value.items():
-                if key == "name_jp" or (key == "name" and len(path) >= 2 and path[-2] == "enemies"):
+                if key in {"name_jp", "enemies", "not_reported_for"} or (
+                    key == "name" and len(path) >= 2 and path[-2] == "enemies"
+                ):
                     continue
                 check(child, path + (key,))
         elif isinstance(value, list):
@@ -237,22 +270,48 @@ def test_published_warning_details_and_hit_severity():
     assert "Floor 3" not in data["summary"].get("Bind", [])
     assert "Light" in tag("Floor 15", "Full-board change")["details"][0]
     assert "Heart" in tag("Floor 5", "Full-board change")["details"][0]
-    assert any("Water" in detail for detail in tag("Floor 10", "Full-board change")["details"])
+    floor10_board_variants = tag("Floor 10", "Full-board change")["variants"]
+    assert {
+        source for variant in floor10_board_variants for source in variant["sources"]
+    } == {"AppMedia", "Game8", "GameWith"}
+    assert all(
+        variant["details"] == ["Water, Heart"] for variant in floor10_board_variants
+    )
+    floor9_board_variants = tag("Floor 9", "Full-board change")["variants"]
+    assert floor9_board_variants == [
+        {
+            "when": "Below 50% HP",
+            "details": ["Fire, Light"],
+            "sources": ["AppMedia"],
+        }
+    ]
+    assert tag("Floor 9", "Orb change")["variants"] == floor9_board_variants
     assert "Full-board change" not in {
         item["name"] for item in floors["Floor 3"]["tags"]
     }
+    floor12 = floors["Floor 12"]
+    assert floor12["one_of"] is True
+    floor12_absorb = tag("Floor 12", "Attribute absorb")
+    assert floor12_absorb["not_reported_for"] == ["試練スクルド"]
+    assert {
+        (tuple(variant["details"]), tuple(variant["enemies"]))
+        for variant in floor12_absorb["variants"]
+    } == {
+        (("for 4 turns", "Fire, Light"), ("試練ウルド",)),
+        (("for 4 turns", "Water, Wood"), ("試練ヴェルダンディ",)),
+    }
+    floor2_absorb = tag("Floor 2", "Attribute absorb")
+    assert floor2_absorb["not_reported_for"] == ["転生アリエル"]
+    assert floor2_absorb["variants"][0]["enemies"] == ["転生ルミエル"]
 
     skill_bind_variants = tag("Floor 6", "Skill bind")["variants"]
-    assert any(
-        variant["details"] == ["for 2 turns"]
-        and variant["sources"] == ["Altema"]
-        for variant in skill_bind_variants
-    )
-    assert any(
-        variant["details"] == ["for 5 turns"]
-        and set(variant["sources"]) == {"AppMedia", "Game8", "GameWith"}
-        for variant in skill_bind_variants
-    )
+    assert skill_bind_variants == [
+        {
+            "when": "Preemptive",
+            "details": ["for 5 turns"],
+            "sources": ["AppMedia", "Game8", "GameWith"],
+        }
+    ]
     floor5_absorb = tag("Floor 5", "Damage absorb")["variants"]
     assert floor5_absorb == [
         {
@@ -263,11 +322,13 @@ def test_published_warning_details_and_hit_severity():
     ]
 
     buff_void_variants = tag("Floor 3", "Void buffs")["variants"]
-    assert {variant["when"] for variant in buff_void_variants} == {
-        "If 11 or fewer combos",
-        "If 12 or fewer combos",
-        "Puzzle test failed",
-    }
+    assert buff_void_variants == [
+        {
+            "when": "Puzzle test failed",
+            "details": [],
+            "sources": ["GameWith"],
+        }
+    ]
 
     enrage_variants = tag("Floor 15", "Enrage")["variants"]
     assert any(
@@ -288,25 +349,52 @@ def test_published_warning_details_and_hit_severity():
     )
     assert set(passed["sources"]) == {"Altema", "AppMedia", "Game8", "GameWith"}
 
+    floor13_bind = tag("Floor 13", "Bind")["variants"]
+    assert floor13_bind == [
+        {
+            "when": "Action 1",
+            "details": ["for 2 turns"],
+            "sources": ["AppMedia", "GameWith"],
+        }
+    ]
+    floor14_damage_void = tag("Floor 14", "Damage void")["variants"]
+    assert floor14_damage_void == [
+        {
+            "when": "Preemptive",
+            "details": ["for 10 turns", "5B or more"],
+            "sources": ["AppMedia", "Game8", "GameWith"],
+        }
+    ]
+
     floor14_assist = tag("Floor 14", "Assist bind")["variants"]
     assert any(
         variant["when"] == "Action 3"
-        and set(variant["sources"]) == {"AppMedia", "GameWith"}
+        and variant["sources"] == ["AppMedia"]
+        for variant in floor14_assist
+    )
+    assert any(
+        variant["when"] == "In-order action 3"
+        and variant["sources"] == ["GameWith"]
         for variant in floor14_assist
     )
     assert any(
         variant["when"] == "Action 6"
-        and set(variant["sources"]) == {"AppMedia", "GameWith"}
+        and variant["sources"] == ["AppMedia"]
+        for variant in floor14_assist
+    )
+    assert any(
+        variant["when"] == "In-order action 6"
+        and variant["sources"] == ["GameWith"]
         for variant in floor14_assist
     )
     floor14_damage_absorb = tag("Floor 14", "Damage absorb")["variants"]
-    assert floor14_damage_absorb == [
-        {
-            "when": "Action 2",
-            "details": ["for 1 turn", "5B or more"],
-            "sources": ["AppMedia", "GameWith"],
-        }
-    ]
+    assert {
+        (variant["when"], tuple(variant["sources"]))
+        for variant in floor14_damage_absorb
+    } == {
+        ("Action 2", ("AppMedia",)),
+        ("In-order action 2", ("GameWith",)),
+    }
 
     assert data["summary"]["Damage absorb"]
     assert data["summary"]["Attribute absorb"]
@@ -357,9 +445,14 @@ def test_published_warning_details_and_hit_severity():
         },
     }
     floor14_roulette = tag("Floor 14", "Roulette")["variants"]
-    assert len(floor14_roulette) == 1
-    assert floor14_roulette[0]["details"][-1] == "2 orbs"
-    assert set(floor14_roulette[0]["sources"]) == {"AppMedia", "GameWith"}
+    assert {
+        (variant["when"], tuple(variant["sources"]))
+        for variant in floor14_roulette
+    } == {
+        ("Action 1", ("AppMedia",)),
+        ("In-order action 1", ("GameWith",)),
+    }
+    assert all(variant["details"][-1] == "2 orbs" for variant in floor14_roulette)
     floor15_roulette = tag("Floor 15", "Roulette")["variants"]
     assert len(floor15_roulette) == 1
     assert floor15_roulette[0]["details"] == [

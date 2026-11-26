@@ -119,7 +119,7 @@ def orb_image_token(img: Tag) -> str | None:
         "ojama.png": "[お邪魔]",
         "bomb.png": "[爆弾]",
     }
-    return orb_by_filename.get(filename)
+    return orb_by_filename.get(filename.removeprefix("drop_"))
 
 
 def cell_events(cell: Tag) -> list[tuple[str, str]]:

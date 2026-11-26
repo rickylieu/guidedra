@@ -130,9 +130,37 @@ function visibleEffectDetails(name, details) {
   );
 }
 
-function formatEffectVariants(tagName, effect, hideDamageVoidThreshold = true) {
+function unresolvedEffectVariantIndexes(variants) {
+  const unresolved = new Set();
+  for (let first = 0; first < variants.length; first += 1) {
+    for (let second = first + 1; second < variants.length; second += 1) {
+      const left = variants[first];
+      const right = variants[second];
+      const sameEnemies =
+        JSON.stringify([...(left.enemies || [])].sort()) ===
+        JSON.stringify([...(right.enemies || [])].sort());
+      if (
+        left.when === right.when &&
+        sameEnemies &&
+        JSON.stringify(left.details || []) !== JSON.stringify(right.details || [])
+      ) {
+        unresolved.add(first);
+        unresolved.add(second);
+      }
+    }
+  }
+  return unresolved;
+}
+
+function formatEffectVariants(
+  tagName,
+  effect,
+  hideDamageVoidThreshold = true,
+) {
   const grouped = new Map();
-  for (const variant of effect?.variants || []) {
+  const variants = effect?.variants || [];
+  const unresolvedVariants = unresolvedEffectVariantIndexes(variants);
+  for (const [index, variant] of variants.entries()) {
     const details = (variant.details || []).filter((detail) => {
       const isDamageVoidThreshold =
         /^\d+(?:\.\d+)?(?:K|M|B|T)? or more$/i.test(detail);
@@ -141,21 +169,84 @@ function formatEffectVariants(tagName, effect, hideDamageVoidThreshold = true) {
         (tagName === "Damage cap set" && detail.startsWith("cap "))
       );
     });
-    const parts = [variant.when, formatEffectDetails(details)].filter(
+    const enemyLabel = variant.enemies?.length
+      ? `on ${variant.enemies.join(", ")}`
+      : null;
+    const parts = [variant.when, formatEffectDetails(details), enemyLabel].filter(
       (part) => part && part !== "Unknown timing",
     );
     const text = parts.join(" · ");
     if (!text) continue;
-    if (!grouped.has(text)) grouped.set(text, new Set());
-    for (const source of variant.sources || []) grouped.get(text).add(source);
+    if (!grouped.has(text)) {
+      grouped.set(text, { sources: new Set(), unresolved: false });
+    }
+    const group = grouped.get(text);
+    group.unresolved ||= unresolvedVariants.has(index);
+    for (const source of variant.sources || []) group.sources.add(source);
   }
-  const showSources = grouped.size > 1;
-  return [...grouped].map(([text, sources]) => {
-    const sourceList = [...sources].sort();
-    return showSources && sourceList.length
+  const formatted = [...grouped].map(([text, group]) => {
+    const sourceList = [...group.sources].sort();
+    return group.unresolved && sourceList.length
       ? `${text} (${sourceList.join(", ")})`
       : text;
   });
+  if (effect?.not_reported_for?.length) {
+    formatted.push(`Not reported for ${effect.not_reported_for.join(", ")}`);
+  }
+  return formatted;
+}
+
+function formatAlternativeAttributeAbsorb(effect, floor) {
+  const variantsByEnemy = new Map();
+  const variants = effect?.variants || [];
+  const unresolvedVariants = unresolvedEffectVariantIndexes(variants);
+  for (const [index, variant] of variants.entries()) {
+    for (const enemy of variant.enemies || []) {
+      if (!variantsByEnemy.has(enemy)) variantsByEnemy.set(enemy, []);
+      variantsByEnemy.get(enemy).push({ index, variant });
+    }
+  }
+  if (!variantsByEnemy.size) return null;
+
+  const enemyOrder = new Map(
+    (floor.enemies || []).map((enemy, index) => [enemy.name, index]),
+  );
+  const enemyDetails = [...variantsByEnemy]
+    .sort(([first], [second]) =>
+      (enemyOrder.get(first) ?? Number.MAX_SAFE_INTEGER) -
+      (enemyOrder.get(second) ?? Number.MAX_SAFE_INTEGER),
+    )
+    .map(([enemy, variants]) => {
+      const formatted = [...variants]
+        .sort(
+          (first, second) =>
+            Number((second.variant.details || []).some((detail) => !detail.startsWith("for "))) -
+            Number((first.variant.details || []).some((detail) => !detail.startsWith("for "))),
+        )
+        .map(({ index, variant }) => {
+          const duration = (variant.details || [])
+            .find((detail) => detail.startsWith("for "))
+            ?.replace(/^for /, "");
+          const colors = (variant.details || [])
+            .filter((detail) => !detail.startsWith("for "))
+            .join(", ");
+          const sources = unresolvedVariants.has(index) && variant.sources?.length
+            ? ` (${variant.sources.join(", ")})`
+            : "";
+          if (colors && duration) {
+            return `${colors} (${duration})${sources}`;
+          }
+          return `${[colors, duration].filter(Boolean).join(" ")}${sources}`;
+        });
+      return `${enemy}: ${formatted.join("; ")}`;
+    });
+  const total = (floor.enemies || []).length;
+  const notReported = effect.not_reported_for?.length
+    ? `; not reported for ${effect.not_reported_for.join(", ")}`
+    : "";
+  return `${variantsByEnemy.size}/${total} possible enemies have Attribute absorb — ${
+    enemyDetails.join("; ")
+  }${notReported}`;
 }
 
 function renderRules(data) {
@@ -224,16 +315,23 @@ function renderCriticalSummary(data) {
         const fallbackDetails = tag === "Damage void"
           ? []
           : visibleEffectDetails(tag, effect?.details);
-        const details = variants.length
+        const alternativeAbsorb =
+          tag === "Attribute absorb" && floor?.one_of
+            ? formatAlternativeAttributeAbsorb(effect, floor)
+            : null;
+        const details = alternativeAbsorb || (variants.length
           ? variants.join("; ")
-          : formatEffectDetails(fallbackDetails);
+          : formatEffectDetails(fallbackDetails));
         const effectDetails = [
           ...(effect?.details || []),
           ...(effect?.variants || []).flatMap((variant) => variant.details || []),
         ];
         const effectName = displayMechanicName(tag, effectDetails);
+        const floorLabel = floor?.one_of && !alternativeAbsorb
+          ? `${label} (${floor.appear} of ${(floor.enemies || []).length} possible enemies)`
+          : label;
         floorList.append(
-          element("li", "", details ? `${label} — ${details}` : `${label} — ${effectName}`),
+          element("li", "", details ? `${floorLabel} — ${details}` : `${floorLabel} — ${effectName}`),
         );
       }
       item.append(floorList);
@@ -377,6 +475,8 @@ function renderFloorTags(tags, primary) {
     if (tag.critical) classes.push("critical");
     const foundBy = tag.sources || [];
     if (!foundBy.includes(primary)) classes.push("not-primary");
+    const unresolvedVariants = unresolvedEffectVariantIndexes(tag.variants || []);
+    const unresolvedSources = unresolvedVariants.size > 0;
     const variants = tag.critical
       ? formatEffectVariants(tag.name, tag, false)
       : [];
@@ -399,11 +499,13 @@ function renderFloorTags(tags, primary) {
       classes.join(" "),
       details ? `${displayName} · ${details}` : displayName,
     );
-    if (foundBy.length) {
+    if (foundBy.length && unresolvedSources) {
       const sourceNote = foundBy.includes(primary)
         ? `Found by: ${foundBy.join(", ")}`
         : `Not in ${primary}; found by: ${foundBy.join(", ")}`;
       badge.title = details ? `${sourceNote}; Details: ${details}` : sourceNote;
+    } else if (details) {
+      badge.title = `Details: ${details}`;
     }
     list.append(badge);
   }
@@ -539,7 +641,10 @@ function renderFloors(data) {
     const header = element("div", "floor-header");
     const title = element("h3", "", floor.label);
     if (floor.appear !== null && floor.appear !== undefined) {
-      title.textContent += ` · ${floor.appear} ${floor.appear === 1 ? "appears" : "appear"}`;
+      const appearance = floor.one_of
+        ? `${floor.appear} of ${(floor.enemies || []).length} possible enemies appears`
+        : `${floor.appear} ${floor.appear === 1 ? "appears" : "appear"}`;
+      title.textContent += ` · ${appearance}`;
     }
     header.append(title);
     header.append(renderFloorTags(floor.tags, primary));

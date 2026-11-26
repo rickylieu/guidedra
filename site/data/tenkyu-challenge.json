@@ -115,14 +115,6 @@
       "Floor 14",
       "Floor 15"
     ],
-    "Full-board change": [
-      "Floor 2",
-      "Floor 5",
-      "Floor 9",
-      "Floor 10",
-      "Floor 12",
-      "Floor 15"
-    ],
     "Unmatchable": [
       "Floor 2",
       "Floor 10"
@@ -147,6 +139,13 @@
     "Damage absorb": [
       "Floor 5",
       "Floor 14",
+      "Floor 15"
+    ],
+    "Full-board change": [
+      "Floor 5",
+      "Floor 8",
+      "Floor 9",
+      "Floor 10",
       "Floor 15"
     ],
     "Skill bind": [
@@ -181,16 +180,6 @@
             "for 4 turns, Light, Dark"
           ],
           "variants": [
-            {
-              "when": "Below 50% HP",
-              "details": [
-                "for 4 turns"
-              ],
-              "sources": [
-                "Altema",
-                "Game8"
-              ]
-            },
             {
               "when": "Below 50% HP",
               "details": [
@@ -1131,24 +1120,20 @@
             {
               "when": "Preemptive",
               "details": [
-                "for 10 turns"
-              ],
-              "sources": [
-                "Altema",
-                "Game8"
-              ]
-            },
-            {
-              "when": "Preemptive",
-              "details": [
                 "for 10 turns",
                 "Light, Dark"
               ],
               "sources": [
                 "AppMedia",
                 "GameWith"
+              ],
+              "enemies": [
+                "転生ルミエル"
               ]
             }
+          ],
+          "not_reported_for": [
+            "転生アリエル"
           ]
         },
         {
@@ -1180,40 +1165,19 @@
           ]
         },
         {
-          "name": "Full-board change",
-          "critical": true,
-          "sources": [
-            "AppMedia"
-          ],
-          "details": [
-            "Heart"
-          ],
-          "variants": [
-            {
-              "when": "Below 50% HP",
-              "details": [
-                "Heart"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            }
-          ]
-        },
-        {
           "name": "Orb change",
           "critical": false,
           "sources": [
             "AppMedia"
           ],
           "details": [
-            "Heart"
+            "Wood, Dark, Heart"
           ],
           "variants": [
             {
               "when": "Below 50% HP",
               "details": [
-                "Heart"
+                "Wood, Dark, Heart"
               ],
               "sources": [
                 "AppMedia"
@@ -1447,15 +1411,6 @@
             "for 1 turn, Light, Dark"
           ],
           "variants": [
-            {
-              "when": "Preemptive",
-              "details": [
-                "for 1 turn"
-              ],
-              "sources": [
-                "Altema"
-              ]
-            },
             {
               "when": "Preemptive",
               "details": [
@@ -1887,7 +1842,7 @@
           ],
           "variants": [
             {
-              "when": "Normal action 1",
+              "when": "Action 1",
               "details": [
                 "Dark",
                 "9 orbs"
@@ -2154,20 +2109,6 @@
           ],
           "details": [],
           "variants": [
-            {
-              "when": "If 11 or fewer combos",
-              "details": [],
-              "sources": [
-                "Altema"
-              ]
-            },
-            {
-              "when": "If 12 or fewer combos",
-              "details": [],
-              "sources": [
-                "AppMedia"
-              ]
-            },
             {
               "when": "Puzzle test failed",
               "details": [],
@@ -2583,17 +2524,11 @@
           "variants": [
             {
               "when": "Below 50% HP",
-              "details": [],
-              "sources": [
-                "AppMedia"
-              ]
-            },
-            {
-              "when": "Below 50% HP",
               "details": [
                 "Water"
               ],
               "sources": [
+                "AppMedia",
                 "GameWith"
               ]
             }
@@ -3507,19 +3442,9 @@
             "GameWith"
           ],
           "details": [
-            "for 2 turns",
             "for 5 turns"
           ],
           "variants": [
-            {
-              "when": "Preemptive",
-              "details": [
-                "for 2 turns"
-              ],
-              "sources": [
-                "Altema"
-              ]
-            },
             {
               "when": "Preemptive",
               "details": [
@@ -3971,16 +3896,41 @@
           ]
         },
         {
+          "name": "Full-board change",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Fire"
+          ],
+          "variants": [
+            {
+              "when": "Below 50% HP",
+              "details": [
+                "Fire"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
           "name": "Orb change",
           "critical": false,
           "sources": [
             "AppMedia"
           ],
-          "details": [],
+          "details": [
+            "Fire"
+          ],
           "variants": [
             {
               "when": "Below 50% HP",
-              "details": [],
+              "details": [
+                "Fire"
+              ],
               "sources": [
                 "AppMedia"
               ]
@@ -4032,6 +3982,28 @@
                 "AppMedia",
                 "Game8",
                 "GameWith"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Skyfall change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 4 turns, Fire"
+          ],
+          "variants": [
+            {
+              "when": "Below 50% HP",
+              "details": [
+                "for 4 turns",
+                "Fire"
+              ],
+              "sources": [
+                "AppMedia"
               ]
             }
           ]
@@ -4284,7 +4256,7 @@
           "details": [],
           "variants": [
             {
-              "when": "Action 1",
+              "when": "Action 2",
               "details": [],
               "sources": [
                 "AppMedia",
@@ -4292,7 +4264,7 @@
               ]
             },
             {
-              "when": "Action 2",
+              "when": "Action 1",
               "details": [],
               "sources": [
                 "AppMedia",
@@ -4373,15 +4345,6 @@
           ],
           "variants": [
             {
-              "when": "Action 2",
-              "details": [
-                "Fire, Light"
-              ],
-              "sources": [
-                "GameWith"
-              ]
-            },
-            {
               "when": "Below 50% HP",
               "details": [
                 "Fire, Light"
@@ -4430,15 +4393,6 @@
             "Fire, Light"
           ],
           "variants": [
-            {
-              "when": "Action 2",
-              "details": [
-                "Fire, Light"
-              ],
-              "sources": [
-                "GameWith"
-              ]
-            },
             {
               "when": "Below 50% HP",
               "details": [
@@ -5076,25 +5030,16 @@
             "GameWith"
           ],
           "details": [
-            "Heart",
             "Water, Heart"
           ],
           "variants": [
             {
               "when": "Below 50% HP",
               "details": [
-                "Heart"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            },
-            {
-              "when": "Below 50% HP",
-              "details": [
                 "Water, Heart"
               ],
               "sources": [
+                "AppMedia",
                 "Game8",
                 "GameWith"
               ]
@@ -5111,25 +5056,16 @@
             "GameWith"
           ],
           "details": [
-            "Heart",
             "Water, Heart"
           ],
           "variants": [
             {
               "when": "Below 50% HP",
               "details": [
-                "Heart"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            },
-            {
-              "when": "Below 50% HP",
-              "details": [
                 "Water, Heart"
               ],
               "sources": [
+                "AppMedia",
                 "Game8",
                 "GameWith"
               ]
@@ -5291,16 +5227,6 @@
             "for 2 turns, Heart"
           ],
           "variants": [
-            {
-              "when": "Preemptive",
-              "details": [
-                "for 2 turns"
-              ],
-              "sources": [
-                "Altema",
-                "Game8"
-              ]
-            },
             {
               "when": "Preemptive",
               "details": [
@@ -5719,15 +5645,6 @@
             {
               "when": "Action 1",
               "details": [
-                "for 4 turns"
-              ],
-              "sources": [
-                "Game8"
-              ]
-            },
-            {
-              "when": "Action 1",
-              "details": [
                 "for 4 turns",
                 "Jammer"
               ],
@@ -5951,30 +5868,10 @@
             "GameWith"
           ],
           "details": [
-            "for 10 turns",
             "for 4 turns, Fire, Light",
             "for 4 turns, Water, Wood"
           ],
           "variants": [
-            {
-              "when": "Preemptive",
-              "details": [
-                "for 10 turns"
-              ],
-              "sources": [
-                "Altema"
-              ]
-            },
-            {
-              "when": "Preemptive",
-              "details": [
-                "for 4 turns"
-              ],
-              "sources": [
-                "Altema",
-                "Game8"
-              ]
-            },
             {
               "when": "Preemptive",
               "details": [
@@ -5984,6 +5881,9 @@
               "sources": [
                 "AppMedia",
                 "GameWith"
+              ],
+              "enemies": [
+                "試練ウルド"
               ]
             },
             {
@@ -5993,9 +5893,16 @@
                 "Water, Wood"
               ],
               "sources": [
+                "AppMedia",
                 "GameWith"
+              ],
+              "enemies": [
+                "試練ヴェルダンディ"
               ]
             }
+          ],
+          "not_reported_for": [
+            "試練スクルド"
           ]
         },
         {
@@ -6214,27 +6121,6 @@
           ]
         },
         {
-          "name": "Full-board change",
-          "critical": true,
-          "sources": [
-            "AppMedia"
-          ],
-          "details": [
-            "Heart"
-          ],
-          "variants": [
-            {
-              "when": "Preemptive",
-              "details": [
-                "Heart"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            }
-          ]
-        },
-        {
           "name": "Move-time change",
           "critical": false,
           "sources": [
@@ -6274,8 +6160,7 @@
           "details": [
             "Fire, Light, Heart",
             "Water, Dark, Heart",
-            "Water, Wood, Heart",
-            "Heart"
+            "Water, Wood, Heart"
           ],
           "variants": [
             {
@@ -6293,19 +6178,11 @@
             {
               "when": "Preemptive",
               "details": [
-                "Heart"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            },
-            {
-              "when": "Preemptive",
-              "details": [
                 "Water, Dark, Heart"
               ],
               "sources": [
                 "Altema",
+                "AppMedia",
                 "Game8",
                 "GameWith"
               ]
@@ -6317,6 +6194,7 @@
               ],
               "sources": [
                 "Altema",
+                "AppMedia",
                 "Game8",
                 "GameWith"
               ]
@@ -6339,9 +6217,8 @@
             "Water, Dark, Heart",
             "Water, Wood, Heart",
             "for 4 turns, Fire, Light",
-            "Heart",
-            "50%",
-            "for 4 turns, Water, Wood"
+            "for 4 turns, Water, Wood",
+            "50%"
           ],
           "variants": [
             {
@@ -6378,19 +6255,11 @@
             {
               "when": "Preemptive",
               "details": [
-                "Heart"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            },
-            {
-              "when": "Preemptive",
-              "details": [
                 "Water, Dark, Heart"
               ],
               "sources": [
                 "Altema",
+                "AppMedia",
                 "Game8",
                 "GameWith"
               ]
@@ -6402,6 +6271,7 @@
               ],
               "sources": [
                 "Altema",
+                "AppMedia",
                 "Game8",
                 "GameWith"
               ]
@@ -6438,7 +6308,6 @@
               ],
               "sources": [
                 "Altema",
-                "AppMedia",
                 "Game8"
               ]
             },
@@ -6460,6 +6329,7 @@
                 "Water, Wood"
               ],
               "sources": [
+                "AppMedia",
                 "GameWith"
               ]
             }
@@ -6475,8 +6345,7 @@
             "GameWith"
           ],
           "details": [
-            "for 4 turns, Water, Dark, Heart, 2 orbs",
-            "for 4 turns, Heart, 2 orbs"
+            "for 4 turns, Water, Dark, Heart, 2 orbs"
           ],
           "variants": [
             {
@@ -7140,15 +7009,7 @@
                 "for 2 turns"
               ],
               "sources": [
-                "AppMedia"
-              ]
-            },
-            {
-              "when": "Normal action 1",
-              "details": [
-                "for 2 turns"
-              ],
-              "sources": [
+                "AppMedia",
                 "GameWith"
               ]
             }
@@ -7254,7 +7115,7 @@
           ],
           "variants": [
             {
-              "when": "Normal action 2",
+              "when": "Action 2",
               "details": [
                 "Light, Heart"
               ],
@@ -7562,8 +7423,7 @@
                 "for 1 turn"
               ],
               "sources": [
-                "AppMedia",
-                "GameWith"
+                "AppMedia"
               ]
             },
             {
@@ -7572,8 +7432,7 @@
                 "for 1 turn"
               ],
               "sources": [
-                "AppMedia",
-                "GameWith"
+                "AppMedia"
               ]
             },
             {
@@ -7585,6 +7444,24 @@
                 "Altema",
                 "AppMedia",
                 "Game8",
+                "GameWith"
+              ]
+            },
+            {
+              "when": "In-order action 3",
+              "details": [
+                "for 1 turn"
+              ],
+              "sources": [
+                "GameWith"
+              ]
+            },
+            {
+              "when": "In-order action 6",
+              "details": [
+                "for 1 turn"
+              ],
+              "sources": [
                 "GameWith"
               ]
             }
@@ -7608,7 +7485,16 @@
                 "Dark"
               ],
               "sources": [
-                "AppMedia",
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "In-order action 7",
+              "details": [
+                "for 1 turn",
+                "Dark"
+              ],
+              "sources": [
                 "GameWith"
               ]
             }
@@ -7632,7 +7518,16 @@
                 "12 or fewer combos"
               ],
               "sources": [
-                "AppMedia",
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "In-order action 5",
+              "details": [
+                "for 1 turn",
+                "12 or fewer combos"
+              ],
+              "sources": [
                 "GameWith"
               ]
             }
@@ -7656,7 +7551,16 @@
                 "5B or more"
               ],
               "sources": [
-                "AppMedia",
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "In-order action 2",
+              "details": [
+                "for 1 turn",
+                "5B or more"
+              ],
+              "sources": [
                 "GameWith"
               ]
             }
@@ -7672,20 +7576,9 @@
             "GameWith"
           ],
           "details": [
-            "for 10 turns, 1B or more",
             "for 10 turns, 5B or more"
           ],
           "variants": [
-            {
-              "when": "Preemptive",
-              "details": [
-                "for 10 turns",
-                "1B or more"
-              ],
-              "sources": [
-                "Altema"
-              ]
-            },
             {
               "when": "Preemptive",
               "details": [
@@ -7718,7 +7611,16 @@
                 "greatly reduced (percentage unspecified)"
               ],
               "sources": [
-                "AppMedia",
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "In-order action 4",
+              "details": [
+                "for 1 turn",
+                "greatly reduced (percentage unspecified)"
+              ],
+              "sources": [
                 "GameWith"
               ]
             }
@@ -7815,7 +7717,17 @@
                 "2 orbs"
               ],
               "sources": [
-                "AppMedia",
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "In-order action 1",
+              "details": [
+                "for 1 turn",
+                "Light, Heart",
+                "2 orbs"
+              ],
+              "sources": [
                 "GameWith"
               ]
             }
