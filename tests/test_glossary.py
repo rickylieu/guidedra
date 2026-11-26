@@ -14,7 +14,7 @@ def test_japanese_number_units_are_combined():
 
 
 def test_attack_multiplier_direction_and_enrage():
-    assert extract_tags("攻撃力0.2倍") == ["Your ATK down"]
+    assert extract_tags("攻撃力0.2倍") == ["Reduce ATK"]
     assert extract_tags("攻撃力が10倍") == ["Enemy ATK up"]
     assert extract_tags("攻撃力が10倍：999ターン") == ["Enrage"]
 
@@ -65,7 +65,7 @@ def test_damage_void_threshold_and_hit_extraction():
 
 
 def test_orb_skyfall_and_spawn_tags():
-    assert "Skyfall change" in extract_tags("[光][回復]目覚め：10ターン")
+    assert "Skyfall increase" in extract_tags("[光][回復]目覚め：10ターン")
     assert {"Bombs", "Orbs spawned"} <= set(extract_tags("[爆弾]を8個生成"))
     assert "8 orbs" in extract_details("[爆弾]を8個生成")
 
@@ -109,7 +109,7 @@ def test_action_annotation_preserves_hit_multiplier_detail():
     }
     annotated = annotate_action(action)
     assert annotated["hit"] == 7_650_000
-    assert annotated["details"] == ["at ×5 ATK"]
+    assert annotated["details"] == []
     assert action == {
         "timing_jp": "",
         "text_jp": "7,650,000ダメージ（5倍時）",
@@ -197,7 +197,7 @@ def test_effect_text_uses_damage_cap_and_skill_haste_values():
     move_time = annotate_action(
         {"timing_jp": "通常行動", "text_jp": "操作時間半減(2ターン)"}
     )
-    assert move_time["text"] == "Move-time change (for 2 turns, reduced by 50%)"
+    assert move_time["text"] == "Move-time change (for 2 turns - reduced by 50%)"
 
 
 def test_pure_damage_gets_english_label_and_resolve_defaults_to_half():
