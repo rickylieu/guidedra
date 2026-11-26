@@ -43,6 +43,22 @@ ORB_NAMES = {
     "回復": "Heart",
     "お邪魔": "Jammer",
     "爆弾": "Bomb",
+    "毒": "Poison",
+    "猛毒": "Mortal poison",
+}
+TYPE_NAMES = {
+    "神": "God",
+    "ドラゴン": "Dragon",
+    "悪魔": "Devil",
+    "マシン": "Machine",
+    "バランス": "Balanced",
+    "攻撃": "Attacker",
+    "体力": "Physical",
+    "回復": "Healer",
+    "進化用": "Evo material",
+    "能力覚醒用": "Awoken material",
+    "強化合成用": "Enhance material",
+    "売却用": "Redeemable",
 }
 NUMBER_UNITS = {
     "万": Decimal(10_000),
@@ -66,6 +82,7 @@ _THORN_COUNT_RE = re.compile(
     r"ドロップ(?:を)?(\d+)個(?:を|が)?(?:トゲ|棘)|(?:トゲ|棘)(?:ドロップ)?(?:を)?(\d+)個"
 )
 _NORMAL_ORDER_RE = re.compile(r"通常(?:行動|攻撃)\s*(\d+)")
+_COUNTDOWN_RE = re.compile(r"カウントダウン\s*(\d+)")
 
 
 def normalize_text(text: str) -> str:
@@ -137,7 +154,7 @@ _TAG_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("Reduction required", re.compile(r"軽減必須")),
     ("Big hit / lethal", re.compile(r"大ダメージ|即死")),
     ("Enemy ATK up", re.compile(r"攻撃力(?:が)?\d+(?:\.\d+)?倍")),
-    ("Your ATK down", re.compile(r"攻撃力(?:が)?(?:激減|減少)")),
+    ("Reduce ATK", re.compile(r"攻撃力(?:が)?(?:激減|減少)")),
     ("Your RCV down", re.compile(r"回復力(?:が)?(?:半減|減少)")),
     ("Enemy DEF up", re.compile(r"防御力(?:が)?\d+(?:\.\d+)?(?:兆|億|万)増加")),
     ("Enemy damage reduction", re.compile(r"ダメージ(?:を)?(?:半減|激減)|受けるダメージを半減|\d+%軽減")),
@@ -162,6 +179,7 @@ _TAG_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("Skill haste", re.compile(r"スキルヘイスト")),
     ("Enemy turn timer change", re.compile(r"行動ターンが.{1,12}変化")),
     ("Charging", re.compile(r"溜め")),
+    ("Destroy orbs", re.compile(r"を破壊")),
 )
 
 
@@ -175,6 +193,10 @@ def _is_enrage(text: str) -> bool:
 def extract_tags(text_jp: str) -> list[str]:
     text = normalize_text(text_jp)
     tags = [name for name, pattern in _TAG_PATTERNS if pattern.search(text)]
+    if "Destroy orbs" in tags and "Bombs" in tags:
+        rest = re.sub(r"[\[\]火水木光闇回復お邪魔爆弾猛毒と・、]+(?:ドロップ)?を破壊", "", text)
+        if "爆弾" not in rest:
+            tags.remove("Bombs")
 
     if "超根性" in text:
         tags.append("Super resolve")
@@ -189,20 +211,27 @@ def extract_tags(text_jp: str) -> list[str]:
         if attack:
             if Decimal(attack.group(1)) < 1:
                 tags = [tag for tag in tags if tag != "Enemy ATK up"]
-                tags.append("Your ATK down")
+                tags.append("Reduce ATK")
             elif "Enemy ATK up" not in tags:
                 tags.append("Enemy ATK up")
 
-    if re.search(r"(?:火|水|木|光|闇|回復|お邪魔|爆弾)ドロップ目覚め|(?:火|水|木|光|闇|回復)目覚め", text):
-        tags.append("Skyfall change")
-    if re.search(r"(?:\[(?:火|水|木|光|闇|回復)\])+(?:ドロップ)?目覚め", text):
-        tags.append("Skyfall change")
     if re.search(
-        r"(?:\[(?:火|水|木|光|闇|回復|お邪魔|爆弾)\]|"
-        r"(?:火|水|木|光|闇|回復|お邪魔|爆弾)(?:ドロップ)?)を?\d+個生成",
+        r"(?:火|水|木|光|闇|回復|お邪魔|爆弾|猛毒|毒)ドロップ目覚め"
+        r"|(?:火|水|木|光|闇|回復|猛毒|毒)目覚め",
+        text,
+    ):
+        tags.append("Skyfall increase")
+    if re.search(r"(?:\[(?:火|水|木|光|闇|回復|猛毒|毒)\])+(?:ドロップ)?目覚め", text):
+        tags.append("Skyfall increase")
+    if re.search(
+        r"(?:\[(?:火|水|木|光|闇|回復|お邪魔|爆弾|猛毒|毒)\]|"
+        r"(?:火|水|木|光|闇|回復|お邪魔|爆弾|猛毒|毒)(?:ドロップ)?)を?\d+個(?:ずつ)?生成",
         text,
     ):
         tags.append("Orbs spawned")
+        tags = [tag for tag in tags if tag != "Poison"]
+    if "Skyfall increase" in tags or "Roulette" in tags:
+        tags = [tag for tag in tags if tag != "Poison"]
     if "先制" in text:
         tags.append("Preemptive")
     if _is_full_board_change(text):
@@ -217,8 +246,16 @@ def is_critical(tag: str) -> bool:
 
 def parse_timing(timing_jp: str, order: int | str | None = None) -> dict[str, str]:
     text = normalize_text(timing_jp)
+    if text and re.search(r"順番に.*使用", text):
+        label = "Repeats in order" if "繰り返し" in text else "Used in order"
+        return {"kind": "sequence", "label": label}
     if not text or "先制" in text:
         return {"kind": "preemptive", "label": "Preemptive"}
+
+    countdown = _COUNTDOWN_RE.search(text)
+    if countdown:
+        # annotate_record turns these into turns once it has seen the whole enemy.
+        return {"kind": "countdown", "label": f"Countdown {countdown.group(1)}"}
 
     if "全部位破壊時" in text:
         return {"kind": "all_parts_break", "label": "When all parts break"}
@@ -234,8 +271,6 @@ def parse_timing(timing_jp: str, order: int | str | None = None) -> dict[str, st
         return {"kind": "lesson_pass", "label": "Puzzle test passed"}
     if "失敗時" in text:
         return {"kind": "lesson_fail", "label": "Puzzle test failed"}
-    if "以下の順番に使用" in text:
-        return {"kind": "sequence", "label": "Used in order"}
     if "ランダムに使用" in text:
         return {"kind": "random", "label": "One at random"}
 
@@ -360,12 +395,24 @@ def extract_details(text_jp: str, order: int | str | None = None) -> list[str]:
             details.append("50%")
 
     attack_multiplier = re.search(r"攻撃力(?:が)?(\d+(?:\.\d+)?)倍", text)
+    attack_down_multiplier = re.search(
+        r"攻撃力.{0,20}?(?:激減|減少|低下).{0,8}?\(?(\d+(?:\.\d+)?)倍",
+        text,
+    )
     attack_down_percent = re.search(
         r"攻撃力.{0,20}?(?:激減|減少|低下).{0,8}?\(?(\d+(?:\.\d+)?)%",
         text,
     )
-    if attack_multiplier and Decimal(attack_multiplier.group(1)) < 1:
-        amount = (Decimal(1) - Decimal(attack_multiplier.group(1))) * 100
+    reduced_multiplier = next(
+        (
+            Decimal(found.group(1))
+            for found in (attack_multiplier, attack_down_multiplier)
+            if found and Decimal(found.group(1)) < 1
+        ),
+        None,
+    )
+    if reduced_multiplier is not None:
+        amount = (Decimal(1) - reduced_multiplier) * 100
         details.append(f"ATK reduced by {format(amount.normalize(), 'f')}%")
     elif attack_down_percent:
         details.append(f"ATK reduced by {attack_down_percent.group(1)}%")
@@ -384,9 +431,10 @@ def extract_details(text_jp: str, order: int | str | None = None) -> list[str]:
     if board:
         details.append(f"{board.group(1)}×{board.group(2)}")
 
-    count = re.search(r"(\d+)個生成", text)
+    count = re.search(r"(\d+)個(ずつ)?生成", text)
     if count and "ルーレット" not in text:
-        details.append(f"{count.group(1)} orbs")
+        unit = "orbs each" if count.group(2) else "orbs"
+        details.append(f"{count.group(1)} {unit}")
     thorns = _THORN_COUNT_RE.search(text)
     if thorns:
         details.append(f"{thorns.group(1) or thorns.group(2)} orbs")
@@ -431,13 +479,20 @@ def extract_details(text_jp: str, order: int | str | None = None) -> list[str]:
     return list(dict.fromkeys(details))
 
 
+def _add_orb_names(fragment: str, names: list[str]) -> None:
+    """Add the orbs named in a fragment. 猛毒 never also counts as 毒."""
+    has_mortal_poison = "猛毒" in fragment
+    rest = fragment.replace("猛毒", "")
+    for orb, name in ORB_NAMES.items():
+        present = has_mortal_poison if orb == "猛毒" else orb in rest
+        if present and name not in names:
+            names.append(name)
+
+
 def _orb_names_in(text: str) -> list[str]:
     names: list[str] = []
-    for match in re.finditer(r"\[([火水木光闇回復お邪魔爆弾]+)\]", text):
-        token = match.group(1)
-        for orb, name in ORB_NAMES.items():
-            if orb in token and name not in names:
-                names.append(name)
+    for match in re.finditer(r"\[([火水木光闇回復お邪魔爆弾猛毒]+)\]", text):
+        _add_orb_names(match.group(1), names)
 
     board_target = re.search(
         r"(?:盤面を|全ドロップ(?:を)?)(?P<target>.*?)(?:変化|変換|にする|に変える)",
@@ -448,10 +503,10 @@ def _orb_names_in(text: str) -> list[str]:
         target_text += match.group(1)
     for match in re.finditer(r"([火水木光闇回復お邪魔爆弾]+)ルーレット", text):
         target_text += match.group(1)
+    for match in re.finditer(r"([火水木光闇回復お邪魔爆弾猛毒と・、]+)(?:ドロップ)?を破壊", text):
+        target_text += match.group(1)
     if target_text:
-        for orb, name in ORB_NAMES.items():
-            if orb in target_text and name not in names:
-                names.append(name)
+        _add_orb_names(target_text, names)
     return names
 
 
@@ -490,6 +545,25 @@ def extract_hit(text_jp: str) -> tuple[int | None, list[str]]:
 def _compose_text(tags: list[str], details: list[str]) -> str:
     labels = list(tags)
     remaining = list(details)
+    if "Thorn orbs" in labels:
+        count = next((d for d in remaining if re.fullmatch(r"\d+ orbs", d or "")), None)
+        if count:
+            remaining.remove(count)
+            labels[labels.index("Thorn orbs")] = f"Create {count.split()[0]} thorn orbs"
+    if "Destroy orbs" in labels:
+        orb_words = {name.lower() for name in ORB_NAMES.values()}
+        colors = next(
+            (d for d in remaining if d and all(part.lower() in orb_words for part in d.split(", "))),
+            None,
+        )
+        if colors:
+            remaining.remove(colors)
+            names = [part.lower() for part in colors.split(", ")]
+            if len(names) > 2:
+                joined = f"{', '.join(names[:-1])}, and {names[-1]}"
+            else:
+                joined = " and ".join(names)
+            labels[labels.index("Destroy orbs")] = f"Destroy {joined} orbs"
     if "Damage cap set" in labels:
         cap = next((detail for detail in remaining if detail.startswith("cap ")), None)
         if cap:
@@ -513,7 +587,8 @@ def _compose_text(tags: list[str], details: list[str]) -> str:
             remaining.remove(shield)
     line = ", ".join(labels)
     if remaining:
-        line += f" ({', '.join(remaining)})"
+        sep = " - "
+        line += f" ({sep.join(remaining)})"
     return line
 
 
@@ -578,8 +653,26 @@ def annotate_record(record: dict[str, Any]) -> dict[str, Any]:
             enemy["traits"] = [trait for trait in enemy["traits"] if trait is not None]
             for action in enemy.get("actions", []):
                 action.update(annotate_action(action))
+            _number_countdown_turns(enemy.get("actions", []))
             _mark_enraged_hits(enemy.get("actions", []))
     return annotated
+
+
+def _number_countdown_turns(actions: list[dict[str, Any]]) -> None:
+    """Turn countdown headers into turns: the highest count is Turn 1."""
+    counts: dict[int, int] = {}
+    for index, action in enumerate(actions):
+        if action.get("timing_kind") != "countdown":
+            continue
+        match = _COUNTDOWN_RE.search(normalize_text(str(action.get("timing_jp", ""))))
+        if match:
+            counts[index] = int(match.group(1))
+    if not counts:
+        return
+    highest = max(counts.values())
+    for index, count in counts.items():
+        actions[index]["timing_kind"] = "turn"
+        actions[index]["when"] = f"Turn {highest - count + 1}"
 
 
 def _mark_enraged_hits(actions: list[dict[str, Any]]) -> None:
@@ -624,6 +717,17 @@ def english_trait(trait_jp: str) -> str | None:
     if "根性" in text:
         match = re.search(r"(?:超根性|根性)\s*[:：]?\s*(\d+)%", text)
         return f"Resolve at {match.group(1) if match else '50'}%"
+    if "半減" in text:
+        types = [
+            TYPE_NAMES[name]
+            for name in re.findall(r"([^\s\[\]【】]+?)タイプ", text)
+            if name in TYPE_NAMES
+        ]
+        if not types:
+            return "Takes half damage from certain types"
+        if len(types) == 1:
+            return f"Takes half damage from {types[0]} types"
+        return f"Takes half damage from {', '.join(types[:-1])} and {types[-1]} types"
     match = re.search(r"(\d+)ターン行動", text)
     if match:
         return f"Acts every {match.group(1)} turns"

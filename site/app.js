@@ -17,6 +17,8 @@ const DEBUG_MODE = new URL(window.location.href).searchParams.get("debug") === "
 const DAMAGE_CAP_TAG = "Damage cap set";
 const DEFAULT_TURNS_PER_FLOOR = 2;
 const MAX_TURNS_PER_FLOOR = 99;
+const MIN_TURNS_WITH_RESOLVE = 2;
+const RESOLVE_TAGS = new Set(["Resolve", "Super resolve"]);
 const BILLION = 1e9;
 const PUZZLE_LESSON_TIMING_KINDS = new Set([
   "after_lesson",
@@ -33,6 +35,15 @@ const PUZZLE_EXEMPT_TAGS = new Set(["Resolve", "Super resolve", "Invade"]);
 let dungeonIndex = [];
 let currentDungeon = null;
 let selectedMechanics = new Set();
+let cardElements = {};
+const ATTRIBUTES = new Set(["Fire", "Water", "Wood", "Light", "Dark"]);
+const ATTRIBUTE_COLORS = {
+  Fire: "229, 83, 61",
+  Water: "61, 139, 229",
+  Wood: "63, 174, 90",
+  Light: "229, 194, 61",
+  Dark: "155, 89, 208",
+};
 
 const SUMMARY_GROUPS = [
   {
@@ -479,6 +490,13 @@ function floorHp(floor) {
   return total(hps);
 }
 
+function hasResolve(floor) {
+  if ((floor.tags || []).some((tag) => RESOLVE_TAGS.has(tag.name))) return true;
+  return (floor.enemies || []).some((enemy) =>
+    (enemy.traits || []).some((trait) => /resolve/i.test(trait)),
+  );
+}
+
 function invadeFloorNumbers(floor) {
   if (Array.isArray(floor.invade_floors) && floor.invade_floors.length) {
     return [...new Set(floor.invade_floors.filter(Number.isInteger))];
@@ -543,9 +561,10 @@ function buildTimeline(floors, averageDamage) {
       if (hp === null) {
         assumed.push(floor.assumedLabel || floor.label);
       } else {
+        const minimum = hasResolve(floor) ? MIN_TURNS_WITH_RESOLVE : 1;
         turns = Math.min(
           MAX_TURNS_PER_FLOOR,
-          Math.max(1, Math.ceil(hp / averageDamage)),
+          Math.max(minimum, Math.ceil(hp / averageDamage)),
         );
       }
     }
@@ -772,6 +791,7 @@ function updateSkillPlan() {
   } else {
     notes.push(
       `Turns on a floor = its enemy HP ÷ ${formatNumber(averageDamage)}, rounded up.`,
+      `Floors with resolve or super resolve take at least ${MIN_TURNS_WITH_RESOLVE} turns.`,
       "Effects that aren't preemptive are left out on floors cleared in 1 turn.",
     );
     if (assumed.length) {
@@ -1035,11 +1055,38 @@ function renderFloorTags(tags, primary) {
   return list;
 }
 
+function enemyAttributes(enemy) {
+  const list = Array.isArray(enemy.elements)
+    ? enemy.elements
+    : cardElements[String(enemy.card)];
+  const [main, sub] = (list || []).filter((name) => ATTRIBUTES.has(name));
+  if (!main) return [];
+  return sub && sub !== main ? [main, sub] : [main];
+}
+
 function renderEnemySummary(enemy) {
   const section = element("section", "enemy-summary");
+  const [main, sub] = enemyAttributes(enemy);
+  if (main) {
+    const first = ATTRIBUTE_COLORS[main];
+    const second = ATTRIBUTE_COLORS[sub || main];
+    section.classList.add("has-attribute");
+    section.style.borderLeft = `5px solid rgb(${second})`;
+    section.style.borderRight = `5px solid rgb(${first})`;
+    section.style.background =
+      `linear-gradient(90deg, rgba(${second}, 0.3) 0 50%, rgba(${first}, 0.3) 50% 100%)`;
+    section.title = sub
+      ? `${main} above 50% HP, ${sub} at 50% HP or below`
+      : main;
+  }
   const heading = element("div", "enemy-heading");
   heading.append(element("h4", "", enemy.name || "Unknown enemy"));
   const stats = element("div", "enemy-stats");
+  if (main) {
+    stats.append(
+      element("span", "enemy-attribute", sub ? `${main} → ${sub} at ≤50% HP` : main),
+    );
+  }
   if (enemy.card !== null && enemy.card !== undefined) {
     stats.append(element("span", "", `Card ${enemy.card}`));
   }
@@ -1065,9 +1112,27 @@ function renderEnemySummary(enemy) {
   return section;
 }
 
-function actionQualifier(action, groupKey) {
+function sequenceLength(actions) {
+  const orders = (actions || [])
+    .map((action) => action.order)
+    .filter((order) => Number.isFinite(order));
+  return orders.length ? Math.max(...orders) : null;
+}
+
+function sequenceTitle(group) {
+  for (const enemyGroup of group.enemies || []) {
+    for (const action of enemyGroup.actions || []) {
+      if (action.when) return action.when;
+    }
+  }
+  return group.title;
+}
+
+function actionQualifier(action, groupKey, sequenceTotal) {
   if (groupKey === "sequence" && Number.isFinite(action.order)) {
-    return `Step ${action.order}`;
+    return sequenceTotal
+      ? `Action ${action.order} of ${sequenceTotal}`
+      : `Action ${action.order}`;
   }
   if (groupKey === "normal") {
     if (action.timing_kind === "random" || action.when === "One at random") {
@@ -1081,7 +1146,7 @@ function actionQualifier(action, groupKey) {
   return "";
 }
 
-function renderAction(action, floor, teamHp, groupKey) {
+function renderAction(action, floor, teamHp, groupKey, sequenceTotal = null) {
   const alert = alertForAction(action, floor, teamHp);
   const alertClass = alert?.startsWith("Execute")
     ? "execute"
@@ -1093,7 +1158,7 @@ function renderAction(action, floor, teamHp, groupKey) {
     `action${alert ? " hit-alert" : ""}${alertClass ? ` ${alertClass}` : ""}`,
   );
   const copy = element("div", "action-copy");
-  const qualifier = actionQualifier(action, groupKey);
+  const qualifier = actionQualifier(action, groupKey, sequenceTotal);
   if (qualifier) copy.append(element("span", "action-when", qualifier));
   const text = actionTextForGroup(action, groupKey, DEBUG_MODE);
   if (text) copy.append(element("span", "action-text", text));
@@ -1128,11 +1193,15 @@ function renderTimingGroups(floor, teamHp) {
     enemySection.append(renderEnemySummary(enemy));
     for (const group of groupFloorActions({ ...floor, enemies: [enemy] })) {
       const section = element("section", "timing-group");
-      section.append(element("h4", "", group.title));
+      const title = group.key === "sequence" ? sequenceTitle(group) : group.title;
+      section.append(element("h4", "", title));
       const actions = element("div", "enemy-actions");
       for (const enemyGroup of group.enemies) {
+        const total = group.key === "sequence"
+          ? sequenceLength(enemyGroup.actions)
+          : null;
         for (const action of enemyGroup.actions) {
-          actions.append(renderAction(action, floor, teamHp, group.key));
+          actions.append(renderAction(action, floor, teamHp, group.key, total));
         }
       }
       section.append(actions);
@@ -1240,6 +1309,9 @@ async function start() {
     dungeonSelect.append(option);
   }
 
+  cardElements = await fetch("data/card_elements.json")
+    .then((reply) => (reply.ok ? reply.json() : {}))
+    .catch(() => ({}));
   const savedHp = window.localStorage.getItem(STORAGE_KEY);
   if (savedHp && Number.isFinite(Number(savedHp)) && Number(savedHp) > 0) {
     teamHpInput.value = savedHp;

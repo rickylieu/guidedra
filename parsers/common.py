@@ -99,7 +99,7 @@ def is_type_icon(img: Tag) -> bool:
 def orb_token(alt: str) -> str | None:
     text = normalize_text(alt)
     match = re.fullmatch(
-        r"(お邪魔|回復|火|水|木|光|闇|爆弾)(?:ドロップ)?(?:目覚め)?",
+        r"(お邪魔|回復|猛毒|毒|火|水|木|光|闇|爆弾)(?:ドロップ)?(?:目覚め)?",
         text,
     )
     return f"[{match.group(1)}]" if match else None
@@ -156,6 +156,13 @@ def cell_events(cell: Tag) -> list[tuple[str, str]]:
             token = orb_image_token(node)
             if token:
                 buffer.append(token)
+            elif is_type_icon(node):
+                # A type icon inside an open 【…】 header names the type,
+                # e.g. 【(神タイプ icon)半減】. Everywhere else it is dropped.
+                alt = image_alt(node)
+                pending = "".join(buffer)
+                if alt.endswith("タイプ") and pending.rfind("【") > pending.rfind("】"):
+                    buffer.append(alt)
             return
         classes = node.get("class", [])
         if isinstance(classes, str):
@@ -248,6 +255,8 @@ def _trait_from_text(text: str) -> str | None:
     ):
         return normalized
     if re.fullmatch(r"\d+ターン行動", normalized):
+        return normalized
+    if re.fullmatch(r"(?:\S+?タイプ)*半減", normalized):
         return normalized
     return None
 

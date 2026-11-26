@@ -554,3 +554,29 @@ main {
     gap: 0.3rem;
   }
 }
+
+/* enemy attributes */
+.enemy-summary.has-attribute {
+  border-left: 4px solid var(--attr-main);
+  border-right: 4px solid var(--attr-sub);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--attr-main) 22%, #0d1117) 0 50%,
+    color-mix(in srgb, var(--attr-sub) 22%, #0d1117) 50% 100%
+  );
+}
+
+.attr-main-fire { --attr-main: #e5533d; }
+.attr-main-water { --attr-main: #3d8be5; }
+.attr-main-wood { --attr-main: #3fae5a; }
+.attr-main-light { --attr-main: #e5c23d; }
+.attr-main-dark { --attr-main: #9b59d0; }
+.attr-sub-fire { --attr-sub: #e5533d; }
+.attr-sub-water { --attr-sub: #3d8be5; }
+.attr-sub-wood { --attr-sub: #3fae5a; }
+.attr-sub-light { --attr-sub: #e5c23d; }
+.attr-sub-dark { --attr-sub: #9b59d0; }
+
+.enemy-attribute {
+  color: #c9d1d9;
+}

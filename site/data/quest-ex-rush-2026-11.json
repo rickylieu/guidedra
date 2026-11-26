@@ -51,9 +51,7 @@
       "Invade (Floor 2, 3, or 4)",
       "Floor 1",
       "Floor 2",
-      "Floor 3",
-      "Floor 6",
-      "Floor 7"
+      "Floor 6"
     ],
     "Roulette": [
       "Invade (Floor 2, 3, or 4)",
@@ -271,6 +269,28 @@
           ]
         },
         {
+          "name": "Reduce ATK",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn, ATK greatly reduced (percentage unspecified)"
+          ],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [
+                "for 1 turn",
+                "ATK greatly reduced (percentage unspecified)"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
           "name": "Roulette",
           "critical": true,
           "sources": [
@@ -341,33 +361,11 @@
               ]
             }
           ]
-        },
-        {
-          "name": "Your ATK down",
-          "critical": false,
-          "sources": [
-            "AppMedia"
-          ],
-          "details": [
-            "for 1 turn, ATK greatly reduced (percentage unspecified)"
-          ],
-          "variants": [
-            {
-              "when": "Action 1",
-              "details": [
-                "for 1 turn",
-                "ATK greatly reduced (percentage unspecified)"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            }
-          ]
         }
       ],
       "enemies": [
         {
-          "name": "ローネ",
+          "name": "Draconic Songstress on Trombone, Rone",
           "card": 5685,
           "hp": 500000000000,
           "defense": 1000000000,
@@ -442,7 +440,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
-              "text": "Board change (for 3 turns, 5×4)",
+              "text": "Board change (for 3 turns - 5×4)",
               "tags": [
                 "Board change"
               ],
@@ -496,9 +494,9 @@
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
-              "text": "Your ATK down (for 1 turn, ATK greatly reduced (percentage unspecified))",
+              "text": "Reduce ATK (for 1 turn - ATK greatly reduced (percentage unspecified))",
               "tags": [
-                "Your ATK down"
+                "Reduce ATK"
               ],
               "details": [
                 "for 1 turn",
@@ -533,7 +531,7 @@
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
-              "text": "Roulette (for 1 turn, Light, Heart, 2 orbs)",
+              "text": "Roulette (for 1 turn - Light, Heart - 2 orbs)",
               "tags": [
                 "Roulette"
               ],
@@ -776,7 +774,7 @@
       ],
       "enemies": [
         {
-          "name": "転生アレス",
+          "name": "Reincarnated Ares",
           "card": 3492,
           "hp": 360000000000,
           "defense": 1000000000,
@@ -810,7 +808,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
-              "text": "Damage void, Preemptive (for 7 turns, 5B or more)",
+              "text": "Damage void, Preemptive (for 7 turns - 5B or more)",
               "tags": [
                 "Damage void",
                 "Preemptive"
@@ -831,7 +829,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
-              "text": "Attribute absorb, Preemptive (for 7 turns, Fire, Light, Dark)",
+              "text": "Attribute absorb, Preemptive (for 7 turns - Fire, Light, Dark)",
               "tags": [
                 "Attribute absorb",
                 "Preemptive"
@@ -1169,7 +1167,7 @@
       ],
       "enemies": [
         {
-          "name": "白龍",
+          "name": "Ivory Dragon",
           "card": 118,
           "hp": 300000000000,
           "defense": 1000000000,
@@ -1201,7 +1199,7 @@
               "timing_kind": "unknown",
               "order": null,
               "source": "AppMedia",
-              "text": "Roulette (for 1 turn, Light, Heart, 2 orbs)",
+              "text": "Roulette (for 1 turn - Light, Heart - 2 orbs)",
               "tags": [
                 "Roulette"
               ],
@@ -1239,7 +1237,7 @@
           ]
         },
         {
-          "name": "ザイラス",
+          "name": "Merciless Dragon Caller, Zyrath",
           "card": 12709,
           "hp": 400000000000,
           "defense": 1000000000,
@@ -1271,7 +1269,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
-              "text": "Combo absorb, Preemptive (for 2 turns, 13 or fewer combos)",
+              "text": "Combo absorb, Preemptive (for 2 turns - 13 or fewer combos)",
               "tags": [
                 "Combo absorb",
                 "Preemptive"
@@ -1292,7 +1290,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
-              "text": "Board change, Preemptive (for 2 turns, 7×6)",
+              "text": "Board change, Preemptive (for 2 turns - 7×6)",
               "tags": [
                 "Board change",
                 "Preemptive"
@@ -1313,7 +1311,7 @@
               "timing_kind": "turn",
               "order": null,
               "source": "AppMedia",
-              "text": "Combo absorb (for 2 turns, 10 or fewer combos)",
+              "text": "Combo absorb (for 2 turns - 10 or fewer combos)",
               "tags": [
                 "Combo absorb"
               ],
@@ -1333,7 +1331,7 @@
               "timing_kind": "turn",
               "order": null,
               "source": "AppMedia",
-              "text": "Board change (for 2 turns, 6×5)",
+              "text": "Board change (for 2 turns - 6×5)",
               "tags": [
                 "Board change"
               ],
@@ -1444,19 +1442,19 @@
           ]
         },
         {
-          "name": "Full-board change",
-          "critical": true,
+          "name": "Orb change",
+          "critical": false,
           "sources": [
             "AppMedia"
           ],
           "details": [
-            "Dark, Heart"
+            "Dark, Heart, Poison"
           ],
           "variants": [
             {
               "when": "On super resolve",
               "details": [
-                "Dark, Heart"
+                "Dark, Heart, Poison"
               ],
               "sources": [
                 "AppMedia"
@@ -1465,19 +1463,19 @@
           ]
         },
         {
-          "name": "Orb change",
+          "name": "Poison",
           "critical": false,
           "sources": [
             "AppMedia"
           ],
           "details": [
-            "Dark, Heart"
+            "Dark, Heart, Poison"
           ],
           "variants": [
             {
               "when": "On super resolve",
               "details": [
-                "Dark, Heart"
+                "Dark, Heart, Poison"
               ],
               "sources": [
                 "AppMedia"
@@ -1583,7 +1581,7 @@
       ],
       "enemies": [
         {
-          "name": "究極サツキ",
+          "name": "Morning Moon Dragon Caller, Satsuki",
           "card": 3581,
           "hp": 450000000000,
           "defense": 1000000000,
@@ -1617,7 +1615,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
-              "text": "Attribute absorb, Preemptive (for 3 turns, Light, Dark)",
+              "text": "Attribute absorb, Preemptive (for 3 turns - Light, Dark)",
               "tags": [
                 "Attribute absorb",
                 "Preemptive"
@@ -1658,7 +1656,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
-              "text": "Damage void (for 3 turns, 5B or more)",
+              "text": "Damage void (for 3 turns - 5B or more)",
               "tags": [
                 "Damage void"
               ],
@@ -1678,13 +1676,13 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
-              "text": "Orb change, Full-board change (Dark, Heart)",
+              "text": "Poison, Orb change (Dark, Heart, Poison)",
               "tags": [
-                "Orb change",
-                "Full-board change"
+                "Poison",
+                "Orb change"
               ],
               "details": [
-                "Dark, Heart"
+                "Dark, Heart, Poison"
               ],
               "hit": 6262000,
               "normal_hit": null,
@@ -1804,7 +1802,7 @@
       ],
       "enemies": [
         {
-          "name": "試練ラファエル",
+          "name": "Savior of the Divine Transcendence, Raphael",
           "card": 11583,
           "hp": 200000000000,
           "defense": 1000000000,
@@ -2074,7 +2072,7 @@
       ],
       "enemies": [
         {
-          "name": "ディアボロス",
+          "name": "Wicked Dragon, Diabolos",
           "card": 11570,
           "hp": 470000000000,
           "defense": 1000000000,
@@ -2108,7 +2106,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
-              "text": "Damage absorb, Preemptive (for 5 turns, 5B or more)",
+              "text": "Damage absorb, Preemptive (for 5 turns - 5B or more)",
               "tags": [
                 "Damage absorb",
                 "Preemptive"
@@ -2129,7 +2127,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
-              "text": "Roulette, Preemptive (for 5 turns, All colors, 2 orbs)",
+              "text": "Roulette, Preemptive (for 5 turns - All colors - 2 orbs)",
               "tags": [
                 "Roulette",
                 "Preemptive"
@@ -2203,7 +2201,7 @@
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
-              "text": "Orbs spawned (Dark, 11 orbs)",
+              "text": "Orbs spawned (Dark - 11 orbs)",
               "tags": [
                 "Orbs spawned"
               ],
@@ -2356,19 +2354,9 @@
             "AppMedia"
           ],
           "details": [
-            "Fire, Dark",
             "Dark"
           ],
           "variants": [
-            {
-              "when": "Action 1",
-              "details": [
-                "Fire, Dark"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            },
             {
               "when": "On super resolve",
               "details": [
@@ -2409,14 +2397,14 @@
             "AppMedia"
           ],
           "details": [
-            "Fire, Dark",
+            "Fire, Dark, Mortal poison",
             "Dark"
           ],
           "variants": [
             {
               "when": "Action 1",
               "details": [
-                "Fire, Dark"
+                "Fire, Dark, Mortal poison"
               ],
               "sources": [
                 "AppMedia"
@@ -2426,6 +2414,27 @@
               "when": "On super resolve",
               "details": [
                 "Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Poison",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Fire, Dark, Mortal poison"
+          ],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [
+                "Fire, Dark, Mortal poison"
               ],
               "sources": [
                 "AppMedia"
@@ -2477,7 +2486,7 @@
           ]
         },
         {
-          "name": "Skyfall change",
+          "name": "Skyfall increase",
           "critical": false,
           "sources": [
             "AppMedia"
@@ -2553,7 +2562,7 @@
       ],
       "enemies": [
         {
-          "name": "レーヴェン&ラジョア",
+          "name": "Dream Slayer Dragonbound, Rehven & Lajoa",
           "card": 12698,
           "hp": 520000000000,
           "defense": 1000000000,
@@ -2587,7 +2596,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
-              "text": "Max HP halved, Preemptive (for 2 turns, 50%)",
+              "text": "Max HP halved, Preemptive (for 2 turns - 50%)",
               "tags": [
                 "Max HP halved",
                 "Preemptive"
@@ -2608,7 +2617,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
-              "text": "Enemy ATK up, Preemptive (for 1 turn, ×4.5)",
+              "text": "Enemy ATK up, Preemptive (for 1 turn - ×4.5)",
               "tags": [
                 "Enemy ATK up",
                 "Preemptive"
@@ -2663,13 +2672,13 @@
               "timing_kind": "first_action",
               "order": 1,
               "source": "AppMedia",
-              "text": "Orb change, Full-board change (Fire, Dark)",
+              "text": "Poison, Orb change (Fire, Dark, Mortal poison)",
               "tags": [
-                "Orb change",
-                "Full-board change"
+                "Poison",
+                "Orb change"
               ],
               "details": [
-                "Fire, Dark"
+                "Fire, Dark, Mortal poison"
               ],
               "hit": null,
               "normal_hit": null,
@@ -2683,7 +2692,7 @@
               "timing_kind": "first_action",
               "order": 2,
               "source": "AppMedia",
-              "text": "Combo absorb (for 1 turn, 11 or fewer combos)",
+              "text": "Combo absorb (for 1 turn - 11 or fewer combos)",
               "tags": [
                 "Combo absorb"
               ],
@@ -2703,7 +2712,7 @@
               "timing_kind": "first_action",
               "order": 3,
               "source": "AppMedia",
-              "text": "Enemy DEF up (for 1 turn, DEF +2.5B)",
+              "text": "Enemy DEF up (for 1 turn - DEF +2.5B)",
               "tags": [
                 "Enemy DEF up"
               ],
@@ -2723,10 +2732,10 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
-              "text": "Super blind, Skyfall change (for 4 turns)",
+              "text": "Super blind, Skyfall increase (for 4 turns)",
               "tags": [
                 "Super blind",
-                "Skyfall change"
+                "Skyfall increase"
               ],
               "details": [
                 "for 4 turns"
@@ -2743,7 +2752,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
-              "text": "Damage void (for 4 turns, 5B or more)",
+              "text": "Damage void (for 4 turns - 5B or more)",
               "tags": [
                 "Damage void"
               ],
@@ -2854,19 +2863,19 @@
           ]
         },
         {
-          "name": "Full-board change",
-          "critical": true,
+          "name": "Orb change",
+          "critical": false,
           "sources": [
             "AppMedia"
           ],
           "details": [
-            "Dark, Jammer"
+            "Dark, Jammer, Mortal poison"
           ],
           "variants": [
             {
               "when": "Action 3",
               "details": [
-                "Dark, Jammer"
+                "Dark, Jammer, Mortal poison"
               ],
               "sources": [
                 "AppMedia"
@@ -2875,19 +2884,19 @@
           ]
         },
         {
-          "name": "Orb change",
+          "name": "Poison",
           "critical": false,
           "sources": [
             "AppMedia"
           ],
           "details": [
-            "Dark, Jammer"
+            "Dark, Jammer, Mortal poison"
           ],
           "variants": [
             {
               "when": "Action 3",
               "details": [
-                "Dark, Jammer"
+                "Dark, Jammer, Mortal poison"
               ],
               "sources": [
                 "AppMedia"
@@ -2928,6 +2937,28 @@
                 "for 4 turns",
                 "All colors",
                 "3 orbs"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Reduce ATK",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn, ATK greatly reduced (percentage unspecified)"
+          ],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [
+                "for 1 turn",
+                "ATK greatly reduced (percentage unspecified)"
               ],
               "sources": [
                 "AppMedia"
@@ -3029,28 +3060,6 @@
           ]
         },
         {
-          "name": "Your ATK down",
-          "critical": false,
-          "sources": [
-            "AppMedia"
-          ],
-          "details": [
-            "for 1 turn, ATK greatly reduced (percentage unspecified)"
-          ],
-          "variants": [
-            {
-              "when": "Action 1",
-              "details": [
-                "for 1 turn",
-                "ATK greatly reduced (percentage unspecified)"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            }
-          ]
-        },
-        {
           "name": "Your RCV down",
           "critical": false,
           "sources": [
@@ -3075,7 +3084,7 @@
       ],
       "enemies": [
         {
-          "name": "極醒木メタトロン",
+          "name": "Mega Awoken Supervisor, Metatron",
           "card": 9302,
           "hp": 650000000000,
           "defense": 1500000000,
@@ -3127,7 +3136,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "AppMedia",
-              "text": "Roulette, Preemptive (for 4 turns, All colors, 3 orbs)",
+              "text": "Roulette, Preemptive (for 4 turns - All colors - 3 orbs)",
               "tags": [
                 "Roulette",
                 "Preemptive"
@@ -3168,7 +3177,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "AppMedia",
-              "text": "Combo void (for 3 turns, 13 or fewer combos)",
+              "text": "Combo void (for 3 turns - 13 or fewer combos)",
               "tags": [
                 "Combo void"
               ],
@@ -3207,9 +3216,9 @@
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
-              "text": "Your ATK down (for 1 turn, ATK greatly reduced (percentage unspecified))",
+              "text": "Reduce ATK (for 1 turn - ATK greatly reduced (percentage unspecified))",
               "tags": [
-                "Your ATK down"
+                "Reduce ATK"
               ],
               "details": [
                 "for 1 turn",
@@ -3242,7 +3251,7 @@
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
-              "text": "Your RCV down (for 1 turn, 50%)",
+              "text": "Your RCV down (for 1 turn - 50%)",
               "tags": [
                 "Your RCV down"
               ],
@@ -3277,13 +3286,13 @@
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
-              "text": "Orb change, Full-board change (Dark, Jammer)",
+              "text": "Poison, Orb change (Dark, Jammer, Mortal poison)",
               "tags": [
-                "Orb change",
-                "Full-board change"
+                "Poison",
+                "Orb change"
               ],
               "details": [
-                "Dark, Jammer"
+                "Dark, Jammer, Mortal poison"
               ],
               "hit": null,
               "normal_hit": null,
@@ -3312,7 +3321,7 @@
               "timing_kind": "normal",
               "order": null,
               "source": "AppMedia",
-              "text": "Thorn orbs (4 orbs)",
+              "text": "Create 4 thorn orbs",
               "tags": [
                 "Thorn orbs"
               ],

@@ -46,6 +46,11 @@ def main() -> None:
         argument_parser.error("a source name is only accepted with --debug")
     dungeons = [_find_dungeon(manifest, args.slug, argument_parser)] if args.slug else manifest
     card_names = json.loads(Path("card_names.json").read_text(encoding="utf-8"))
+    card_elements = json.loads(Path("card_elements.json").read_text(encoding="utf-8"))
+    Path("site/data").mkdir(parents=True, exist_ok=True)
+    Path("site/data/card_elements.json").write_text(
+        json.dumps(card_elements, separators=(",", ":")), encoding="utf-8"
+    )
     sections = []
     built = date.today().isoformat()
     for dungeon in dungeons:

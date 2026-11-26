@@ -457,7 +457,7 @@
       ],
       "enemies": [
         {
-          "name": "レモック(変身)",
+          "name": "Bountiful Yellow Fruit Spirit, Lemocks",
           "card": 10981,
           "hp": 650000000000,
           "defense": 200000000,
@@ -496,7 +496,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Board change, Preemptive (for 3 turns, 5×4)",
+              "text": "Board change, Preemptive (for 3 turns - 5×4)",
               "tags": [
                 "Board change",
                 "Preemptive"
@@ -555,7 +555,7 @@
               "timing_kind": "part_break",
               "order": null,
               "source": "GameWith",
-              "text": "Enemy DEF up (for 2 turns, DEF +7B)",
+              "text": "Enemy DEF up (for 2 turns - DEF +7B)",
               "tags": [
                 "Enemy DEF up"
               ],
@@ -609,7 +609,7 @@
               "timing_kind": "hp_below",
               "order": null,
               "source": "GameWith",
-              "text": "Enemy damage reduction (for 1 turn, 50%)",
+              "text": "Enemy damage reduction (for 1 turn - 50%)",
               "tags": [
                 "Enemy damage reduction"
               ],
@@ -644,7 +644,7 @@
               "timing_kind": "hp_below",
               "order": null,
               "source": "GameWith",
-              "text": "Attribute absorb (for 4 turns, Light, Dark)",
+              "text": "Attribute absorb (for 4 turns - Light, Dark)",
               "tags": [
                 "Attribute absorb"
               ],
@@ -679,7 +679,7 @@
               "timing_kind": "normal",
               "order": null,
               "source": "GameWith",
-              "text": "Roulette (for 1 turn, Light, Heart, 2 orbs)",
+              "text": "Roulette (for 1 turn - Light, Heart - 2 orbs)",
               "tags": [
                 "Roulette"
               ],
@@ -889,7 +889,7 @@
       ],
       "enemies": [
         {
-          "name": "ハーニス",
+          "name": "Holy Inferno Companion Dragon, Harnis",
           "card": 4638,
           "hp": 280000000000,
           "defense": 200000000,
@@ -936,7 +936,7 @@
           ]
         },
         {
-          "name": "レニュア",
+          "name": "Seven Seas Companion Dragon, Renya",
           "card": 4640,
           "hp": 300000000000,
           "defense": 0,
@@ -965,7 +965,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Enemy DEF up, Preemptive (for 2 turns, DEF +5B)",
+              "text": "Enemy DEF up, Preemptive (for 2 turns - DEF +5B)",
               "tags": [
                 "Enemy DEF up",
                 "Preemptive"
@@ -1003,7 +1003,7 @@
           ]
         },
         {
-          "name": "ネド",
+          "name": "Earth Ruler Companion Dragon, Nehd",
           "card": 4642,
           "hp": 280000000000,
           "defense": 200000000,
@@ -1102,12 +1102,12 @@
                 "GameWith"
               ],
               "enemies": [
-                "転生ルミエル"
+                "Reincarnated Lumiel"
               ]
             }
           ],
           "not_reported_for": [
-            "転生アリエル"
+            "Reincarnated Ariel"
           ]
         },
         {
@@ -1401,7 +1401,7 @@
       ],
       "enemies": [
         {
-          "name": "転生アリエル",
+          "name": "Reincarnated Ariel",
           "card": 5860,
           "hp": 300000000000,
           "defense": 200000000,
@@ -1433,7 +1433,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Damage void, Preemptive (for 10 turns, 5B or more)",
+              "text": "Damage void, Preemptive (for 10 turns - 5B or more)",
               "tags": [
                 "Damage void",
                 "Preemptive"
@@ -1471,7 +1471,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Unmatchable, Preemptive (for 1 turn, Light, Dark)",
+              "text": "Unmatchable, Preemptive (for 1 turn - Light, Dark)",
               "tags": [
                 "Unmatchable",
                 "Preemptive"
@@ -1490,7 +1490,7 @@
           ]
         },
         {
-          "name": "転生ルミエル",
+          "name": "Reincarnated Lumiel",
           "card": 5861,
           "hp": 300000000000,
           "defense": 200000000,
@@ -1522,7 +1522,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Attribute absorb, Preemptive (for 10 turns, Light, Dark)",
+              "text": "Attribute absorb, Preemptive (for 10 turns - Light, Dark)",
               "tags": [
                 "Attribute absorb",
                 "Preemptive"
@@ -1560,7 +1560,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Roulette, Preemptive (for 1 turn, All colors, 4 orbs)",
+              "text": "Roulette, Preemptive (for 1 turn - All colors - 4 orbs)",
               "tags": [
                 "Roulette",
                 "Preemptive"
@@ -1979,7 +1979,7 @@
           ]
         },
         {
-          "name": "Skyfall change",
+          "name": "Skyfall increase",
           "critical": false,
           "sources": [
             "Altema",
@@ -2054,7 +2054,7 @@
       ],
       "enemies": [
         {
-          "name": "試練黎明ルシファー",
+          "name": "Dawn of the Divine Transcendence, Lucifer",
           "card": 13548,
           "hp": 310000000000,
           "defense": 200000000,
@@ -2124,7 +2124,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Move-time change, Preemptive (for 1 turn, ×2)",
+              "text": "Move-time change, Preemptive (for 1 turn - ×2)",
               "tags": [
                 "Move-time change",
                 "Preemptive"
@@ -2145,7 +2145,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Combo void, Preemptive (for 1 turn, 11 or fewer combos)",
+              "text": "Combo void, Preemptive (for 1 turn - 11 or fewer combos)",
               "tags": [
                 "Combo void",
                 "Preemptive"
@@ -2166,7 +2166,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Board change, Preemptive (for 1 turn, 7×6)",
+              "text": "Board change, Preemptive (for 1 turn - 7×6)",
               "tags": [
                 "Board change",
                 "Preemptive"
@@ -2187,7 +2187,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Orbs spawned, Preemptive (Light, Dark, Heart, 12 orbs)",
+              "text": "Orbs spawned, Preemptive (Light, Dark, Heart - 12 orbs)",
               "tags": [
                 "Orbs spawned",
                 "Preemptive"
@@ -2261,10 +2261,10 @@
               "timing_kind": "lesson_pass",
               "order": null,
               "source": "GameWith",
-              "text": "Super blind, Skyfall change (for 4 turns)",
+              "text": "Super blind, Skyfall increase (for 4 turns)",
               "tags": [
                 "Super blind",
-                "Skyfall change"
+                "Skyfall increase"
               ],
               "details": [
                 "for 4 turns"
@@ -2328,7 +2328,7 @@
               "timing_kind": "normal",
               "order": 1,
               "source": "GameWith",
-              "text": "Orbs spawned (Dark, 9 orbs)",
+              "text": "Orbs spawned (Dark - 9 orbs)",
               "tags": [
                 "Orbs spawned"
               ],
@@ -2599,7 +2599,7 @@
       ],
       "enemies": [
         {
-          "name": "木ヌト",
+          "name": "Skyformer Galaxy Goddess, Nut",
           "card": 3452,
           "hp": 320000000000,
           "defense": 200000000,
@@ -2673,7 +2673,7 @@
               "timing_kind": "hp_below",
               "order": null,
               "source": "GameWith",
-              "text": "Move-time change (for 2 turns, reduced by 50%)",
+              "text": "Move-time change (for 2 turns - reduced by 50%)",
               "tags": [
                 "Move-time change"
               ],
@@ -2742,7 +2742,7 @@
               "timing_kind": "normal",
               "order": null,
               "source": "GameWith",
-              "text": "Bombs, Orbs spawned (Bomb, 8 orbs)",
+              "text": "Bombs, Orbs spawned (Bomb - 8 orbs)",
               "tags": [
                 "Bombs",
                 "Orbs spawned"
@@ -3059,7 +3059,7 @@
       ],
       "enemies": [
         {
-          "name": "水エンジェル",
+          "name": "Heavenly Herald, Archangel",
           "card": 1103,
           "hp": 350000000000,
           "defense": 200000000,
@@ -3093,7 +3093,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Damage absorb, Preemptive (for 4 turns, 5B or more)",
+              "text": "Damage absorb, Preemptive (for 4 turns - 5B or more)",
               "tags": [
                 "Damage absorb",
                 "Preemptive"
@@ -3131,7 +3131,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Enemy ATK up, Preemptive (for 1 turn, ×5)",
+              "text": "Enemy ATK up, Preemptive (for 1 turn - ×5)",
               "tags": [
                 "Enemy ATK up",
                 "Preemptive"
@@ -3257,6 +3257,28 @@
               ],
               "sources": [
                 "AppMedia",
+                "GameWith"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Orbs spawned",
+          "critical": false,
+          "sources": [
+            "GameWith"
+          ],
+          "details": [
+            "Light, Jammer, 6 orbs each"
+          ],
+          "variants": [
+            {
+              "when": "Normal action",
+              "details": [
+                "Light, Jammer",
+                "6 orbs each"
+              ],
+              "sources": [
                 "GameWith"
               ]
             }
@@ -3397,7 +3419,7 @@
       ],
       "enemies": [
         {
-          "name": "ゴティーン",
+          "name": "Gleaming Star Companion Dragon, Goteene",
           "card": 4644,
           "hp": 340000000000,
           "defense": 200000000,
@@ -3461,10 +3483,13 @@
               "timing_kind": "normal",
               "order": null,
               "source": "GameWith",
-              "text": " (Light, Jammer)",
-              "tags": [],
+              "text": "Orbs spawned (Light, Jammer - 6 orbs each)",
+              "tags": [
+                "Orbs spawned"
+              ],
               "details": [
-                "Light, Jammer"
+                "Light, Jammer",
+                "6 orbs each"
               ],
               "hit": null,
               "normal_hit": null,
@@ -3495,7 +3520,7 @@
           ]
         },
         {
-          "name": "ドルトス",
+          "name": "Heavenly King Companion Dragon, Doltos",
           "card": 4646,
           "hp": 340000000000,
           "defense": 200000000,
@@ -3507,7 +3532,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Enemy DEF up, Preemptive (for 2 turns, DEF +7B)",
+              "text": "Enemy DEF up, Preemptive (for 2 turns - DEF +7B)",
               "tags": [
                 "Enemy DEF up",
                 "Preemptive"
@@ -3688,7 +3713,7 @@
       ],
       "enemies": [
         {
-          "name": "敵",
+          "name": "Dub-pluslit",
           "card": 9536,
           "hp": 200000000000,
           "defense": 1000000000,
@@ -3718,7 +3743,7 @@
           ]
         },
         {
-          "name": "敵",
+          "name": "Dub-pluslit",
           "card": 9536,
           "hp": 200000000000,
           "defense": 1000000000,
@@ -3875,7 +3900,7 @@
           ]
         },
         {
-          "name": "Skyfall change",
+          "name": "Skyfall increase",
           "critical": false,
           "sources": [
             "AppMedia"
@@ -3953,7 +3978,7 @@
       ],
       "enemies": [
         {
-          "name": "マッハ(転生)",
+          "name": "Blazing Hellhorse Goddess, Macha",
           "card": 5206,
           "hp": 400000000000,
           "defense": 200000000,
@@ -4392,7 +4417,7 @@
       ],
       "enemies": [
         {
-          "name": "転生アストレア",
+          "name": "Reincarnated Astraea",
           "card": 7548,
           "hp": 420000000000,
           "defense": 200000000,
@@ -4461,7 +4486,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Roulette, Preemptive (for 4 turns, All colors, Bottom row)",
+              "text": "Roulette, Preemptive (for 4 turns - All colors - Bottom row)",
               "tags": [
                 "Roulette",
                 "Preemptive"
@@ -4517,7 +4542,7 @@
               "timing_kind": "nth_action",
               "order": null,
               "source": "GameWith",
-              "text": "Damage void (for 4 turns, 5B or more)",
+              "text": "Damage void (for 4 turns - 5B or more)",
               "tags": [
                 "Damage void"
               ],
@@ -4571,7 +4596,7 @@
           ]
         },
         {
-          "name": "転生ウラノス",
+          "name": "Reincarnated Uranus",
           "card": 7278,
           "hp": 700000000000,
           "defense": 200000000,
@@ -4940,6 +4965,40 @@
           ]
         },
         {
+          "name": "Reduce ATK",
+          "critical": false,
+          "sources": [
+            "AppMedia",
+            "GameWith"
+          ],
+          "details": [
+            "for 3 turns, ATK greatly reduced (percentage unspecified)",
+            "for 1 turn, ATK greatly reduced (percentage unspecified)"
+          ],
+          "variants": [
+            {
+              "when": "Normal action",
+              "details": [
+                "for 1 turn",
+                "ATK greatly reduced (percentage unspecified)"
+              ],
+              "sources": [
+                "GameWith"
+              ]
+            },
+            {
+              "when": "When 1 remains",
+              "details": [
+                "for 3 turns",
+                "ATK greatly reduced (percentage unspecified)"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
           "name": "Status immunity",
           "critical": false,
           "sources": [
@@ -5017,40 +5076,6 @@
           ]
         },
         {
-          "name": "Your ATK down",
-          "critical": false,
-          "sources": [
-            "AppMedia",
-            "GameWith"
-          ],
-          "details": [
-            "for 3 turns, ATK greatly reduced (percentage unspecified)",
-            "for 1 turn, ATK greatly reduced (percentage unspecified)"
-          ],
-          "variants": [
-            {
-              "when": "Normal action",
-              "details": [
-                "for 1 turn",
-                "ATK greatly reduced (percentage unspecified)"
-              ],
-              "sources": [
-                "GameWith"
-              ]
-            },
-            {
-              "when": "When 1 remains",
-              "details": [
-                "for 3 turns",
-                "ATK greatly reduced (percentage unspecified)"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            }
-          ]
-        },
-        {
           "name": "Your RCV down",
           "critical": false,
           "sources": [
@@ -5081,7 +5106,7 @@
       ],
       "enemies": [
         {
-          "name": "敵",
+          "name": "Stone Gaze Demon Bird, Cockatrice",
           "card": 790,
           "hp": 350000000000,
           "defense": 200000000,
@@ -5145,9 +5170,9 @@
               "timing_kind": "normal",
               "order": null,
               "source": "GameWith",
-              "text": "Your ATK down (for 1 turn, ATK greatly reduced (percentage unspecified))",
+              "text": "Reduce ATK (for 1 turn - ATK greatly reduced (percentage unspecified))",
               "tags": [
-                "Your ATK down"
+                "Reduce ATK"
               ],
               "details": [
                 "for 1 turn",
@@ -5163,7 +5188,7 @@
           ]
         },
         {
-          "name": "ハイレン(転生)",
+          "name": "Godly Healer Dragon Caller, Highren",
           "card": 12717,
           "hp": 390000000000,
           "defense": 200000000,
@@ -5214,7 +5239,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Unmatchable, Preemptive (for 2 turns, Heart)",
+              "text": "Unmatchable, Preemptive (for 2 turns - Heart)",
               "tags": [
                 "Unmatchable",
                 "Preemptive"
@@ -5235,7 +5260,7 @@
               "timing_kind": "hp_below",
               "order": null,
               "source": "GameWith",
-              "text": "Damage void (for 4 turns, 5B or more)",
+              "text": "Damage void (for 4 turns - 5B or more)",
               "tags": [
                 "Damage void"
               ],
@@ -5291,7 +5316,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "GameWith",
-              "text": "Your RCV down (for 10 turns, 50%)",
+              "text": "Your RCV down (for 10 turns - 50%)",
               "tags": [
                 "Your RCV down"
               ],
@@ -5517,7 +5542,7 @@
       ],
       "enemies": [
         {
-          "name": "光メタトロン(転生)",
+          "name": "Keeper of the Holy Scriptures, Metatron",
           "card": 8465,
           "hp": 500000000000,
           "defense": 0,
@@ -5549,7 +5574,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Enemy damage reduction, Preemptive (for 1 turn, 50%)",
+              "text": "Enemy damage reduction, Preemptive (for 1 turn - 50%)",
               "tags": [
                 "Enemy damage reduction",
                 "Preemptive"
@@ -5570,7 +5595,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Enemy ATK up, Preemptive (for 1 turn, ×3.5)",
+              "text": "Enemy ATK up, Preemptive (for 1 turn - ×3.5)",
               "tags": [
                 "Enemy ATK up",
                 "Preemptive"
@@ -5591,7 +5616,7 @@
               "timing_kind": "first_action",
               "order": null,
               "source": "GameWith",
-              "text": "Jammers (for 4 turns, Jammer)",
+              "text": "Jammers (for 4 turns - Jammer)",
               "tags": [
                 "Jammers"
               ],
@@ -5659,7 +5684,7 @@
                 "GameWith"
               ],
               "enemies": [
-                "試練ウルド"
+                "Past of the Divine Transcendence, Urd"
               ]
             },
             {
@@ -5673,12 +5698,12 @@
                 "GameWith"
               ],
               "enemies": [
-                "試練ヴェルダンディ"
+                "Present of the Divine Transcendence, Verdandi"
               ]
             }
           ],
           "not_reported_for": [
-            "試練スクルド"
+            "Future of the Divine Transcendence, Skuld"
           ]
         },
         {
@@ -6103,6 +6128,33 @@
           ]
         },
         {
+          "name": "Reduce ATK",
+          "critical": false,
+          "sources": [
+            "Altema",
+            "AppMedia",
+            "Game8",
+            "GameWith"
+          ],
+          "details": [
+            "for 2 turns, ATK greatly reduced (percentage unspecified)"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "for 2 turns",
+                "ATK greatly reduced (percentage unspecified)"
+              ],
+              "sources": [
+                "AppMedia",
+                "Game8",
+                "GameWith"
+              ]
+            }
+          ]
+        },
+        {
           "name": "Roulette",
           "critical": true,
           "sources": [
@@ -6190,38 +6242,11 @@
               ]
             }
           ]
-        },
-        {
-          "name": "Your ATK down",
-          "critical": false,
-          "sources": [
-            "Altema",
-            "AppMedia",
-            "Game8",
-            "GameWith"
-          ],
-          "details": [
-            "for 2 turns, ATK greatly reduced (percentage unspecified)"
-          ],
-          "variants": [
-            {
-              "when": "On super resolve",
-              "details": [
-                "for 2 turns",
-                "ATK greatly reduced (percentage unspecified)"
-              ],
-              "sources": [
-                "AppMedia",
-                "Game8",
-                "GameWith"
-              ]
-            }
-          ]
         }
       ],
       "enemies": [
         {
-          "name": "試練ウルド",
+          "name": "Past of the Divine Transcendence, Urd",
           "card": 13554,
           "hp": 470000000000,
           "defense": 200000000,
@@ -6255,7 +6280,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Attribute absorb, Preemptive (for 4 turns, Fire, Light)",
+              "text": "Attribute absorb, Preemptive (for 4 turns - Fire, Light)",
               "tags": [
                 "Attribute absorb",
                 "Preemptive"
@@ -6314,7 +6339,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "GameWith",
-              "text": "Enemy damage reduction (for 2 turns, 50%)",
+              "text": "Enemy damage reduction (for 2 turns - 50%)",
               "tags": [
                 "Enemy damage reduction"
               ],
@@ -6349,9 +6374,9 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "GameWith",
-              "text": "Your ATK down (for 2 turns, ATK greatly reduced (percentage unspecified))",
+              "text": "Reduce ATK (for 2 turns - ATK greatly reduced (percentage unspecified))",
               "tags": [
-                "Your ATK down"
+                "Reduce ATK"
               ],
               "details": [
                 "for 2 turns",
@@ -6399,7 +6424,7 @@
           ]
         },
         {
-          "name": "試練スクルド",
+          "name": "Future of the Divine Transcendence, Skuld",
           "card": 12807,
           "hp": 400000000000,
           "defense": 200000000,
@@ -6432,7 +6457,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Combo void, Preemptive (for 2 turns, 11 or fewer combos)",
+              "text": "Combo void, Preemptive (for 2 turns - 11 or fewer combos)",
               "tags": [
                 "Combo void",
                 "Preemptive"
@@ -6508,7 +6533,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "GameWith",
-              "text": "Damage void (for 4 turns, 5B or more)",
+              "text": "Damage void (for 4 turns - 5B or more)",
               "tags": [
                 "Damage void"
               ],
@@ -6528,7 +6553,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "GameWith",
-              "text": "Enemy damage reduction (for 4 turns, 75%)",
+              "text": "Enemy damage reduction (for 4 turns - 75%)",
               "tags": [
                 "Enemy damage reduction"
               ],
@@ -6548,7 +6573,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "GameWith",
-              "text": "Roulette (for 4 turns, Water, Dark, Heart, 2 orbs)",
+              "text": "Roulette (for 4 turns - Water, Dark, Heart - 2 orbs)",
               "tags": [
                 "Roulette"
               ],
@@ -6567,7 +6592,7 @@
           ]
         },
         {
-          "name": "試練ヴェルダンディ",
+          "name": "Present of the Divine Transcendence, Verdandi",
           "card": 12974,
           "hp": 470000000000,
           "defense": 200000000,
@@ -6601,7 +6626,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Attribute absorb, Preemptive (for 4 turns, Water, Wood)",
+              "text": "Attribute absorb, Preemptive (for 4 turns - Water, Wood)",
               "tags": [
                 "Attribute absorb",
                 "Preemptive"
@@ -6660,7 +6685,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "GameWith",
-              "text": "Enemy DEF up (for 2 turns, DEF +8B)",
+              "text": "Enemy DEF up (for 2 turns - DEF +8B)",
               "tags": [
                 "Enemy DEF up"
               ],
@@ -6695,7 +6720,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "GameWith",
-              "text": "Move-time change (for 2 turns, reduced by 50%)",
+              "text": "Move-time change (for 2 turns - reduced by 50%)",
               "tags": [
                 "Move-time change"
               ],
@@ -6963,7 +6988,7 @@
       ],
       "enemies": [
         {
-          "name": "ブレイブXゴッド",
+          "name": "Ancient God of Life, Brave X God",
           "card": 13943,
           "hp": 480000000000,
           "defense": 200000000,
@@ -7088,7 +7113,7 @@
               "timing_kind": "hp_below",
               "order": null,
               "source": "GameWith",
-              "text": "Combo void (for 2 turns, 14 or fewer combos)",
+              "text": "Combo void (for 2 turns - 14 or fewer combos)",
               "tags": [
                 "Combo void"
               ],
@@ -7123,7 +7148,7 @@
               "timing_kind": "hp_below",
               "order": null,
               "source": "GameWith",
-              "text": "Board change (for 2 turns, 7×6)",
+              "text": "Board change (for 2 turns - 7×6)",
               "tags": [
                 "Board change"
               ],
@@ -7508,7 +7533,7 @@
       ],
       "enemies": [
         {
-          "name": "アレクセン",
+          "name": "Celestial Firmament Ruler, Alexen",
           "card": 14018,
           "hp": 1200000000000,
           "defense": 200000000,
@@ -7540,7 +7565,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Damage void, Preemptive (for 10 turns, 5B or more)",
+              "text": "Damage void, Preemptive (for 10 turns - 5B or more)",
               "tags": [
                 "Damage void",
                 "Preemptive"
@@ -7598,7 +7623,7 @@
               "timing_kind": "sequence",
               "order": 1,
               "source": "GameWith",
-              "text": "Roulette (for 1 turn, Light, Heart, 2 orbs)",
+              "text": "Roulette (for 1 turn - Light, Heart - 2 orbs)",
               "tags": [
                 "Roulette"
               ],
@@ -7619,7 +7644,7 @@
               "timing_kind": "sequence",
               "order": 2,
               "source": "GameWith",
-              "text": "Damage absorb (for 1 turn, 5B or more)",
+              "text": "Damage absorb (for 1 turn - 5B or more)",
               "tags": [
                 "Damage absorb"
               ],
@@ -7658,7 +7683,7 @@
               "timing_kind": "sequence",
               "order": 4,
               "source": "GameWith",
-              "text": "Move-time change (for 1 turn, greatly reduced (percentage unspecified))",
+              "text": "Move-time change (for 1 turn - greatly reduced (percentage unspecified))",
               "tags": [
                 "Move-time change"
               ],
@@ -7678,7 +7703,7 @@
               "timing_kind": "sequence",
               "order": 5,
               "source": "GameWith",
-              "text": "Combo void (for 1 turn, 12 or fewer combos)",
+              "text": "Combo void (for 1 turn - 12 or fewer combos)",
               "tags": [
                 "Combo void"
               ],
@@ -7717,7 +7742,7 @@
               "timing_kind": "sequence",
               "order": 7,
               "source": "GameWith",
-              "text": "Attribute absorb (for 1 turn, Dark)",
+              "text": "Attribute absorb (for 1 turn - Dark)",
               "tags": [
                 "Attribute absorb"
               ],
@@ -8132,6 +8157,40 @@
           ]
         },
         {
+          "name": "Reduce ATK",
+          "critical": false,
+          "sources": [
+            "AppMedia",
+            "GameWith"
+          ],
+          "details": [
+            "for 1 turn, ATK greatly reduced (percentage unspecified)",
+            "for 1 turn, ATK reduced by 75%"
+          ],
+          "variants": [
+            {
+              "when": "Action 3",
+              "details": [
+                "for 1 turn",
+                "ATK greatly reduced (percentage unspecified)"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "One at random",
+              "details": [
+                "for 1 turn",
+                "ATK reduced by 75%"
+              ],
+              "sources": [
+                "GameWith"
+              ]
+            }
+          ]
+        },
+        {
           "name": "Roulette",
           "critical": true,
           "sources": [
@@ -8159,7 +8218,7 @@
           ]
         },
         {
-          "name": "Skyfall change",
+          "name": "Skyfall increase",
           "critical": false,
           "sources": [
             "Altema",
@@ -8253,45 +8312,11 @@
               ]
             }
           ]
-        },
-        {
-          "name": "Your ATK down",
-          "critical": false,
-          "sources": [
-            "AppMedia",
-            "GameWith"
-          ],
-          "details": [
-            "for 1 turn, ATK greatly reduced (percentage unspecified)",
-            "for 1 turn, ATK reduced by 75%"
-          ],
-          "variants": [
-            {
-              "when": "Action 3",
-              "details": [
-                "for 1 turn",
-                "ATK greatly reduced (percentage unspecified)"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            },
-            {
-              "when": "One at random",
-              "details": [
-                "for 1 turn",
-                "ATK reduced by 75%"
-              ],
-              "sources": [
-                "GameWith"
-              ]
-            }
-          ]
         }
       ],
       "enemies": [
         {
-          "name": "アレクセン(変身)",
+          "name": "Iridescent Celestial Firmament Ruler, Alexen",
           "card": 14019,
           "hp": 2300000000000,
           "defense": 200000000,
@@ -8334,9 +8359,9 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Skyfall change, Preemptive (for 10 turns, Light, Heart)",
+              "text": "Skyfall increase, Preemptive (for 10 turns - Light, Heart)",
               "tags": [
-                "Skyfall change",
+                "Skyfall increase",
                 "Preemptive"
               ],
               "details": [
@@ -8355,7 +8380,7 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Enemy ATK up, Preemptive (for 1 turn, ×3)",
+              "text": "Enemy ATK up, Preemptive (for 1 turn - ×3)",
               "tags": [
                 "Enemy ATK up",
                 "Preemptive"
@@ -8376,7 +8401,7 @@
               "timing_kind": "first_action",
               "order": null,
               "source": "GameWith",
-              "text": "Move-time change (for 3 turns, reduced by 50%)",
+              "text": "Move-time change (for 3 turns - reduced by 50%)",
               "tags": [
                 "Move-time change"
               ],
@@ -8434,7 +8459,7 @@
               "timing_kind": "random",
               "order": 1,
               "source": "GameWith",
-              "text": "Damage void (for 1 turn, 5B or more)",
+              "text": "Damage void (for 1 turn - 5B or more)",
               "tags": [
                 "Damage void"
               ],
@@ -8473,9 +8498,9 @@
               "timing_kind": "random",
               "order": 3,
               "source": "GameWith",
-              "text": "Your ATK down (for 1 turn, ATK reduced by 75%)",
+              "text": "Reduce ATK (for 1 turn - ATK reduced by 75%)",
               "tags": [
-                "Your ATK down"
+                "Reduce ATK"
               ],
               "details": [
                 "for 1 turn",
@@ -8512,7 +8537,7 @@
               "timing_kind": "random",
               "order": 5,
               "source": "GameWith",
-              "text": "Enemy DEF up (for 1 turn, DEF +5B)",
+              "text": "Enemy DEF up (for 1 turn - DEF +5B)",
               "tags": [
                 "Enemy DEF up"
               ],
@@ -8551,7 +8576,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "GameWith",
-              "text": "Combo absorb (for 2 turns, 14 or fewer combos)",
+              "text": "Combo absorb (for 2 turns - 14 or fewer combos)",
               "tags": [
                 "Combo absorb"
               ],
@@ -8571,7 +8596,7 @@
               "timing_kind": "on_super_resolve",
               "order": null,
               "source": "GameWith",
-              "text": "Roulette (for 4 turns, All colors, 2 orbs)",
+              "text": "Roulette (for 4 turns - All colors - 2 orbs)",
               "tags": [
                 "Roulette"
               ],
