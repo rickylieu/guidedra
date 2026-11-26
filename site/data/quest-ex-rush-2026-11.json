@@ -1,0 +1,3344 @@
+{
+  "slug": "quest-ex-rush-2026-11",
+  "name_en": "November Quest EX Rush",
+  "name_jp": "9月クエストEXラッシュ",
+  "built": "2026-11-25",
+  "sources": [
+    {
+      "name": "AppMedia",
+      "url": "https://appmedia.jp/pazudora/80371195"
+    }
+  ],
+  "rules": {
+    "battles": null,
+    "stamina": null,
+    "notes": []
+  },
+  "normal_hit_baseline": 6402500,
+  "damage_progression": {
+    "range_change_multiple": 1.5,
+    "ranges": [
+      {
+        "start_floor": 1,
+        "end_floor": 3,
+        "median_hit": 5580000,
+        "min_hit": 2000000,
+        "max_hit": 6750000,
+        "label": "Floors 1–3"
+      },
+      {
+        "start_floor": 5,
+        "end_floor": 7,
+        "median_hit": 6666000,
+        "min_hit": 2970000,
+        "max_hit": 7140000,
+        "label": "Floors 5–7"
+      }
+    ],
+    "missing_floors": [
+      4
+    ],
+    "excluded_floors": [],
+    "invade_median_hit": 6500000
+  },
+  "summary": {
+    "Full-board change": [
+      "Invade (Floor 2, 3, or 4)",
+      "Floor 1",
+      "Floor 2",
+      "Floor 3",
+      "Floor 6",
+      "Floor 7"
+    ],
+    "Roulette": [
+      "Invade (Floor 2, 3, or 4)",
+      "Floor 2",
+      "Floor 5",
+      "Floor 7"
+    ],
+    "Void buffs": [
+      "Invade (Floor 2, 3, or 4)"
+    ],
+    "Attribute absorb": [
+      "Floor 1",
+      "Floor 3"
+    ],
+    "Damage void": [
+      "Floor 1",
+      "Floor 3",
+      "Floor 6"
+    ],
+    "Damage cap set": [
+      "Floor 2"
+    ],
+    "Enrage": [
+      "Floor 2"
+    ],
+    "Skill bind": [
+      "Floor 3"
+    ],
+    "One-shot required": [
+      "Floor 4"
+    ],
+    "Damage absorb": [
+      "Floor 5"
+    ],
+    "Void assists": [
+      "Floor 5",
+      "Floor 7"
+    ],
+    "Max HP halved": [
+      "Floor 6"
+    ],
+    "Super blind": [
+      "Floor 6"
+    ],
+    "Awoken bind": [
+      "Floor 7"
+    ],
+    "Combo void": [
+      "Floor 7"
+    ]
+  },
+  "floors": [
+    {
+      "label": "Invade (Floor 2, 3, or 4)",
+      "number": null,
+      "appear": null,
+      "one_of": false,
+      "halves_max_hp": false,
+      "tags": [
+        {
+          "name": "Board change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 3 turns, 5×4"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "for 3 turns",
+                "5×4"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Enemy attribute change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Action 2",
+              "details": [],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Action 3",
+              "details": [],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Enemy shield",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "1 shield"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "1 shield"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Full-board change",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Light"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "Light"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Orb change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Light"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "Light"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Preemptive",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 7 turns",
+            "1 shield",
+            "Light"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "1 shield"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "Light"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Roulette",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn, Light, Heart, 2 orbs"
+          ],
+          "variants": [
+            {
+              "when": "Action 2",
+              "details": [
+                "for 1 turn",
+                "Light, Heart",
+                "2 orbs"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Status immunity",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 7 turns"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Super resolve",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "40%"
+          ],
+          "variants": []
+        },
+        {
+          "name": "Void buffs",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Your ATK down",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn, ATK greatly reduced (percentage unspecified)"
+          ],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [
+                "for 1 turn",
+                "ATK greatly reduced (percentage unspecified)"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        }
+      ],
+      "enemies": [
+        {
+          "name": "ローネ",
+          "card": 5685,
+          "hp": 500000000000,
+          "defense": 1000000000,
+          "parts": [],
+          "traits": [
+            "Super resolve at 40%"
+          ],
+          "actions": [
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Status immunity, Preemptive (for 7 turns)",
+              "tags": [
+                "Status immunity",
+                "Preemptive"
+              ],
+              "details": [
+                "for 7 turns"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Generate 1 shield, Preemptive",
+              "tags": [
+                "Enemy shield",
+                "Preemptive"
+              ],
+              "details": [
+                "1 shield"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Orb change, Full-board change, Preemptive (Light)",
+              "tags": [
+                "Orb change",
+                "Full-board change",
+                "Preemptive"
+              ],
+              "details": [
+                "Light"
+              ],
+              "hit": 5850000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "On super resolve",
+              "timing_kind": "on_super_resolve",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Board change (for 3 turns, 5×4)",
+              "tags": [
+                "Board change"
+              ],
+              "details": [
+                "for 3 turns",
+                "5×4"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "On super resolve",
+              "timing_kind": "on_super_resolve",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Void buffs",
+              "tags": [
+                "Void buffs"
+              ],
+              "details": [],
+              "hit": 6500000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 1",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Enemy attribute change",
+              "tags": [
+                "Enemy attribute change"
+              ],
+              "details": [],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 1",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Your ATK down (for 1 turn, ATK greatly reduced (percentage unspecified))",
+              "tags": [
+                "Your ATK down"
+              ],
+              "details": [
+                "for 1 turn",
+                "ATK greatly reduced (percentage unspecified)"
+              ],
+              "hit": 6500000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 2",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Enemy attribute change",
+              "tags": [
+                "Enemy attribute change"
+              ],
+              "details": [],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 2",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Roulette (for 1 turn, Light, Heart, 2 orbs)",
+              "tags": [
+                "Roulette"
+              ],
+              "details": [
+                "for 1 turn",
+                "Light, Heart",
+                "2 orbs"
+              ],
+              "hit": 6500000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 3",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Enemy attribute change",
+              "tags": [
+                "Enemy attribute change"
+              ],
+              "details": [],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 3",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Multi-hit attack",
+              "tags": [],
+              "details": [],
+              "hit": 6630000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Floor 1",
+      "number": 1,
+      "appear": null,
+      "one_of": false,
+      "halves_max_hp": false,
+      "tags": [
+        {
+          "name": "Attribute absorb",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 7 turns, Fire, Light, Dark"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns",
+                "Fire, Light, Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Damage void",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 7 turns, 5B or more"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns",
+                "5B or more"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Full-board change",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Fire"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "Fire"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "No skyfall combos",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "for 1 turn"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Orb change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Fire"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "Fire"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Preemptive",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 7 turns, 5B or more",
+            "for 7 turns, Fire, Light, Dark"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns",
+                "5B or more"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns",
+                "Fire, Light, Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Status immunity",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 7 turns"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Super resolve",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "50%"
+          ],
+          "variants": []
+        }
+      ],
+      "enemies": [
+        {
+          "name": "転生アレス",
+          "card": 3492,
+          "hp": 360000000000,
+          "defense": 1000000000,
+          "parts": [],
+          "traits": [
+            "Super resolve at 50%"
+          ],
+          "actions": [
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Status immunity, Preemptive (for 7 turns)",
+              "tags": [
+                "Status immunity",
+                "Preemptive"
+              ],
+              "details": [
+                "for 7 turns"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Damage void, Preemptive (for 7 turns, 5B or more)",
+              "tags": [
+                "Damage void",
+                "Preemptive"
+              ],
+              "details": [
+                "for 7 turns",
+                "5B or more"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Attribute absorb, Preemptive (for 7 turns, Fire, Light, Dark)",
+              "tags": [
+                "Attribute absorb",
+                "Preemptive"
+              ],
+              "details": [
+                "for 7 turns",
+                "Fire, Light, Dark"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "On super resolve",
+              "timing_kind": "on_super_resolve",
+              "order": null,
+              "source": "AppMedia",
+              "text": "No skyfall combos (for 1 turn)",
+              "tags": [
+                "No skyfall combos"
+              ],
+              "details": [
+                "for 1 turn"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "On super resolve",
+              "timing_kind": "on_super_resolve",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Orb change, Full-board change (Fire)",
+              "tags": [
+                "Orb change",
+                "Full-board change"
+              ],
+              "details": [
+                "Fire"
+              ],
+              "hit": 6435000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Floor 2",
+      "number": 2,
+      "appear": 2,
+      "one_of": false,
+      "halves_max_hp": false,
+      "tags": [
+        {
+          "name": "Board change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 2 turns, 7×6",
+            "for 2 turns, 6×5"
+          ],
+          "variants": [
+            {
+              "when": "Action 2",
+              "details": [
+                "for 2 turns",
+                "6×5"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 2 turns",
+                "7×6"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Combo absorb",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 2 turns, 13 or fewer combos",
+            "for 2 turns, 10 or fewer combos"
+          ],
+          "variants": [
+            {
+              "when": "Action 2",
+              "details": [
+                "for 2 turns",
+                "10 or fewer combos"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 2 turns",
+                "13 or fewer combos"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Combo reduction",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 4 turns"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 4 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Damage cap set",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 3 turns, cap 2B"
+          ],
+          "variants": [
+            {
+              "when": "Below 50% HP",
+              "details": [
+                "for 3 turns",
+                "cap 2B"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Enrage",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "×10"
+          ],
+          "variants": [
+            {
+              "when": "When 1 remains",
+              "details": [
+                "×10"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Full-board change",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Light, Dark"
+          ],
+          "variants": [
+            {
+              "when": "Below 50% HP",
+              "details": [
+                "Light, Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Orb change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Light, Dark"
+          ],
+          "variants": [
+            {
+              "when": "Below 50% HP",
+              "details": [
+                "Light, Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Preemptive",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 4 turns",
+            "for 7 turns",
+            "for 2 turns, 13 or fewer combos",
+            "for 2 turns, 7×6"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 2 turns",
+                "13 or fewer combos"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 2 turns",
+                "7×6"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 4 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Roulette",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn, Light, Heart, 2 orbs"
+          ],
+          "variants": [
+            {
+              "when": "Unknown timing",
+              "details": [
+                "for 1 turn",
+                "Light, Heart",
+                "2 orbs"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Status immunity",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 7 turns"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        }
+      ],
+      "enemies": [
+        {
+          "name": "白龍",
+          "card": 118,
+          "hp": 300000000000,
+          "defense": 1000000000,
+          "parts": [],
+          "traits": [],
+          "actions": [
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Combo reduction, Preemptive (for 4 turns)",
+              "tags": [
+                "Combo reduction",
+                "Preemptive"
+              ],
+              "details": [
+                "for 4 turns"
+              ],
+              "hit": 2250000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Unknown timing",
+              "timing_kind": "unknown",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Roulette (for 1 turn, Light, Heart, 2 orbs)",
+              "tags": [
+                "Roulette"
+              ],
+              "details": [
+                "for 1 turn",
+                "Light, Heart",
+                "2 orbs"
+              ],
+              "hit": 2000000,
+              "normal_hit": 2000000,
+              "enraged_hit": 20000000,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "When 1 remains",
+              "timing_kind": "remaining_eq",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Enrage (×10)",
+              "tags": [
+                "Enrage"
+              ],
+              "details": [
+                "×10"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            }
+          ]
+        },
+        {
+          "name": "ザイラス",
+          "card": 12709,
+          "hp": 400000000000,
+          "defense": 1000000000,
+          "parts": [],
+          "traits": [],
+          "actions": [
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Status immunity, Preemptive (for 7 turns)",
+              "tags": [
+                "Status immunity",
+                "Preemptive"
+              ],
+              "details": [
+                "for 7 turns"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Combo absorb, Preemptive (for 2 turns, 13 or fewer combos)",
+              "tags": [
+                "Combo absorb",
+                "Preemptive"
+              ],
+              "details": [
+                "for 2 turns",
+                "13 or fewer combos"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Board change, Preemptive (for 2 turns, 7×6)",
+              "tags": [
+                "Board change",
+                "Preemptive"
+              ],
+              "details": [
+                "for 2 turns",
+                "7×6"
+              ],
+              "hit": 4500000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Turn 2",
+              "timing_kind": "turn",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Combo absorb (for 2 turns, 10 or fewer combos)",
+              "tags": [
+                "Combo absorb"
+              ],
+              "details": [
+                "for 2 turns",
+                "10 or fewer combos"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Turn 2",
+              "timing_kind": "turn",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Board change (for 2 turns, 6×5)",
+              "tags": [
+                "Board change"
+              ],
+              "details": [
+                "for 2 turns",
+                "6×5"
+              ],
+              "hit": 5300000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Below 50% HP",
+              "timing_kind": "hp_below",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Damage cap set to 2B (for 3 turns)",
+              "tags": [
+                "Damage cap set"
+              ],
+              "details": [
+                "for 3 turns",
+                "cap 2B"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Below 50% HP",
+              "timing_kind": "hp_below",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Orb change, Full-board change (Light, Dark)",
+              "tags": [
+                "Orb change",
+                "Full-board change"
+              ],
+              "details": [
+                "Light, Dark"
+              ],
+              "hit": 5353000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Floor 3",
+      "number": 3,
+      "appear": null,
+      "one_of": false,
+      "halves_max_hp": false,
+      "tags": [
+        {
+          "name": "Attribute absorb",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 3 turns, Light, Dark"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 3 turns",
+                "Light, Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Damage void",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 3 turns, 5B or more"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "for 3 turns",
+                "5B or more"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Full-board change",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Dark, Heart"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "Dark, Heart"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Orb change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Dark, Heart"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "Dark, Heart"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Preemptive",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 7 turns",
+            "for 3 turns, Light, Dark",
+            "for 2 turns"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 2 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 3 turns",
+                "Light, Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Skill bind",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 2 turns"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 2 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Status immunity",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 7 turns"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Super resolve",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "50%"
+          ],
+          "variants": []
+        }
+      ],
+      "enemies": [
+        {
+          "name": "究極サツキ",
+          "card": 3581,
+          "hp": 450000000000,
+          "defense": 1000000000,
+          "parts": [],
+          "traits": [
+            "Super resolve at 50%"
+          ],
+          "actions": [
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Status immunity, Preemptive (for 7 turns)",
+              "tags": [
+                "Status immunity",
+                "Preemptive"
+              ],
+              "details": [
+                "for 7 turns"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Attribute absorb, Preemptive (for 3 turns, Light, Dark)",
+              "tags": [
+                "Attribute absorb",
+                "Preemptive"
+              ],
+              "details": [
+                "for 3 turns",
+                "Light, Dark"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Skill bind, Preemptive (for 2 turns)",
+              "tags": [
+                "Skill bind",
+                "Preemptive"
+              ],
+              "details": [
+                "for 2 turns"
+              ],
+              "hit": 5580000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "On super resolve",
+              "timing_kind": "on_super_resolve",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Damage void (for 3 turns, 5B or more)",
+              "tags": [
+                "Damage void"
+              ],
+              "details": [
+                "for 3 turns",
+                "5B or more"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "On super resolve",
+              "timing_kind": "on_super_resolve",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Orb change, Full-board change (Dark, Heart)",
+              "tags": [
+                "Orb change",
+                "Full-board change"
+              ],
+              "details": [
+                "Dark, Heart"
+              ],
+              "hit": 6262000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Floor 4",
+      "number": 4,
+      "appear": null,
+      "one_of": false,
+      "halves_max_hp": false,
+      "tags": [
+        {
+          "name": "One-shot required",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Orb change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Fire, Light, Dark"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "Fire, Light, Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Preemptive",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn",
+            "Fire, Light, Dark"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "Fire, Light, Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 1 turn"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Status immunity",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 1 turn"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        }
+      ],
+      "enemies": [
+        {
+          "name": "試練ラファエル",
+          "card": 11583,
+          "hp": 200000000000,
+          "defense": 1000000000,
+          "parts": [],
+          "traits": [],
+          "actions": [
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Status immunity, Preemptive (for 1 turn)",
+              "tags": [
+                "Status immunity",
+                "Preemptive"
+              ],
+              "details": [
+                "for 1 turn"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Orb change, Preemptive (Fire, Light, Dark)",
+              "tags": [
+                "Orb change",
+                "Preemptive"
+              ],
+              "details": [
+                "Fire, Light, Dark"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "One-shot required, Preemptive",
+              "tags": [
+                "One-shot required",
+                "Preemptive"
+              ],
+              "details": [],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Floor 5",
+      "number": 5,
+      "appear": null,
+      "one_of": false,
+      "halves_max_hp": false,
+      "tags": [
+        {
+          "name": "Blind",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Damage absorb",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 5 turns, 5B or more"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 5 turns",
+                "5B or more"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Orbs spawned",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Dark, 11 orbs"
+          ],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [
+                "Dark",
+                "11 orbs"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Preemptive",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 10 turns",
+            "for 5 turns, 5B or more",
+            "for 5 turns, All colors, 2 orbs",
+            "for 4 turns"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 10 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 4 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 5 turns",
+                "5B or more"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 5 turns",
+                "All colors",
+                "2 orbs"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Roulette",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 5 turns, All colors, 2 orbs"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 5 turns",
+                "All colors",
+                "2 orbs"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Status immunity",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 10 turns"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 10 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Super resolve",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "50%"
+          ],
+          "variants": []
+        },
+        {
+          "name": "Void assists",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 4 turns"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 4 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        }
+      ],
+      "enemies": [
+        {
+          "name": "ディアボロス",
+          "card": 11570,
+          "hp": 470000000000,
+          "defense": 1000000000,
+          "parts": [],
+          "traits": [
+            "Super resolve at 50%"
+          ],
+          "actions": [
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Status immunity, Preemptive (for 10 turns)",
+              "tags": [
+                "Status immunity",
+                "Preemptive"
+              ],
+              "details": [
+                "for 10 turns"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Damage absorb, Preemptive (for 5 turns, 5B or more)",
+              "tags": [
+                "Damage absorb",
+                "Preemptive"
+              ],
+              "details": [
+                "for 5 turns",
+                "5B or more"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Roulette, Preemptive (for 5 turns, All colors, 2 orbs)",
+              "tags": [
+                "Roulette",
+                "Preemptive"
+              ],
+              "details": [
+                "for 5 turns",
+                "All colors",
+                "2 orbs"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Void assists, Preemptive (for 4 turns)",
+              "tags": [
+                "Void assists",
+                "Preemptive"
+              ],
+              "details": [
+                "for 4 turns"
+              ],
+              "hit": 5850000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "First action",
+              "timing_kind": "first_action",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Blind",
+              "tags": [
+                "Blind"
+              ],
+              "details": [],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "First action",
+              "timing_kind": "first_action",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Multi-hit attack",
+              "tags": [],
+              "details": [],
+              "hit": 6370000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 1",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Orbs spawned (Dark, 11 orbs)",
+              "tags": [
+                "Orbs spawned"
+              ],
+              "details": [
+                "Dark",
+                "11 orbs"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 1",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Multi-hit attack",
+              "tags": [],
+              "details": [],
+              "hit": 6500000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Floor 6",
+      "number": 6,
+      "appear": null,
+      "one_of": false,
+      "halves_max_hp": true,
+      "tags": [
+        {
+          "name": "Combo absorb",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn, 11 or fewer combos"
+          ],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [
+                "for 1 turn",
+                "11 or fewer combos"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Damage void",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 4 turns, 5B or more"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "for 4 turns",
+                "5B or more"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Enemy ATK up",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn, ×4.5"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 1 turn",
+                "×4.5"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Enemy DEF up",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn, DEF +2.5B"
+          ],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [
+                "for 1 turn",
+                "DEF +2.5B"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Enemy attribute change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Full-board change",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Fire, Dark",
+            "Dark"
+          ],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [
+                "Fire, Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "On super resolve",
+              "details": [
+                "Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Max HP halved",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 2 turns, 50%"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 2 turns",
+                "50%"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Orb change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Fire, Dark",
+            "Dark"
+          ],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [
+                "Fire, Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "On super resolve",
+              "details": [
+                "Dark"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Preemptive",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 7 turns",
+            "for 2 turns, 50%",
+            "for 1 turn, ×4.5"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 1 turn",
+                "×4.5"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 2 turns",
+                "50%"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Skyfall change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 4 turns"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "for 4 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Status immunity",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 7 turns"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 7 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Super blind",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 4 turns"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "for 4 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Super resolve",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "40%"
+          ],
+          "variants": []
+        }
+      ],
+      "enemies": [
+        {
+          "name": "レーヴェン&ラジョア",
+          "card": 12698,
+          "hp": 520000000000,
+          "defense": 1000000000,
+          "parts": [],
+          "traits": [
+            "Super resolve at 40%"
+          ],
+          "actions": [
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Status immunity, Preemptive (for 7 turns)",
+              "tags": [
+                "Status immunity",
+                "Preemptive"
+              ],
+              "details": [
+                "for 7 turns"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Max HP halved, Preemptive (for 2 turns, 50%)",
+              "tags": [
+                "Max HP halved",
+                "Preemptive"
+              ],
+              "details": [
+                "for 2 turns",
+                "50%"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Enemy ATK up, Preemptive (for 1 turn, ×4.5)",
+              "tags": [
+                "Enemy ATK up",
+                "Preemptive"
+              ],
+              "details": [
+                "for 1 turn",
+                "×4.5"
+              ],
+              "hit": 2970000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "First action",
+              "timing_kind": "first_action",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Enemy attribute change",
+              "tags": [
+                "Enemy attribute change"
+              ],
+              "details": [],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "First action",
+              "timing_kind": "first_action",
+              "order": 1,
+              "source": "AppMedia",
+              "text": " (at ×4.5 ATK)",
+              "tags": [],
+              "details": [
+                "at ×4.5 ATK"
+              ],
+              "hit": 29700000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": true,
+              "severity": "large",
+              "severity_multiple": 4.5
+            },
+            {
+              "when": "First action",
+              "timing_kind": "first_action",
+              "order": 1,
+              "source": "AppMedia",
+              "text": "Orb change, Full-board change (Fire, Dark)",
+              "tags": [
+                "Orb change",
+                "Full-board change"
+              ],
+              "details": [
+                "Fire, Dark"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "First action",
+              "timing_kind": "first_action",
+              "order": 2,
+              "source": "AppMedia",
+              "text": "Combo absorb (for 1 turn, 11 or fewer combos)",
+              "tags": [
+                "Combo absorb"
+              ],
+              "details": [
+                "for 1 turn",
+                "11 or fewer combos"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "First action",
+              "timing_kind": "first_action",
+              "order": 3,
+              "source": "AppMedia",
+              "text": "Enemy DEF up (for 1 turn, DEF +2.5B)",
+              "tags": [
+                "Enemy DEF up"
+              ],
+              "details": [
+                "for 1 turn",
+                "DEF +2.5B"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "On super resolve",
+              "timing_kind": "on_super_resolve",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Super blind, Skyfall change (for 4 turns)",
+              "tags": [
+                "Super blind",
+                "Skyfall change"
+              ],
+              "details": [
+                "for 4 turns"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "On super resolve",
+              "timing_kind": "on_super_resolve",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Damage void (for 4 turns, 5B or more)",
+              "tags": [
+                "Damage void"
+              ],
+              "details": [
+                "for 4 turns",
+                "5B or more"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "On super resolve",
+              "timing_kind": "on_super_resolve",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Orb change, Full-board change (Dark)",
+              "tags": [
+                "Orb change",
+                "Full-board change"
+              ],
+              "details": [
+                "Dark"
+              ],
+              "hit": 6666000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Floor 7",
+      "number": 7,
+      "appear": null,
+      "one_of": false,
+      "halves_max_hp": false,
+      "tags": [
+        {
+          "name": "Awoken bind",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 2 turns"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "for 2 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Combo void",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 3 turns, 13 or fewer combos"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "for 3 turns",
+                "13 or fewer combos"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Enemy shield",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "3 shields"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "3 shields"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Full-board change",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Dark, Jammer"
+          ],
+          "variants": [
+            {
+              "when": "Action 3",
+              "details": [
+                "Dark, Jammer"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Orb change",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "Dark, Jammer"
+          ],
+          "variants": [
+            {
+              "when": "Action 3",
+              "details": [
+                "Dark, Jammer"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Preemptive",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "3 shields",
+            "for 4 turns, All colors, 3 orbs"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "3 shields"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 4 turns",
+                "All colors",
+                "3 orbs"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Roulette",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 4 turns, All colors, 3 orbs"
+          ],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 4 turns",
+                "All colors",
+                "3 orbs"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Status immunity",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [],
+          "variants": [
+            {
+              "when": "Preemptive",
+              "details": [],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Super resolve",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "50%"
+          ],
+          "variants": []
+        },
+        {
+          "name": "Thorn orbs",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "4 orbs"
+          ],
+          "variants": [
+            {
+              "when": "Action 4",
+              "details": [
+                "4 orbs"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Void assists",
+          "critical": true,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 4 turns"
+          ],
+          "variants": [
+            {
+              "when": "On super resolve",
+              "details": [
+                "for 4 turns"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Your ATK down",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn, ATK greatly reduced (percentage unspecified)"
+          ],
+          "variants": [
+            {
+              "when": "Action 1",
+              "details": [
+                "for 1 turn",
+                "ATK greatly reduced (percentage unspecified)"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Your RCV down",
+          "critical": false,
+          "sources": [
+            "AppMedia"
+          ],
+          "details": [
+            "for 1 turn, 50%"
+          ],
+          "variants": [
+            {
+              "when": "Action 2",
+              "details": [
+                "for 1 turn",
+                "50%"
+              ],
+              "sources": [
+                "AppMedia"
+              ]
+            }
+          ]
+        }
+      ],
+      "enemies": [
+        {
+          "name": "極醒木メタトロン",
+          "card": 9302,
+          "hp": 650000000000,
+          "defense": 1500000000,
+          "parts": [],
+          "traits": [
+            "Super resolve at 50%"
+          ],
+          "actions": [
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Status immunity, Preemptive",
+              "tags": [
+                "Status immunity",
+                "Preemptive"
+              ],
+              "details": [],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Generate 3 shields, Preemptive",
+              "tags": [
+                "Enemy shield",
+                "Preemptive"
+              ],
+              "details": [
+                "3 shields"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Preemptive",
+              "timing_kind": "preemptive",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Roulette, Preemptive (for 4 turns, All colors, 3 orbs)",
+              "tags": [
+                "Roulette",
+                "Preemptive"
+              ],
+              "details": [
+                "for 4 turns",
+                "All colors",
+                "3 orbs"
+              ],
+              "hit": 6300000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "On super resolve",
+              "timing_kind": "on_super_resolve",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Void assists (for 4 turns)",
+              "tags": [
+                "Void assists"
+              ],
+              "details": [
+                "for 4 turns"
+              ],
+              "hit": 7000000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "On super resolve",
+              "timing_kind": "on_super_resolve",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Combo void (for 3 turns, 13 or fewer combos)",
+              "tags": [
+                "Combo void"
+              ],
+              "details": [
+                "for 3 turns",
+                "13 or fewer combos"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "On super resolve",
+              "timing_kind": "on_super_resolve",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Awoken bind (for 2 turns)",
+              "tags": [
+                "Awoken bind"
+              ],
+              "details": [
+                "for 2 turns"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 1",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Your ATK down (for 1 turn, ATK greatly reduced (percentage unspecified))",
+              "tags": [
+                "Your ATK down"
+              ],
+              "details": [
+                "for 1 turn",
+                "ATK greatly reduced (percentage unspecified)"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 1",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Multi-hit attack",
+              "tags": [],
+              "details": [],
+              "hit": 7140000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 2",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Your RCV down (for 1 turn, 50%)",
+              "tags": [
+                "Your RCV down"
+              ],
+              "details": [
+                "for 1 turn",
+                "50%"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 2",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Multi-hit attack",
+              "tags": [],
+              "details": [],
+              "hit": 7140000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 3",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Orb change, Full-board change (Dark, Jammer)",
+              "tags": [
+                "Orb change",
+                "Full-board change"
+              ],
+              "details": [
+                "Dark, Jammer"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 3",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Multi-hit attack",
+              "tags": [],
+              "details": [],
+              "hit": 7140000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 4",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Thorn orbs (4 orbs)",
+              "tags": [
+                "Thorn orbs"
+              ],
+              "details": [
+                "4 orbs"
+              ],
+              "hit": null,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            },
+            {
+              "when": "Normal action 4",
+              "timing_kind": "normal",
+              "order": null,
+              "source": "AppMedia",
+              "text": "Multi-hit attack",
+              "tags": [],
+              "details": [],
+              "hit": 7140000,
+              "normal_hit": null,
+              "enraged_hit": null,
+              "enraged": false,
+              "severity": null,
+              "severity_multiple": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

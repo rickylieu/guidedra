@@ -23,7 +23,7 @@ CRITICAL_TAGS = {
     "Attribute absorb",
     "Combo void",
     "Skill bind",
-    "Assist bind",
+    "Void assists",
     "Skill delay",
     "Bind",
     "Roulette",
@@ -61,6 +61,11 @@ _EXACT_ACTION_ANNOTATIONS = {
 _HIT_RE = re.compile(
     rf"(?P<lower>{_AMOUNT})(?:\s*[〜～~−-]\s*(?P<upper>{_AMOUNT}))?\s*ダメージ"
 )
+_MULTI_HIT_RE = re.compile(r"の?連続攻撃")
+_THORN_COUNT_RE = re.compile(
+    r"ドロップ(?:を)?(\d+)個(?:を|が)?(?:トゲ|棘)|(?:トゲ|棘)(?:ドロップ)?(?:を)?(\d+)個"
+)
+_NORMAL_ORDER_RE = re.compile(r"通常(?:行動|攻撃)\s*(\d+)")
 
 
 def normalize_text(text: str) -> str:
@@ -110,7 +115,7 @@ _TAG_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("Damage void", re.compile(r"ダメージ無効|\d+(?:\.\d+)?億以上無効")),
     ("Combo void", re.compile(r"コンボ以下無効")),
     ("Skill bind", re.compile(r"スキル封印|スキル使用不可")),
-    ("Assist bind", re.compile(r"アシスト無効")),
+    ("Void assists", re.compile(r"アシスト無効")),
     ("Skill delay", re.compile(r"スキル遅延")),
     ("Bind", re.compile(r"バインド")),
     ("Invulnerable", re.compile(r"ダメージ(?:を|が)?与えられない|与えられなくなる")),
@@ -147,7 +152,10 @@ _TAG_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("No skyfall combos", re.compile(r"落ちコンなし")),
     ("Combo reduction", re.compile(r"コンボ減算|コンボ減少")),
     ("Weakened orbs", re.compile(r"弱化|弱体化")),
-    ("Thorn orbs", re.compile(r"トゲ目覚め|棘目覚め|トゲドロップ目覚め")),
+    (
+        "Thorn orbs",
+        re.compile(r"トゲ目覚め|棘目覚め|トゲドロップ目覚め|" + _THORN_COUNT_RE.pattern),
+    ),
     ("Jammers", re.compile(r"(?:お邪魔|\[お邪魔\])目覚め")),
     ("Bombs", re.compile(r"爆弾")),
     ("Skill charge", re.compile(r"スキルチャージ")),
@@ -260,7 +268,9 @@ def parse_timing(timing_jp: str, order: int | str | None = None) -> dict[str, st
     if match:
         return {"kind": "turn", "label": f"Turn {match.group(1)}"}
     if "通常行動" in text or "通常攻撃" in text:
-        ordinal = _parse_order(order)
+        ordinal = _timing_order(timing_jp)
+        if ordinal is None:
+            ordinal = _parse_order(order)
         return {
             "kind": "normal",
             "label": f"Normal action {ordinal}" if ordinal is not None else "Normal action",
@@ -275,6 +285,15 @@ def _parse_order(order: int | str | None) -> int | None:
         return order
     match = re.search(r"\d+", normalize_text(order))
     return int(match.group()) if match else None
+
+
+def _timing_order(timing_jp: str) -> int | None:
+    """Read the action number written in a timing header, e.g. 通常行動①."""
+    for character in timing_jp:
+        if character in _CIRCLED_ORDERS:
+            return _CIRCLED_ORDERS.index(character) + 1
+    match = _NORMAL_ORDER_RE.search(normalize_text(timing_jp))
+    return int(match.group(1)) if match else None
 
 
 def extract_details(text_jp: str, order: int | str | None = None) -> list[str]:
@@ -368,6 +387,9 @@ def extract_details(text_jp: str, order: int | str | None = None) -> list[str]:
     count = re.search(r"(\d+)個生成", text)
     if count and "ルーレット" not in text:
         details.append(f"{count.group(1)} orbs")
+    thorns = _THORN_COUNT_RE.search(text)
+    if thorns:
+        details.append(f"{thorns.group(1) or thorns.group(2)} orbs")
     if "ルーレット" in text:
         positions = re.search(r"ルーレット(?:を)?\s*(\d+)\s*個", text)
         if not positions:
@@ -503,6 +525,7 @@ def _is_pure_damage(text_jp: str) -> bool:
         return False
     text = text[: match.start()] + text[match.end() :]
     text = re.sub(r"[（(]\s*\d+(?:\.\d+)?倍時\s*[）)]", "", text)
+    text = _MULTI_HIT_RE.sub("", text)
     text = re.sub(r"[\s、,。・:：+!！?？()（）]", "", text)
     return not text
 
@@ -533,7 +556,11 @@ def annotate_action(action: dict[str, Any]) -> dict[str, Any]:
         }
     )
     if hit is not None and not (set(tags) - {"Preemptive"}) and _is_pure_damage(text_jp):
-        annotated["text"] = "Normal attack"
+        annotated["text"] = (
+            "Multi-hit attack"
+            if _MULTI_HIT_RE.search(normalize_text(text_jp))
+            else "Normal attack"
+        )
     exact_annotation = _EXACT_ACTION_ANNOTATIONS.get(normalize_text(text_jp))
     if exact_annotation:
         annotated["text"] = exact_annotation

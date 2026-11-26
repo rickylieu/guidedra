@@ -313,9 +313,11 @@ def _floor_normal_hit_samples(
 def floor_label(floor: dict[str, Any]) -> str:
     if floor.get("number") is not None:
         return f"Floor {floor['number']}"
-    invade = floor.get("invade_floors", [])
+    invade = [str(number) for number in floor.get("invade_floors", [])]
+    if len(invade) > 2:
+        return f"Invade (Floor {', '.join(invade[:-1])}, or {invade[-1]})"
     if invade:
-        return f"Invade (Floor {' or '.join(map(str, invade))})"
+        return f"Invade (Floor {' or '.join(invade)})"
     return "Invade"
 
 

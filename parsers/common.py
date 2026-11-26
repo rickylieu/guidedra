@@ -25,6 +25,7 @@ ORB_DETAILS = {
     "爆弾": "爆弾",
 }
 _CIRCLED_ORDERS = dict(zip("①②③④⑤⑥⑦⑧⑨", range(1, 10)))
+_ONE_SHOT_NOTE = re.compile(r"ワンパン必須|1ターンで倒す")
 
 
 def parse_html(html: str) -> BeautifulSoup:
@@ -218,21 +219,14 @@ def appear_count(value: str) -> int | None:
 
 def invade_floors(value: str) -> list[int]:
     text = unicodedata.normalize("NFKC", value)
+    item = r"(?:B\s*)?\d{1,2}(?:\s*F)?"
+    separator = r"\s*(?:or|[/・,、])\s*"
+    run = rf"(?<![A-Za-z0-9]){item}(?:{separator}{item})*(?![A-Za-z0-9])"
     floors: list[int] = []
-    for match in re.finditer(r"(?<!\d)(\d+)\s*F\s*(?:or|/)\s*(\d+)\s*F", text, re.IGNORECASE):
-        floors.extend((int(match.group(1)), int(match.group(2))))
-    for match in re.finditer(
-        r"(?<![A-Za-z0-9])B\s*(\d+)\s*[/・,、]\s*B?\s*(\d+)(?!\d)",
-        text,
-        re.IGNORECASE,
-    ):
-        floors.extend((int(match.group(1)), int(match.group(2))))
-    for match in re.finditer(
-        r"(?<![A-Za-z0-9])B\s*(\d+)(?!\d)|(?<!\d)(\d+)\s*F(?![A-Za-z0-9])",
-        text,
-        re.IGNORECASE,
-    ):
-        floors.append(int(match.group(1) or match.group(2)))
+    for match in re.finditer(run, text, re.IGNORECASE):
+        if not re.search(r"[BF]", match.group(), re.IGNORECASE):
+            continue
+        floors.extend(int(number) for number in re.findall(r"\d+", match.group()))
     return list(dict.fromkeys(floors))
 
 
@@ -268,10 +262,11 @@ def actions_from_cell(cell: Tag, source: str) -> tuple[list[dict[str, Any]], lis
         line = re.sub(r"\s+", " ", line).strip()
         if not line:
             return
-        if source in {"appmedia", "gamewith"} and (
-            line.startswith("※") or "出現を確認" in line
-        ):
-            return
+        if source in {"appmedia", "gamewith"}:
+            if line.startswith("※") and _ONE_SHOT_NOTE.search(line):
+                line = line.lstrip("※ ").strip()
+            elif line.startswith("※") or "出現を確認" in line:
+                return
         if line.startswith("┗") and actions:
             actions[-1]["text_jp"] += " " + line[1:].strip()
             return

@@ -12,6 +12,7 @@ const clearFloorFilter = document.getElementById("clear-floor-filter");
 const selectAllMechanicsButton = document.getElementById("select-all-mechanics");
 const STORAGE_KEY = "pad-dungeon-guide-team-hp";
 const DEBUG_MODE = new URL(window.location.href).searchParams.get("debug") === "1";
+const DAMAGE_CAP_TAG = "Damage cap set";
 
 let dungeonIndex = [];
 let currentDungeon = null;
@@ -114,20 +115,27 @@ function formatEffectDetails(details) {
   return (details || []).map(formatEffectDetail).join("; ");
 }
 
-function displayMechanicName(name, details = []) {
-  if (name !== "Damage cap set") return name;
-  const caps = [...new Set(
-    details
-      .filter((detail) => detail.startsWith("cap "))
-      .map((detail) => detail.slice(4)),
+function isDamageCapValue(name, detail) {
+  return name === DAMAGE_CAP_TAG && detail.startsWith("cap ");
+}
+
+function damageCapValues(name, details) {
+  return [...new Set(
+    (details || [])
+      .filter((detail) => isDamageCapValue(name, detail))
+      .map((detail) => `to ${detail.slice(4)}`),
   )];
-  return caps.length === 1 ? `Damage cap set to ${caps[0]}` : name;
+}
+
+function displayMechanicName(name) {
+  return name === DAMAGE_CAP_TAG ? "Damage cap changed" : name;
 }
 
 function visibleEffectDetails(name, details) {
-  return (details || []).filter(
-    (detail) => !(name === "Damage cap set" && detail.startsWith("cap ")),
-  );
+  return [
+    ...damageCapValues(name, details),
+    ...(details || []).filter((detail) => !isDamageCapValue(name, detail)),
+  ];
 }
 
 function unresolvedEffectVariantIndexes(variants) {
@@ -166,15 +174,19 @@ function formatEffectVariants(
         /^\d+(?:\.\d+)?(?:K|M|B|T)? or more$/i.test(detail);
       return !(
         (hideDamageVoidThreshold && tagName === "Damage void" && isDamageVoidThreshold) ||
-        (tagName === "Damage cap set" && detail.startsWith("cap "))
+        isDamageCapValue(tagName, detail)
       );
     });
+    const capValue = damageCapValues(tagName, variant.details).join(", ");
     const enemyLabel = variant.enemies?.length
       ? `on ${variant.enemies.join(", ")}`
       : null;
-    const parts = [variant.when, formatEffectDetails(details), enemyLabel].filter(
-      (part) => part && part !== "Unknown timing",
-    );
+    const parts = [
+      capValue,
+      variant.when,
+      formatEffectDetails(details),
+      enemyLabel,
+    ].filter((part) => part && part !== "Unknown timing");
     const text = parts.join(" · ");
     if (!text) continue;
     if (!grouped.has(text)) {
@@ -186,7 +198,7 @@ function formatEffectVariants(
   }
   const formatted = [...grouped].map(([text, group]) => {
     const sourceList = [...group.sources].sort();
-    return group.unresolved && sourceList.length
+    return DEBUG_MODE && group.unresolved && sourceList.length
       ? `${text} (${sourceList.join(", ")})`
       : text;
   });
@@ -230,9 +242,10 @@ function formatAlternativeAttributeAbsorb(effect, floor) {
           const colors = (variant.details || [])
             .filter((detail) => !detail.startsWith("for "))
             .join(", ");
-          const sources = unresolvedVariants.has(index) && variant.sources?.length
-            ? ` (${variant.sources.join(", ")})`
-            : "";
+          const sources =
+            DEBUG_MODE && unresolvedVariants.has(index) && variant.sources?.length
+              ? ` (${variant.sources.join(", ")})`
+              : "";
           if (colors && duration) {
             return `${colors} (${duration})${sources}`;
           }
@@ -291,18 +304,11 @@ function renderCriticalSummary(data) {
     const grid = element("div", "summary-grid");
     for (const tag of mechanics) {
       const item = element("div", "summary-item");
-      const capDetails = (data.floors || []).flatMap((floor) =>
-        (floor.tags || [])
-          .filter((effect) => effect.name === tag)
-          .flatMap((effect) => [
-            ...(effect.details || []),
-            ...(effect.variants || []).flatMap((variant) => variant.details || []),
-          ]),
-      );
-      const button = element("button", "summary-mechanic", displayMechanicName(tag, capDetails));
+      const mechanicName = displayMechanicName(tag);
+      const button = element("button", "summary-mechanic", mechanicName);
       button.type = "button";
       button.dataset.mechanic = tag;
-      button.setAttribute("aria-label", `Toggle ${tag} floor filter`);
+      button.setAttribute("aria-label", `Toggle ${mechanicName} floor filter`);
       button.setAttribute("aria-controls", "floors-list");
       button.setAttribute("aria-pressed", String(selectedMechanics.has(tag)));
       button.addEventListener("click", () => selectMechanic(tag));
@@ -322,16 +328,11 @@ function renderCriticalSummary(data) {
         const details = alternativeAbsorb || (variants.length
           ? variants.join("; ")
           : formatEffectDetails(fallbackDetails));
-        const effectDetails = [
-          ...(effect?.details || []),
-          ...(effect?.variants || []).flatMap((variant) => variant.details || []),
-        ];
-        const effectName = displayMechanicName(tag, effectDetails);
         const floorLabel = floor?.one_of && !alternativeAbsorb
           ? `${label} (${floor.appear} of ${(floor.enemies || []).length} possible enemies)`
           : label;
         floorList.append(
-          element("li", "", details ? `${floorLabel} — ${details}` : `${floorLabel} — ${effectName}`),
+          element("li", "", details ? `${floorLabel} — ${details}` : `${floorLabel} — ${mechanicName}`),
         );
       }
       item.append(floorList);
@@ -480,15 +481,12 @@ function renderFloorTags(tags, primary) {
     const variants = tag.critical
       ? formatEffectVariants(tag.name, tag, false)
       : [];
-    const displayName = displayMechanicName(tag.name, [
-      ...(tag.details || []),
-      ...(tag.variants || []).flatMap((variant) => variant.details || []),
-    ]);
+    const displayName = displayMechanicName(tag.name);
     const fallbackDetails = visibleEffectDetails(tag.name, tag.details);
     let details = "";
     if (
       tag.critical ||
-      ["Resolve", "Super resolve", "Your ATK down"].includes(tag.name)
+      ["Resolve", "Super resolve", "Your ATK down", DAMAGE_CAP_TAG].includes(tag.name)
     ) {
       details = variants.length
         ? variants.join("; ")
@@ -499,7 +497,7 @@ function renderFloorTags(tags, primary) {
       classes.join(" "),
       details ? `${displayName} · ${details}` : displayName,
     );
-    if (foundBy.length && unresolvedSources) {
+    if (DEBUG_MODE && foundBy.length && unresolvedSources) {
       const sourceNote = foundBy.includes(primary)
         ? `Found by: ${foundBy.join(", ")}`
         : `Not in ${primary}; found by: ${foundBy.join(", ")}`;
@@ -574,7 +572,7 @@ function renderAction(action, floor, teamHp, groupKey) {
   if (qualifier) copy.append(element("span", "action-when", qualifier));
   const text = actionTextForGroup(action, groupKey, DEBUG_MODE);
   if (text) copy.append(element("span", "action-text", text));
-  if (action.source) {
+  if (DEBUG_MODE && action.source) {
     const source = element("span", "action-source", action.source);
     source.title = `Source: ${action.source}`;
     copy.append(source);
