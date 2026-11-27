@@ -18,7 +18,7 @@ from rules import apply_rules
 
 PRIMARY_ORDER = ("gamewith", "appmedia", "altema", "game8")
 FILL_ORDER = ("gamewith", "appmedia", "altema", "game8")
-PART_NAMES = {"部位": "Part", "翼": "Wing", "聖鳥": "Holy bird"}
+PART_NAMES = {"部位": "Part", "翼": "Wing", "聖鳥": "Holy bird", "左部位": "Left part", "右部位": "Right part"}
 ROULETTE_ORB_COLORS = frozenset(
     {"Fire", "Water", "Wood", "Light", "Dark", "Heart", "Jammer", "Bomb"}
 )
@@ -798,7 +798,7 @@ def _semantic_timing(
     if kind == "sequence":
         order = action.get("order")
         if order is not None:
-            return "sequence", str(order)
+            return "action", str(order)
     if kind == "normal":
         match = re.fullmatch(r"Normal action (\d+)", when)
         if match:
@@ -819,7 +819,7 @@ def _semantic_timing_label(key: tuple[str, str | None]) -> str:
     if kind == "first_action":
         return "First action"
     if kind == "sequence":
-        return f"In-order action {value}" if value else "Used in order"
+        return f"Action {value}" if value else "Used in order"
     if kind == "action":
         return f"Action {value}"
     if kind == "turn":

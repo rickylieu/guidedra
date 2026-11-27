@@ -91,9 +91,9 @@ def test_normal_action_number_merges_first_but_not_in_order_actions():
 
     assert normal_action == numbered_action == ("action", "1")
     assert first_action == ("action", "1")
-    assert ordered_action == ("sequence", "1")
+    assert ordered_action == ("action", "1")
     assert _semantic_timing_label(first_action) == "Action 1"
-    assert _semantic_timing_label(ordered_action) == "In-order action 1"
+    assert _semantic_timing_label(ordered_action) == "Action 1"
 
 
 def test_puzzle_failure_replaces_combo_threshold_for_same_enemy_only():

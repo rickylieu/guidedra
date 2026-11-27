@@ -2,7 +2,7 @@
   "slug": "tenkyu-challenge",
   "name_en": "Tenkyū Challenge",
   "name_jp": "天穹チャレンジ",
-  "built": "2026-11-26",
+  "built": "2026-11-27",
   "sources": [
     {
       "name": "GameWith",
@@ -4899,18 +4899,18 @@
             "GameWith"
           ],
           "details": [
-            "for 4 turns"
+            "for 4 turns, 1 random color"
           ],
           "variants": [
             {
               "when": "Preemptive",
               "details": [
-                "for 4 turns"
+                "for 4 turns",
+                "1 random color"
               ],
               "sources": [
                 "Altema",
                 "AppMedia",
-                "Game8",
                 "GameWith"
               ]
             }
@@ -5034,10 +5034,19 @@
             "GameWith"
           ],
           "details": [
-            "for 4 turns",
+            "for 4 turns, 1 random color",
             "for 10 turns"
           ],
           "variants": [
+            {
+              "when": "Preemptive",
+              "details": [],
+              "sources": [
+                "Altema",
+                "Game8",
+                "GameWith"
+              ]
+            },
             {
               "when": "Preemptive",
               "details": [
@@ -5056,9 +5065,18 @@
                 "for 4 turns"
               ],
               "sources": [
+                "Game8"
+              ]
+            },
+            {
+              "when": "Preemptive",
+              "details": [
+                "for 4 turns",
+                "1 random color"
+              ],
+              "sources": [
                 "Altema",
                 "AppMedia",
-                "Game8",
                 "GameWith"
               ]
             }
@@ -5237,13 +5255,14 @@
               "timing_kind": "preemptive",
               "order": null,
               "source": "GameWith",
-              "text": "Attribute absorb, Preemptive (for 4 turns)",
+              "text": "Attribute absorb, Preemptive (for 4 turns - 1 random color)",
               "tags": [
                 "Attribute absorb",
                 "Preemptive"
               ],
               "details": [
-                "for 4 turns"
+                "for 4 turns",
+                "1 random color"
               ],
               "hit": null,
               "normal_hit": null,
@@ -7342,16 +7361,7 @@
                 "Dark"
               ],
               "sources": [
-                "AppMedia"
-              ]
-            },
-            {
-              "when": "In-order action 7",
-              "details": [
-                "for 1 turn",
-                "Dark"
-              ],
-              "sources": [
+                "AppMedia",
                 "GameWith"
               ]
             }
@@ -7375,16 +7385,7 @@
                 "12 or fewer combos"
               ],
               "sources": [
-                "AppMedia"
-              ]
-            },
-            {
-              "when": "In-order action 5",
-              "details": [
-                "for 1 turn",
-                "12 or fewer combos"
-              ],
-              "sources": [
+                "AppMedia",
                 "GameWith"
               ]
             }
@@ -7408,16 +7409,7 @@
                 "5B or more"
               ],
               "sources": [
-                "AppMedia"
-              ]
-            },
-            {
-              "when": "In-order action 2",
-              "details": [
-                "for 1 turn",
-                "5B or more"
-              ],
-              "sources": [
+                "AppMedia",
                 "GameWith"
               ]
             }
@@ -7468,16 +7460,7 @@
                 "greatly reduced (percentage unspecified)"
               ],
               "sources": [
-                "AppMedia"
-              ]
-            },
-            {
-              "when": "In-order action 4",
-              "details": [
-                "for 1 turn",
-                "greatly reduced (percentage unspecified)"
-              ],
-              "sources": [
+                "AppMedia",
                 "GameWith"
               ]
             }
@@ -7574,17 +7557,7 @@
                 "2 orbs"
               ],
               "sources": [
-                "AppMedia"
-              ]
-            },
-            {
-              "when": "In-order action 1",
-              "details": [
-                "for 1 turn",
-                "Light, Heart",
-                "2 orbs"
-              ],
-              "sources": [
+                "AppMedia",
                 "GameWith"
               ]
             }
@@ -7636,7 +7609,8 @@
                 "for 1 turn"
               ],
               "sources": [
-                "AppMedia"
+                "AppMedia",
+                "GameWith"
               ]
             },
             {
@@ -7645,7 +7619,8 @@
                 "for 1 turn"
               ],
               "sources": [
-                "AppMedia"
+                "AppMedia",
+                "GameWith"
               ]
             },
             {
@@ -7657,24 +7632,6 @@
                 "Altema",
                 "AppMedia",
                 "Game8",
-                "GameWith"
-              ]
-            },
-            {
-              "when": "In-order action 3",
-              "details": [
-                "for 1 turn"
-              ],
-              "sources": [
-                "GameWith"
-              ]
-            },
-            {
-              "when": "In-order action 6",
-              "details": [
-                "for 1 turn"
-              ],
-              "sources": [
                 "GameWith"
               ]
             }
@@ -7937,13 +7894,14 @@
             "GameWith"
           ],
           "details": [
-            "for 1 turn"
+            "for 1 turn, 1 random color"
           ],
           "variants": [
             {
               "when": "Action 1",
               "details": [
-                "for 1 turn"
+                "for 1 turn",
+                "1 random color"
               ],
               "sources": [
                 "AppMedia"
@@ -7952,7 +7910,8 @@
             {
               "when": "One at random",
               "details": [
-                "for 1 turn"
+                "for 1 turn",
+                "1 random color"
               ],
               "sources": [
                 "GameWith"
@@ -8646,12 +8605,13 @@
               "timing_kind": "random",
               "order": 2,
               "source": "GameWith",
-              "text": "Attribute absorb (for 1 turn)",
+              "text": "Attribute absorb (for 1 turn - 1 random color)",
               "tags": [
                 "Attribute absorb"
               ],
               "details": [
-                "for 1 turn"
+                "for 1 turn",
+                "1 random color"
               ],
               "hit": 20400000,
               "normal_hit": 20400000,
@@ -8687,12 +8647,13 @@
               "timing_kind": "random",
               "order": 4,
               "source": "GameWith",
-              "text": "Attribute absorb (for 1 turn)",
+              "text": "Attribute absorb (for 1 turn - 1 random color)",
               "tags": [
                 "Attribute absorb"
               ],
               "details": [
-                "for 1 turn"
+                "for 1 turn",
+                "1 random color"
               ],
               "hit": 20400000,
               "normal_hit": 20400000,

@@ -641,3 +641,53 @@ main {
 .enemy-team-damage {
   color: #c9d1d9;
 }
+
+.skill-plan-stall,
+.skill-plan-stall strong {
+  color: #ff6b6b;
+  font-weight: 700;
+}
+
+.enemy-parts {
+  display: block;
+}
+
+.enemy-part {
+  display: block;
+}
+
+.effective-hp {
+  font-size: 0.9em;
+  opacity: 0.85;
+}
+
+.effective-hp {
+  flex-basis: 100%;
+}
+
+.effective-hp-line {
+  font-variant-numeric: tabular-nums;
+}
+
+.team-panel {
+  flex-basis: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.team-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+}
+
+.team-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}

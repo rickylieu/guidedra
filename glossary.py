@@ -477,6 +477,11 @@ def extract_details(text_jp: str, order: int | str | None = None) -> list[str]:
         threshold = re.search(r"(?:超根性|根性)\s*[:：]?\s*(\d+)%", text)
         details.append(f"{threshold.group(1) if threshold else '50'}%")
 
+    # random-colour absorb
+    random_absorb = re.search(r"ランダム(\d+)(?:属性|色)吸収", normalize_text(text_jp))
+    if random_absorb:
+        n = random_absorb.group(1)
+        details.append(f"{n} random color" if n == "1" else f"{n} random colors")
     return list(dict.fromkeys(details))
 
 

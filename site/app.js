@@ -210,7 +210,89 @@ function updateLocation(slug) {
   window.history.replaceState(null, "", url);
 }
 
+const LEADER_CARD_KEY = "pad-dungeon-guide-leader-card";
+const HELPER_CARD_KEY = "pad-dungeon-guide-helper-card";
+let cardShields = {};
+let cardNames = {};
+let effectiveHpRange = null;
+let explainEffectiveHp = null;
+const [leaderLabel, leaderInput] = cardNumberInput("leader-card", "Leader card #", LEADER_CARD_KEY);
+const [helperLabel, helperInput] = cardNumberInput("helper-card", "Helper card #", HELPER_CARD_KEY);
+const effectiveHpNote = document.createElement("div");
+effectiveHpNote.className = "effective-hp";
+const teamHpLabel = document.querySelector('label[for="team-hp"]');
+const teamPanel = document.createElement("div");
+teamPanel.className = "team-panel";
+const teamFields = document.createElement("div");
+teamFields.className = "team-fields";
+const teamField = (...nodes) => {
+  const wrap = document.createElement("span");
+  wrap.className = "team-field";
+  wrap.append(...nodes.filter(Boolean));
+  return wrap;
+};
+(teamHpLabel || teamHpInput).before(teamPanel);
+teamFields.append(
+  teamField(teamHpLabel, teamHpInput),
+  teamField(leaderLabel, leaderInput),
+  teamField(helperLabel, helperInput),
+);
+teamPanel.append(teamFields, effectiveHpNote);
+Promise.all([
+  import("./team-shield.mjs"),
+  fetch("data/card_shields.json").then((response) => (response.ok ? response.json() : {})),
+  fetch("data/card_names.json").then((response) => (response.ok ? response.json() : {})),
+])
+  .then(([shieldMaths, data, names]) => {
+    effectiveHpRange = shieldMaths.effectiveHpRange;
+    explainEffectiveHp = shieldMaths.explainEffectiveHp;
+    cardShields = data || {};
+    cardNames = names || {};
+    teamHpInput.dispatchEvent(new Event("input"));
+  })
+  .catch(() => {});
+
+function cardNumberInput(id, text, key) {
+  const label = document.createElement("label");
+  label.htmlFor = id;
+  label.className = document.querySelector('label[for="team-hp"]')?.className || "";
+  label.textContent = text;
+  const input = document.createElement("input");
+  Object.assign(input, { id, type: "number", min: "1", step: "1", inputMode: "numeric", placeholder: "Optional" });
+  input.className = teamHpInput.className;
+  input.value = window.localStorage.getItem(key) || "";
+  input.addEventListener("input", () => {
+    if (input.value.trim() === "") window.localStorage.removeItem(key);
+    else window.localStorage.setItem(key, input.value);
+    teamHpInput.dispatchEvent(new Event("input"));
+  });
+  return [label, input];
+}
+
+function cardSource(role, input) {
+  const value = input.value.trim();
+  if (!value) return null;
+  const card = Number(value);
+  const entry = cardNames[String(card)];
+  const name = typeof entry === "string" ? entry : entry?.name_en || entry?.name || null;
+  return { role, card, name, shields: cardShields[String(card)] || [] };
+}
+
+function showEffectiveHp(raw, sources) {
+  const lines = explainEffectiveHp && sources.length ? explainEffectiveHp(raw, sources) : [];
+  effectiveHpNote.replaceChildren(...lines.map((line) => element("div", "effective-hp-line", line)));
+}
+
 function selectedTeamHp() {
+  const raw = rawTeamHp();
+  const sources = [cardSource("Leader", leaderInput), cardSource("Helper", helperInput)].filter(Boolean);
+  const shields = sources.flatMap((source) => source.shields);
+  const range = raw === null || !effectiveHpRange ? null : effectiveHpRange(raw, shields);
+  showEffectiveHp(raw, sources);
+  return range ? range.low : raw;
+}
+
+function rawTeamHp() {
   const value = Number(teamHpInput.value);
   return teamHpInput.value.trim() !== "" && Number.isFinite(value) && value > 0
     ? value
@@ -966,11 +1048,6 @@ function updateSkillPlan() {
         `No HP for ${assumed.join(", ")}: assumed ${DEFAULT_TURNS_PER_FLOOR} turns.`,
       );
     }
-    if (stalled.length) {
-      notes.push(
-        `Your attributes can't damage ${stalled.join(", ")} in time: counted as ${MAX_TURNS_PER_FLOOR} turns.`,
-      );
-    }
   }
   if (scenarios.length > 1) {
     notes.push(
@@ -981,6 +1058,14 @@ function updateSkillPlan() {
     notes.push("Invaders with no known floor are not counted in the turns.");
   }
   skillPlanNote.textContent = notes.join(" ");
+  if (averageDamage !== null && stalled.length) {
+    const warning = element("p", "skill-plan-line skill-plan-stall");
+    warning.append(
+      element("strong", "", "Can't clear in time:"),
+      ` ${stalled.join(", ")} (counted as ${MAX_TURNS_PER_FLOOR} turns)`,
+    );
+    skillPlanLines.append(warning);
+  }
   for (const plan of activeSkillPlans()) {
     const line = element("p", "skill-plan-line");
     line.append(
@@ -1310,7 +1395,7 @@ function renderEnemySummary(enemy) {
   if ((enemy.parts || []).length) {
     const parts = element("div", "enemy-parts");
     for (const part of enemy.parts) {
-      parts.append(element("span", "", `${part.name} ${formatNumber(part.hp)}`));
+      parts.append(element("div", "enemy-part", `[Part] ${part.name} HP ${formatNumber(part.hp)}`));
     }
     section.append(parts);
   }
@@ -1569,11 +1654,11 @@ dungeonSelect.addEventListener("change", async () => {
   }
 });
 
-teamHpInput.addEventListener("input", () => {
+teamHpInput.addEventListener("input", (event) => {
   if (teamHpInput.value.trim() === "") {
-    window.localStorage.removeItem(STORAGE_KEY);
+    if (event.isTrusted) window.localStorage.removeItem(STORAGE_KEY);
   } else {
-    window.localStorage.setItem(STORAGE_KEY, teamHpInput.value);
+    if (event.isTrusted) window.localStorage.setItem(STORAGE_KEY, teamHpInput.value);
   }
   if (currentDungeon) {
     renderHitSummary(currentDungeon);

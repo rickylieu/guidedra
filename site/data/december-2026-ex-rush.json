@@ -2,7 +2,7 @@
   "slug": "december-2026-ex-rush",
   "name_en": "December 2026 Quest EX Rush",
   "name_jp": "10月クエストEXラッシュ",
-  "built": "2026-11-26",
+  "built": "2026-11-27",
   "sources": [
     {
       "name": "AppMedia",
@@ -1049,22 +1049,24 @@
             "AppMedia"
           ],
           "details": [
-            "for 1 turn"
+            "for 1 turn, 1 random color"
           ],
           "variants": [
             {
-              "when": "In-order action 1",
+              "when": "Action 1",
               "details": [
-                "for 1 turn"
+                "for 1 turn",
+                "1 random color"
               ],
               "sources": [
                 "AppMedia"
               ]
             },
             {
-              "when": "In-order action 3",
+              "when": "Action 3",
               "details": [
-                "for 1 turn"
+                "for 1 turn",
+                "1 random color"
               ],
               "sources": [
                 "AppMedia"
@@ -1127,7 +1129,7 @@
           ],
           "variants": [
             {
-              "when": "In-order action 1",
+              "when": "Action 1",
               "details": [
                 "for 1 turn",
                 "DEF +1B"
@@ -1137,7 +1139,7 @@
               ]
             },
             {
-              "when": "In-order action 3",
+              "when": "Action 3",
               "details": [
                 "for 1 turn",
                 "DEF +1.5B"
@@ -1159,7 +1161,7 @@
           ],
           "variants": [
             {
-              "when": "In-order action 2",
+              "when": "Action 2",
               "details": [
                 "for 1 turn",
                 "50%"
@@ -1181,7 +1183,7 @@
           ],
           "variants": [
             {
-              "when": "In-order action 2",
+              "when": "Action 2",
               "details": [
                 "×1.3"
               ],
@@ -1346,12 +1348,13 @@
               "timing_kind": "sequence",
               "order": 1,
               "source": "AppMedia",
-              "text": "Attribute absorb (for 1 turn)",
+              "text": "Attribute absorb (for 1 turn - 1 random color)",
               "tags": [
                 "Attribute absorb"
               ],
               "details": [
-                "for 1 turn"
+                "for 1 turn",
+                "1 random color"
               ],
               "hit": null,
               "normal_hit": null,
@@ -1428,12 +1431,13 @@
               "timing_kind": "sequence",
               "order": 3,
               "source": "AppMedia",
-              "text": "Attribute absorb (for 1 turn)",
+              "text": "Attribute absorb (for 1 turn - 1 random color)",
               "tags": [
                 "Attribute absorb"
               ],
               "details": [
-                "for 1 turn"
+                "for 1 turn",
+                "1 random color"
               ],
               "hit": null,
               "normal_hit": null,
@@ -3217,7 +3221,7 @@
           ],
           "variants": [
             {
-              "when": "In-order action 1",
+              "when": "Action 1",
               "details": [
                 "for 1 turn",
                 "5×4"
@@ -3365,7 +3369,7 @@
           ],
           "variants": [
             {
-              "when": "In-order action 2",
+              "when": "Action 2",
               "details": [
                 "for 1 turn",
                 "ATK reduced by 75%"
@@ -3409,7 +3413,7 @@
           ],
           "variants": [
             {
-              "when": "In-order action 4",
+              "when": "Action 4",
               "details": [
                 "for 2 turns"
               ],
@@ -3456,7 +3460,7 @@
           "details": [],
           "variants": [
             {
-              "when": "In-order action 3",
+              "when": "Action 3",
               "details": [],
               "sources": [
                 "AppMedia"

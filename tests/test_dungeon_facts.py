@@ -369,22 +369,16 @@ def test_published_warning_details_and_hit_severity():
     floor14_assist = tag("Floor 14", "Void assists")["variants"]
     assert any(
         variant["when"] == "Action 3"
-        and variant["sources"] == ["AppMedia"]
+        and {"AppMedia", "GameWith"} <= set(variant["sources"])
         for variant in floor14_assist
     )
-    assert any(
-        variant["when"] == "In-order action 3"
-        and variant["sources"] == ["GameWith"]
+    assert not any(
+        str(variant["when"]).startswith("In-order")
         for variant in floor14_assist
     )
     assert any(
         variant["when"] == "Action 6"
-        and variant["sources"] == ["AppMedia"]
-        for variant in floor14_assist
-    )
-    assert any(
-        variant["when"] == "In-order action 6"
-        and variant["sources"] == ["GameWith"]
+        and "AppMedia" in variant["sources"]
         for variant in floor14_assist
     )
     floor14_damage_absorb = tag("Floor 14", "Damage absorb")["variants"]
@@ -392,8 +386,7 @@ def test_published_warning_details_and_hit_severity():
         (variant["when"], tuple(variant["sources"]))
         for variant in floor14_damage_absorb
     } == {
-        ("Action 2", ("AppMedia",)),
-        ("In-order action 2", ("GameWith",)),
+        ("Action 2", ("AppMedia", "GameWith")),
     }
 
     assert data["summary"]["Damage absorb"]
@@ -449,8 +442,7 @@ def test_published_warning_details_and_hit_severity():
         (variant["when"], tuple(variant["sources"]))
         for variant in floor14_roulette
     } == {
-        ("Action 1", ("AppMedia",)),
-        ("In-order action 1", ("GameWith",)),
+        ("Action 1", ("AppMedia", "GameWith")),
     }
     assert all(variant["details"][-1] == "2 orbs" for variant in floor14_roulette)
     floor15_roulette = tag("Floor 15", "Roulette")["variants"]
