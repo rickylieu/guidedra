@@ -7898,22 +7898,13 @@
           ],
           "variants": [
             {
-              "when": "Action 1",
-              "details": [
-                "for 1 turn",
-                "1 random color"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            },
-            {
               "when": "One at random",
               "details": [
                 "for 1 turn",
                 "1 random color"
               ],
               "sources": [
+                "AppMedia",
                 "GameWith"
               ]
             }
@@ -8028,22 +8019,13 @@
           ],
           "variants": [
             {
-              "when": "Action 2",
-              "details": [
-                "for 1 turn",
-                "5B or more"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            },
-            {
               "when": "One at random",
               "details": [
                 "for 1 turn",
                 "5B or more"
               ],
               "sources": [
+                "AppMedia",
                 "GameWith"
               ]
             }
@@ -8089,22 +8071,13 @@
           ],
           "variants": [
             {
-              "when": "Action 4",
-              "details": [
-                "for 1 turn",
-                "DEF +5B"
-              ],
-              "sources": [
-                "AppMedia"
-              ]
-            },
-            {
               "when": "One at random",
               "details": [
                 "for 1 turn",
                 "DEF +5B"
               ],
               "sources": [
+                "AppMedia",
                 "GameWith"
               ]
             }

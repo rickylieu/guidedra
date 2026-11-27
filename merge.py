@@ -208,6 +208,23 @@ def _prioritize_puzzle_test_failure(
     return dict(variants)
 
 
+def _fold_random_into_numbered(variants):
+    # a numbered move in one source and the same move in another's random set are one move
+    random_key = ("label", "One at random")
+    folded = {key: set(sources) for key, sources in variants.items()}
+    for key in list(folded):
+        if key not in folded or key[0] != random_key:
+            continue
+        matches = [
+            other
+            for other in folded
+            if other[0][0] == "action" and other[1] == key[1]
+        ]
+        if len(matches) == 1:
+            folded[key].update(folded.pop(matches[0]))
+    return folded
+
+
 def _fold_unspecified_amounts(variants):
     # an unspecified amount yields to a stated one at the same timing
     folded = {key: set(sources) for key, sources in variants.items()}
@@ -230,7 +247,7 @@ def _fold_unspecified_amounts(variants):
         ]
         if len(matches) == 1:
             folded[matches[0]].update(folded.pop(key))
-    return folded
+    return _fold_random_into_numbered(folded)
 
 
 def _prefer_source_consensus(
