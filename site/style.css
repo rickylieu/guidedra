@@ -707,3 +707,9 @@ main {
   color: #f5c542;
   border-color: #f5c542;
 }
+
+.team-break {
+  flex-basis: 100%;
+  grid-column: 1 / -1;
+  height: 0;
+}

@@ -48,8 +48,9 @@ def test_app_uses_effective_hp():
     app = (SITE / "app.js").read_text(encoding="utf-8")
     assert "function rawTeamHp()" in app
     assert 'import("./team-shield.mjs")' in app
-    assert "effectiveHpRange(raw" in app
-    assert "explainEffectiveHp(raw, sources)" in app
+    assert "effectiveHpRange(hp, list.flatMap" in app
+    assert "buffedHp(raw, loopingBuff)" in app
+    assert "explainEffectiveHp(hp, list)" in app
     assert "data/card_shields.json" in app
 
 

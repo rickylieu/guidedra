@@ -230,6 +230,28 @@ survivalWarning.hidden = true;
 const [loopingLabel, loopingInput] = cardNumberInput("looping-shield", "Looping shield %", LOOPING_SHIELD_KEY);
 const [largerLabel, largerInput] = cardNumberInput("larger-shield", "Larger shield %", LARGER_SHIELD_KEY);
 for (const input of [loopingInput, largerInput]) Object.assign(input, { max: "100", step: "any", inputMode: "decimal" });
+const LOOPING_HP_KEY = "pad-dungeon-guide-looping-hp";
+const LARGER_HP_KEY = "pad-dungeon-guide-larger-hp";
+let largerWhat = "Larger shield";
+const [loopingHpLabel, loopingHpInput] = cardNumberInput("looping-hp", "Looping HP ×", LOOPING_HP_KEY);
+const [largerHpLabel, largerHpInput] = cardNumberInput("larger-hp", "Larger HP ×", LARGER_HP_KEY);
+for (const input of [loopingHpInput, largerHpInput]) Object.assign(input, { min: "1", step: "any", inputMode: "decimal" });
+const L_AWAKENINGS_KEY = "pad-dungeon-guide-l-awakenings";
+const L_AWAKENINGS_ON_KEY = "pad-dungeon-guide-l-awakenings-on";
+const [lAwakeningsLabel, lAwakeningsInput] = cardNumberInput("l-awakenings", "L awakenings", L_AWAKENINGS_KEY);
+Object.assign(lAwakeningsInput, { min: "0", max: "19", step: "1", inputMode: "numeric" });
+const lAwakeningsCheck = document.createElement("input");
+lAwakeningsCheck.type = "checkbox";
+lAwakeningsCheck.id = "l-awakenings-on";
+lAwakeningsCheck.checked = window.localStorage.getItem(L_AWAKENINGS_ON_KEY) === "1";
+const lAwakeningsCheckLabel = document.createElement("label");
+lAwakeningsCheckLabel.htmlFor = "l-awakenings-on";
+lAwakeningsCheckLabel.textContent = "Include L awakenings in damage calculations";
+lAwakeningsCheck.addEventListener("change", () => {
+  if (lAwakeningsCheck.checked) window.localStorage.setItem(L_AWAKENINGS_ON_KEY, "1");
+  else window.localStorage.removeItem(L_AWAKENINGS_ON_KEY);
+  lAwakeningsInput.dispatchEvent(new Event("input"));
+});
 const [leaderLabel, leaderInput] = cardNumberInput("leader-card", "Leader card #", LEADER_CARD_KEY);
 const [helperLabel, helperInput] = cardNumberInput("helper-card", "Helper card #", HELPER_CARD_KEY);
 const effectiveHpNote = document.createElement("div");
@@ -252,6 +274,12 @@ teamFields.append(
   teamField(helperLabel, helperInput),
   teamField(loopingLabel, loopingInput),
   teamField(largerLabel, largerInput),
+  element("div", "team-break", ""),
+  teamField(loopingHpLabel, loopingHpInput),
+  teamField(largerHpLabel, largerHpInput),
+  element("div", "team-break", ""),
+  teamField(lAwakeningsLabel, lAwakeningsInput),
+  teamField(lAwakeningsCheck, lAwakeningsCheckLabel),
 );
 teamPanel.append(teamFields, effectiveHpNote);
 teamFields.after(survivalWarning);
@@ -305,11 +333,36 @@ function shieldSource(role, input) {
   return { role, card: null, shields: [{ pct }] };
 }
 
-function showEffectiveHp(raw, sources, largerSources = null) {
-  const lines = explainEffectiveHp && sources.length ? explainEffectiveHp(raw, sources) : [];
-  if (explainEffectiveHp && largerSources) {
-    const extra = explainEffectiveHp(raw, largerSources).filter((line) => !lines.includes(line));
-    lines.push("With the larger shield instead of the looping shield:", ...extra);
+// L awakenings: 5% each, added together; counted only when the checkbox is on.
+function lAwakeningSource() {
+  const count = Math.max(0, Math.floor(Number(lAwakeningsInput.value) || 0));
+  if (!lAwakeningsCheck.checked || !count) return null;
+  const n = Math.min(count, 19);
+  return shieldSource(`L awakenings (${n} × 5%)`, { value: String(n * 5) });
+}
+
+function hpBuff(input) {
+  const match = /^(\d+(?:\.\d+)?)\s*[x×]?$/i.exec(input.value.trim());
+  const value = match ? Number(match[1]) : NaN;
+  return value > 0 ? value : null;
+}
+
+// HP buffs multiply team HP, rounded down; shields then apply to the buffed HP.
+function buffedHp(raw, multiplier) {
+  return raw === null || multiplier === null ? raw : Math.floor(raw * multiplier + 1e-6);
+}
+
+function showEffectiveHp(raw, sources, loopingBuff = null, larger = null) {
+  const explain = (hp, list) => (explainEffectiveHp && list.length ? explainEffectiveHp(hp, list) : []);
+  const hpLine = (label, mult) => `${label}: ${raw.toLocaleString("en-US")} × ${mult} = ${buffedHp(raw, mult).toLocaleString("en-US")} HP`;
+  const lines = [];
+  if (raw !== null && loopingBuff !== null) lines.push(hpLine("Looping HP buff", loopingBuff));
+  lines.push(...explain(buffedHp(raw, loopingBuff), sources));
+  if (larger) {
+    const extra = [];
+    if (raw !== null && larger.buff !== null) extra.push(hpLine("Larger HP buff", larger.buff));
+    extra.push(...explain(larger.hp, larger.sources).filter((line) => !lines.includes(line)));
+    if (extra.length) lines.push(`For big hits, with the ${largerWhat.replace(/^Larger/, "larger")} instead:`, ...extra);
   }
   effectiveHpNote.replaceChildren(...lines.map((line) => element("div", "effective-hp-line", line)));
 }
@@ -319,14 +372,21 @@ function selectedTeamHp() {
   const cards = [cardSource("Leader", leaderInput), cardSource("Helper", helperInput)].filter(Boolean);
   const looping = shieldSource("Looping shield", loopingInput);
   const larger = shieldSource("Larger shield", largerInput);
-  const sources = looping ? [...cards, looping] : cards;
-  const largerSources = larger ? [...cards, larger] : null;
-  const lowest = (list) => (raw === null || !effectiveHpRange
+  const loopingBuff = hpBuff(loopingHpInput);
+  const largerBuff = hpBuff(largerHpInput);
+  const lAwake = lAwakeningSource();
+  const sources = [...cards, looping, lAwake].filter(Boolean);
+  // Larger buffs replace their looping twin on big hits; a looping one with no larger twin stays up.
+  const largerSources = larger || largerBuff !== null ? [...cards, larger || looping, lAwake].filter(Boolean) : null;
+  largerWhat = larger && largerBuff !== null ? "Larger shield and HP buff" : larger ? "Larger shield" : "Larger HP buff";
+  const loopingHp = buffedHp(raw, loopingBuff);
+  const largerHp = buffedHp(raw, largerBuff ?? loopingBuff);
+  const lowest = (hp, list) => (hp === null || !effectiveHpRange
     ? null
-    : effectiveHpRange(raw, list.flatMap((source) => source.shields)).low);
-  largerEffectiveHp = largerSources ? lowest(largerSources) : null;
-  showEffectiveHp(raw, sources, largerSources);
-  return lowest(sources) ?? raw;
+    : effectiveHpRange(hp, list.flatMap((source) => source.shields)).low);
+  largerEffectiveHp = largerSources ? lowest(largerHp, largerSources) : null;
+  showEffectiveHp(raw, sources, loopingBuff, largerSources ? { buff: largerBuff, hp: largerHp, sources: largerSources } : null);
+  return lowest(loopingHp, sources) ?? loopingHp;
 }
 
 function rawTeamHp() {
@@ -405,7 +465,8 @@ function alertForAction(action, floor, teamHp) {
   if (teamHp === null || !survivalCheck) return null;
   const enemy = (floor.enemies || []).find((e) => (e.actions || []).includes(action));
   if (puzzleFailCheck && puzzleFailCheck(action, enemy?.actions || [])) return null;
-  return survivalCheck(actionDamage(action, floor), teamHp, isBigHit(action) ? largerEffectiveHp : null, Boolean(floor.halves_max_hp));
+  const result = survivalCheck(actionDamage(action, floor), teamHp, isBigHit(action) ? largerEffectiveHp : null, Boolean(floor.halves_max_hp));
+  return result === "Larger shield needed" ? `${largerWhat} needed` : result;
 }
 
 // Only a big hit (the build's large flag: 2x+ the median normal hit) may be answered with the larger shield.
@@ -440,6 +501,52 @@ function renderBigHitList(container, data) {
   if (!count) container.append(element("p", "muted", "No big hits in this dungeon."));
 }
 
+// The enrage move can exist only in the floor's tags when the primary source left it out
+// (Tenkyū Floor 15's all-parts-break ×1.3 comes from Altema alone).
+function floorEnrageReasons(floor, ratio) {
+  const reasons = [];
+  for (const tag of floor?.tags || []) {
+    if (tag.name !== "Enrage" && tag.name !== "Enemy ATK up") continue;
+    for (const variant of tag.variants || []) {
+      const details = variant.details || [];
+      const matches = details.some((detail) => {
+        const m = /^[×x](\d+(?:\.\d+)?)$/.exec(detail);
+        return m && Math.abs(Number(m[1]) - ratio) <= ratio * 0.01;
+      });
+      if (!matches) continue;
+      const when = variant.when || variant.timing || "";
+      reasons.push(`${when ? `${when}: ` : ""}${tag.name} (${details.join(" - ")})`);
+    }
+  }
+  return [...new Set(reasons)];
+}
+
+function enemyOf(floor, action) {
+  return (floor.enemies || []).find((enemy) => (enemy.actions || []).includes(action)) || null;
+}
+
+// "hit", or "enraged hit (when: the enrage move)" when the damage checked is the enraged one.
+function hitWord(action, enemy, damage, floor = null) {
+  const normal = Number.isFinite(action.normal_hit) ? action.normal_hit : action.hit;
+  const enraged = Boolean(action.already_enraged)
+    || (Number.isFinite(action.enraged_hit) && action.enraged_hit > normal && damage >= action.enraged_hit);
+  const kind = action.severity === "large" ? "large hit" : "normal hit";
+  if (!enraged) return kind;
+  const atkUp = new Set(["Enrage", "Enemy ATK up"]);
+  const tagName = (tag) => (typeof tag === "string" ? tag : tag?.name);
+  // Name only the ATK-up move whose multiplier explains this hit (enraged / normal).
+  const multiplier = (text) => Number((/[×x](\d+(?:\.\d+)?)/.exec(text || "") || [])[1]);
+  const movers = (enemy?.actions || [])
+    .filter((other) => other !== action && (other.tags || []).some((tag) => atkUp.has(tagName(tag))));
+  const ratio = action.already_enraged ? null : damage / normal;
+  const matching = ratio === null
+    ? (movers.length === 1 ? movers : [])
+    : movers.filter((other) => Math.abs(multiplier(other.text) - ratio) <= ratio * 0.01);
+  const why = matching.map((other) => `${other.when || "Preemptive"}: ${other.text}`);
+  if (!why.length && ratio !== null) why.push(...floorEnrageReasons(floor, ratio));
+  return why.length ? `enraged ${kind} (${[...new Set(why)].join("; ")})` : `enraged ${kind}`;
+}
+
 function renderSurvivalWarning(data, teamHp) {
   const worst = new Map();
   for (const floor of data.floors || []) {
@@ -448,7 +555,7 @@ function renderSurvivalWarning(data, teamHp) {
         if (alertForAction(action, floor, teamHp) !== "Can't survive") continue;
         const damage = actionDamage(action, floor);
         const current = worst.get(floor.label);
-        if (!current || damage > current.damage) worst.set(floor.label, { damage, floor, big: isBigHit(action) });
+        if (!current || damage > current.damage) worst.set(floor.label, { damage, floor, big: isBigHit(action), action });
       }
     }
   }
@@ -457,13 +564,13 @@ function renderSurvivalWarning(data, teamHp) {
     survivalWarning.replaceChildren();
     return;
   }
-  const lines = [...worst].map(([label, { damage, floor, big }]) => {
+  const lines = [...worst].map(([label, { damage, floor, big, action }]) => {
     const useLarger = big && largerEffectiveHp !== null;
     const limit = useLarger ? largerEffectiveHp : teamHp;
-    const withWhat = useLarger ? "with the larger shield" : "with your current shields";
+    const withWhat = useLarger ? `with the ${largerWhat.replace(/^Larger/, "larger")}` : "with your current shields";
     const hp = floor.halves_max_hp ? limit / 2 : limit;
     const halved = floor.halves_max_hp ? " (max HP halved)" : "";
-    return element("div", "survival-warning-line", `${label}: ${formatNumber(damage)} hit ≥ ${formatNumber(hp)} effective HP ${withWhat}${halved}`);
+    return element("div", "survival-warning-line", `${label}: ${formatNumber(damage)} ${hitWord(action, enemyOf(floor, action), damage, floor)} ≥ ${formatNumber(hp)} effective HP ${withWhat}${halved}`);
   });
   survivalWarning.replaceChildren(element("strong", "", "Hits you can't survive"), ...lines);
 }
@@ -1560,7 +1667,7 @@ function renderAction(action, floor, teamHp, groupKey, sequenceTotal = null, col
       ? "large"
       : alert === "Can't survive"
         ? "cant-survive"
-        : alert === "Larger shield needed"
+        : alert?.startsWith("Larger ")
           ? "larger-shield"
           : "";
   const row = element(
