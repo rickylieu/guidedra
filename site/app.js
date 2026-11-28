@@ -216,6 +216,20 @@ let cardShields = {};
 let cardNames = {};
 let effectiveHpRange = null;
 let explainEffectiveHp = null;
+const LOOPING_SHIELD_KEY = "pad-dungeon-guide-looping-shield";
+const LARGER_SHIELD_KEY = "pad-dungeon-guide-larger-shield";
+// The median section and Large hit alerts stay in the code; effective HP replaces them for now.
+const SHOW_MEDIAN = false;
+let survivalCheck = null;
+let puzzleFailCheck = null;
+let damageCheck = null;
+let largerEffectiveHp = null;
+const survivalWarning = document.createElement("div");
+survivalWarning.className = "survival-warning";
+survivalWarning.hidden = true;
+const [loopingLabel, loopingInput] = cardNumberInput("looping-shield", "Looping shield %", LOOPING_SHIELD_KEY);
+const [largerLabel, largerInput] = cardNumberInput("larger-shield", "Larger shield %", LARGER_SHIELD_KEY);
+for (const input of [loopingInput, largerInput]) Object.assign(input, { max: "100", step: "any", inputMode: "decimal" });
 const [leaderLabel, leaderInput] = cardNumberInput("leader-card", "Leader card #", LEADER_CARD_KEY);
 const [helperLabel, helperInput] = cardNumberInput("helper-card", "Helper card #", HELPER_CARD_KEY);
 const effectiveHpNote = document.createElement("div");
@@ -236,8 +250,11 @@ teamFields.append(
   teamField(teamHpLabel, teamHpInput),
   teamField(leaderLabel, leaderInput),
   teamField(helperLabel, helperInput),
+  teamField(loopingLabel, loopingInput),
+  teamField(largerLabel, largerInput),
 );
 teamPanel.append(teamFields, effectiveHpNote);
+teamFields.after(survivalWarning);
 Promise.all([
   import("./team-shield.mjs"),
   fetch("data/card_shields.json").then((response) => (response.ok ? response.json() : {})),
@@ -246,6 +263,9 @@ Promise.all([
   .then(([shieldMaths, data, names]) => {
     effectiveHpRange = shieldMaths.effectiveHpRange;
     explainEffectiveHp = shieldMaths.explainEffectiveHp;
+    survivalCheck = shieldMaths.survivalAlert;
+    puzzleFailCheck = shieldMaths.isPuzzleFail;
+    damageCheck = shieldMaths.survivalDamage;
     cardShields = data || {};
     cardNames = names || {};
     teamHpInput.dispatchEvent(new Event("input"));
@@ -278,18 +298,35 @@ function cardSource(role, input) {
   return { role, card, name, shields: cardShields[String(card)] || [] };
 }
 
-function showEffectiveHp(raw, sources) {
+function shieldSource(role, input) {
+  const text = input.value.trim();
+  const pct = Number(text);
+  if (!text || !(pct > 0) || pct > 100) return null;
+  return { role, card: null, shields: [{ pct }] };
+}
+
+function showEffectiveHp(raw, sources, largerSources = null) {
   const lines = explainEffectiveHp && sources.length ? explainEffectiveHp(raw, sources) : [];
+  if (explainEffectiveHp && largerSources) {
+    const extra = explainEffectiveHp(raw, largerSources).filter((line) => !lines.includes(line));
+    lines.push("With the larger shield instead of the looping shield:", ...extra);
+  }
   effectiveHpNote.replaceChildren(...lines.map((line) => element("div", "effective-hp-line", line)));
 }
 
 function selectedTeamHp() {
   const raw = rawTeamHp();
-  const sources = [cardSource("Leader", leaderInput), cardSource("Helper", helperInput)].filter(Boolean);
-  const shields = sources.flatMap((source) => source.shields);
-  const range = raw === null || !effectiveHpRange ? null : effectiveHpRange(raw, shields);
-  showEffectiveHp(raw, sources);
-  return range ? range.low : raw;
+  const cards = [cardSource("Leader", leaderInput), cardSource("Helper", helperInput)].filter(Boolean);
+  const looping = shieldSource("Looping shield", loopingInput);
+  const larger = shieldSource("Larger shield", largerInput);
+  const sources = looping ? [...cards, looping] : cards;
+  const largerSources = larger ? [...cards, larger] : null;
+  const lowest = (list) => (raw === null || !effectiveHpRange
+    ? null
+    : effectiveHpRange(raw, list.flatMap((source) => source.shields)).low);
+  largerEffectiveHp = largerSources ? lowest(largerSources) : null;
+  showEffectiveHp(raw, sources, largerSources);
+  return lowest(sources) ?? raw;
 }
 
 function rawTeamHp() {
@@ -363,6 +400,75 @@ function formatMultiple(value) {
 }
 
 function alertForAction(action, floor, teamHp) {
+  if (SHOW_MEDIAN) return legacyAlertForAction(action, floor, teamHp);
+  if (action.severity === "execute") return "Execute";
+  if (teamHp === null || !survivalCheck) return null;
+  const enemy = (floor.enemies || []).find((e) => (e.actions || []).includes(action));
+  if (puzzleFailCheck && puzzleFailCheck(action, enemy?.actions || [])) return null;
+  return survivalCheck(actionDamage(action, floor), teamHp, isBigHit(action) ? largerEffectiveHp : null, Boolean(floor.halves_max_hp));
+}
+
+// Only a big hit (the build's large flag: 2x+ the median normal hit) may be answered with the larger shield.
+function isBigHit(action) {
+  return action.severity === "large";
+}
+
+function actionDamage(action, floor) {
+  const enemy = (floor.enemies || []).find((e) => (e.actions || []).includes(action));
+  if (damageCheck) return damageCheck(action, enemy?.actions || []);
+  const hits = [action.hit, action.enraged_hit].filter(Number.isFinite);
+  return hits.length ? Math.max(...hits) : null;
+}
+
+// Every big hit in the dungeon by floor, shown even while the median lines are hidden.
+function renderBigHitList(container, data) {
+  container.hidden = false;
+  container.replaceChildren(element("strong", "", "Big hits"));
+  let count = 0;
+  for (const floor of data.floors || []) {
+    const hits = new Set();
+    for (const enemy of floor.enemies || []) {
+      for (const action of enemy.actions || []) {
+        if (!isBigHit(action) || !Number.isFinite(action.hit)) continue;
+        hits.add(`${formatNumber(action.hit)} (${action.when || "Preemptive"})`);
+      }
+    }
+    if (!hits.size) continue;
+    count += hits.size;
+    container.append(element("div", "big-hit-line", `${floor.label}: ${[...hits].join(", ")}`));
+  }
+  if (!count) container.append(element("p", "muted", "No big hits in this dungeon."));
+}
+
+function renderSurvivalWarning(data, teamHp) {
+  const worst = new Map();
+  for (const floor of data.floors || []) {
+    for (const enemy of floor.enemies || []) {
+      for (const action of enemy.actions || []) {
+        if (alertForAction(action, floor, teamHp) !== "Can't survive") continue;
+        const damage = actionDamage(action, floor);
+        const current = worst.get(floor.label);
+        if (!current || damage > current.damage) worst.set(floor.label, { damage, floor, big: isBigHit(action) });
+      }
+    }
+  }
+  survivalWarning.hidden = worst.size === 0;
+  if (!worst.size) {
+    survivalWarning.replaceChildren();
+    return;
+  }
+  const lines = [...worst].map(([label, { damage, floor, big }]) => {
+    const useLarger = big && largerEffectiveHp !== null;
+    const limit = useLarger ? largerEffectiveHp : teamHp;
+    const withWhat = useLarger ? "with the larger shield" : "with your current shields";
+    const hp = floor.halves_max_hp ? limit / 2 : limit;
+    const halved = floor.halves_max_hp ? " (max HP halved)" : "";
+    return element("div", "survival-warning-line", `${label}: ${formatNumber(damage)} hit ≥ ${formatNumber(hp)} effective HP ${withWhat}${halved}`);
+  });
+  survivalWarning.replaceChildren(element("strong", "", "Hits you can't survive"), ...lines);
+}
+
+function legacyAlertForAction(action, floor, teamHp) {
   const hit = action.hit;
   if (!Number.isFinite(hit)) return null;
   if (action.severity === "execute") return "Execute";
@@ -1199,6 +1305,13 @@ function renderHitSummary(data) {
   const container = document.getElementById("hit-summary");
   container.replaceChildren();
   const teamHp = selectedTeamHp();
+  if (!SHOW_MEDIAN) {
+    renderBigHitList(container, data);
+    const heading = container.previousElementSibling;
+    if (heading && /^H[1-6]$/.test(heading.tagName)) heading.hidden = true;
+    renderSurvivalWarning(data, teamHp);
+    return;
+  }
   const byFloor = new Map();
   if (Number.isFinite(data.normal_hit_baseline) && data.normal_hit_baseline > 0) {
     container.append(
@@ -1445,7 +1558,11 @@ function renderAction(action, floor, teamHp, groupKey, sequenceTotal = null, col
     ? "execute"
     : alert?.startsWith("Large hit")
       ? "large"
-      : "";
+      : alert === "Can't survive"
+        ? "cant-survive"
+        : alert === "Larger shield needed"
+          ? "larger-shield"
+          : "";
   const row = element(
     "div",
     `action${alert ? " hit-alert" : ""}${alertClass ? ` ${alertClass}` : ""}`,
@@ -1475,7 +1592,8 @@ function renderAction(action, floor, teamHp, groupKey, sequenceTotal = null, col
       : Number.isFinite(action.enraged_hit)
       ? ` (enraged hit: ${formatNumber(action.enraged_hit)})`
       : "";
-    const hitLabel = `${alert ? `${alert} · ` : ""}${formatNumber(normalHit)} damage${enragedHit}`;
+    const hitKind = action.severity === "execute" ? "" : isBigHit(action) ? "Big hit · " : "Normal hit · ";
+    const hitLabel = `${alert ? `${alert} · ` : ""}${hitKind}${formatNumber(normalHit)} damage${enragedHit}`;
     const chip = element(
       "span",
       `hit-chip${alert ? " alert" : ""}${alertClass ? ` ${alertClass}` : ""}`,

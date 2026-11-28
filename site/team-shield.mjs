@@ -49,17 +49,28 @@ function describe(shield) {
 
 const who = (source) => (source.name ? `${source.name} (${source.card})` : `card ${source.card}`);
 
+const sourceLabel = (source) => (source.card == null ? source.role : `${source.role} ${who(source)}`);
+
+// Larger shield replaces the looping one, so it only matters for hits the looping shield can't take.
+export function survivalAlert(damage, effectiveHp, largerHp = null, halvesMaxHp = false) {
+  if (!Number.isFinite(damage) || !(effectiveHp > 0)) return null;
+  const share = halvesMaxHp ? 0.5 : 1;
+  if (damage < effectiveHp * share) return null;
+  if (largerHp != null && damage < largerHp * share) return "Larger shield needed";
+  return "Can't survive";
+}
+
 // The working, one line per string: which card gave which shield, then the maths.
 export function explainEffectiveHp(teamHp, sources) {
   const lines = [];
   const all = [];
   for (const source of sources) {
     if (!source.shields.length) {
-      lines.push(`${source.role} ${who(source)}: no leader shield`);
+      lines.push(`${sourceLabel(source)}: no leader shield`);
       continue;
     }
     for (const shield of source.shields) {
-      lines.push(`${source.role} ${who(source)}: ${describe(shield)}`);
+      lines.push(`${sourceLabel(source)}: ${describe(shield)}`);
       all.push(shield);
     }
   }
@@ -113,4 +124,45 @@ export function explainEffectiveHp(teamHp, sources) {
     lines.push(`Shield needed uses the lowest: ${Number.isFinite(lowest) ? whole(lowest) : "no damage taken"}`);
   }
   return lines;
+}
+
+// A failed puzzle lesson is the player's choice, not a hit to plan HP around.
+// Same test as merge.py: a lesson_fail timing, or the ≤ combos branch of an enemy that also has a ≥ combos branch.
+export function isPuzzleFail(action, enemyActions = []) {
+  if (action.timing_kind === "lesson_fail" || action.when === "Puzzle lesson failed") return true;
+  if (action.timing_kind !== "combo_le") return false;
+  return enemyActions.some((other) => other.timing_kind === "combo_ge");
+}
+
+// Enrages you only meet by being slow: a Turn 3+ timer, or a leave-N-alive trigger.
+export const SLOW_ENRAGE_TURN = 3;
+const ATK_UP = new Set(["Enrage", "Enemy ATK up"]);
+
+export function isSlowEnrage(action) {
+  if (!(action.tags || []).some((tag) => ATK_UP.has(tag))) return false;
+  if (action.timing_kind === "remaining_eq" || action.timing_kind === "remaining_le") return true;
+  const step = enrageStep(action);
+  return step !== null && step >= SLOW_ENRAGE_TURN;
+}
+
+// Which of the enemy's turns a numbered move lands on: Turn 3, Action 3, Normal action 3, or move 3 of an in-order set.
+const STEP_KINDS = new Set(["turn", "nth_action", "normal", "sequence"]);
+function enrageStep(action) {
+  if (!STEP_KINDS.has(action.timing_kind)) return null;
+  const match = /(?:Turn|Action|Normal action) (\d+)/.exec(action.when || "");
+  if (match) return Number(match[1]);
+  return Number.isFinite(action.order) ? action.order : null;
+}
+
+// The damage a hit is checked at; null leaves it out of the checks.
+export function survivalDamage(action, enemyActions = []) {
+  if (isSlowEnrage(action)) return null;
+  const enrages = enemyActions.filter((other) => (other.tags || []).some((tag) => ATK_UP.has(tag)));
+  if (enrages.length && enrages.every(isSlowEnrage)) {
+    if (action.already_enraged) return null;
+    const base = Number.isFinite(action.normal_hit) ? action.normal_hit : action.hit;
+    return Number.isFinite(base) ? base : null;
+  }
+  const hits = [action.hit, action.enraged_hit].filter(Number.isFinite);
+  return hits.length ? Math.max(...hits) : null;
 }

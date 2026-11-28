@@ -691,3 +691,19 @@ main {
   gap: 0.5rem;
   white-space: nowrap;
 }
+
+.survival-warning {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+.hit-chip.cant-survive {
+  color: #ff6b6b;
+  border-color: #ff6b6b;
+  font-weight: bold;
+}
+
+.hit-chip.larger-shield {
+  color: #f5c542;
+  border-color: #f5c542;
+}
